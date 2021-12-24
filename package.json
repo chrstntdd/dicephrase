@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rescript && node scripts/prerender.js",
     "preview": "vite preview",
     "re:build": "rescript",
     "re:start": "rescript build -w"

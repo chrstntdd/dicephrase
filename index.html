@@ -8,7 +8,7 @@
       name="description"
       content="Simple, random, unique secure passphrase generator based on the diceware method"
     />
-    <title>dicephrase | generate</title>
+    <title><!--doc-title--></title>
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -47,7 +47,8 @@
       <br />
       Please enable it.
     </noscript>
-    <div id="root"></div>
+    <div id="root"><!--ssr-outlet--></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/offline-entry.ts"></script>
   </body>
 </html>

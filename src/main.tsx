@@ -4,9 +4,9 @@ import ReactDOM from "react-dom"
 import "./styles/global.css"
 import { App } from "./app"
 
-ReactDOM.render(
+ReactDOM.hydrate(
   <React.StrictMode>
-    <App />
+    <App url={globalThis.location.pathname} />
   </React.StrictMode>,
   document.getElementById("root")
 )

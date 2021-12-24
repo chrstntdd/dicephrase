@@ -3,17 +3,18 @@ import { GeneratedOutput } from "./views/generated-output"
 
 import * as styles from "./app.css"
 
-function App() {
-  let route = location.pathname
+function App({ url }: { url: string }) {
+  console.log({ url })
+
   return (
     <div className={styles.appGutter}>
       <h1 className={styles.pageTile}>
         <a href="/generate">Dicephrase</a>
       </h1>
-      {route === "/generate" ? (
+      {url === "/generate" ? (
         <Generate />
       ) : /* Match query params for count and separator */
-      route === "/generated" ? (
+      url === "/generated" ? (
         <GeneratedOutput />
       ) : (
         <div>

@@ -10,3 +10,5 @@ dist-ssg
 lib
 .bsb.lock
 .merlin
+# Allow app's lib
+!src/lib

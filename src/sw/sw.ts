@@ -14,9 +14,9 @@ sw.addEventListener("install", (event) => {
           includeUncontrolled: true,
           type: "window"
         })
-        clients.forEach((client) =>
+        clients.forEach((client) => {
           client.postMessage({ type: "PRECACHE_SUCCESS" })
-        )
+        })
       })
       .catch((reason) => {
         console.error({ reason })

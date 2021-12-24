@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react"
+import { useState } from "react"
+import type { FormEvent } from "react"
 
 import { RadioGroup, Radio } from "../components/rad-group"
 import { usePassphrase } from "../lib/use-passphrase"

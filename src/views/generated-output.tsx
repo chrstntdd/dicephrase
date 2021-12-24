@@ -1,9 +1,12 @@
 import { useEffect } from "react"
 
 import { usePassphrase } from "../lib/use-passphrase"
+import { PhraseOutput } from "./phrase-output"
+
+import * as styles from "./generated-output.css"
 
 function GeneratedOutput() {
-  let [{ phrases, separators }, { generate }] = usePassphrase()
+  let [{ phrases, separators }, { generate, saveToClipboard }] = usePassphrase()
 
   useEffect(() => {
     generate(location.search)
@@ -12,8 +15,16 @@ function GeneratedOutput() {
   return (
     <div>
       Here is your passphrase:
-      <h2>{phrases?.join("")}</h2>
-      <a href="/generate">Generate another passphrase</a>
+      {separators && phrases && (
+        <PhraseOutput
+          handleCopyPress={saveToClipboard}
+          separators={separators}
+          phrases={phrases}
+        />
+      )}
+      <a className={styles.backToGenerateLink} href="/generate">
+        Generate another passphrase
+      </a>
     </div>
   )
 }

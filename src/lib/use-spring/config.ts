@@ -1,16 +1,11 @@
-import React from "react"
 import { TaskId } from "./raf"
 import { currentTime } from "./time"
 
 export function useSpringInstance(target: number, config: Config): Instance {
-  const ref = React.useRef<Instance | null>(null)
-  if (ref.current == null) {
-    ref.current = {
-      config: getConfigWithDefaults(target, config),
-      state: getInitialState(target, config)
-    }
+  return {
+    config: getConfigWithDefaults(target, config),
+    state: getInitialState(target, config)
   }
-  return ref.current!
 }
 
 export function getConfigWithDefaults(

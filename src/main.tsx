@@ -1,19 +1,16 @@
-import React from "react"
-import ReactDOM from "react-dom"
+import { render, hydrate } from "solid-js/web"
 import { inspect } from "@xstate/inspect"
 
 import "./styles/global.css"
 import { App } from "./app"
 
-let start = import.meta.env.PROD ? ReactDOM.hydrate : ReactDOM.render
+let start = import.meta.env.PROD ? hydrate : render
 
 if (import.meta.env.DEV) {
   inspect({ iframe: false })
 }
 
 start(
-  <React.StrictMode>
-    <App url={globalThis.location.pathname} />
-  </React.StrictMode>,
-  document.getElementById("root")
+  () => <App url={globalThis.location.pathname} />,
+  document.getElementById("root")!
 )

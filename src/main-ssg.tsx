@@ -3,13 +3,11 @@
  * Server side app entry to get a plain ol html string for prerendering
  * or just SSR.
  */
-import { renderToString } from "react-dom/server"
+import { renderToString } from "solid-js/web"
 import { App } from "./app"
 
 async function render(url: string) {
-  let vnode = <App url={url} />
-
-  let html = renderToString(vnode)
+  let html = renderToString(() => <App url={url} />)
 
   return { html }
 }

@@ -1,4 +1,4 @@
-import { unstable_batchedUpdates } from "react-dom"
+import { batch } from "solid-js"
 import { currentTime } from "./time"
 
 type FrameId = number
@@ -27,5 +27,6 @@ function runQueue() {
   const now = currentTime()
   const queue = nextFrameQueue
   nextFrameQueue = []
-  unstable_batchedUpdates(() => queue.forEach((task) => task && task(now)))
+
+  batch(() => queue.forEach((task) => task && task(now)))
 }

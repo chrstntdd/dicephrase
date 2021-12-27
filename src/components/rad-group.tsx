@@ -1,12 +1,11 @@
 import {
   useContext,
-  useEffect,
-  useRef,
-  useState,
+  createEffect,
+  createSignal,
   createContext,
-  createElement,
-  ReactFragment
-} from "react"
+  For,
+  createMemo
+} from "solid-js"
 import type { ReactNode, HTMLProps } from "react"
 
 interface RadioGroupCtx<V = unknown> {
@@ -21,7 +20,6 @@ let RadioGroupContext = createContext({})
 let RadioGroupIndexCtx = createContext<number | null>(undefined as any)
 
 type RadioGroupProps<V = unknown> = {
-  as?: keyof HTMLElementTagNameMap
   children: ReactNode[]
   labelledBy: string
   onChange: (value: V) => void
@@ -31,26 +29,19 @@ type RadioGroupProps<V = unknown> = {
   name: string
 }
 
-function RadioGroup<V>({
-  as,
-  children,
-  labelledBy,
-  value,
-  onChange,
-  ...props
-}: RadioGroupProps<V>) {
-  let [descendants, setDescendants] = useState<{ el: HTMLElement; val: V }[]>(
-    []
-  )
+function RadioGroup<V>(props: RadioGroupProps<V>) {
+  let [descendants, setDescendants] = createSignal<
+    { el: HTMLElement; val: V }[]
+  >([])
 
   let setChecked = (activeIdx: number) => {
-    let desc = descendants.find((_, index) => activeIdx === index)
+    let desc = descendants().find((_, index) => activeIdx === index)
 
     if (!desc) return
 
     desc.el.focus()
 
-    onChange?.(desc.val)
+    props.onChange?.(desc.val)
   }
 
   let registerDescendant = (el: HTMLElement, val: V) => {
@@ -64,35 +55,32 @@ function RadioGroup<V>({
     })
   }
 
-  let lastIndex = children.length - 1
+  let lastIndex = props.children.length - 1
 
-  let ctx: RadioGroupCtx<V> = {
+  let ctx = createMemo<RadioGroupCtx<V>>(() => ({
     registerDescendant,
     setChecked,
     name: props.name,
-    value,
+    value: props.value,
     lastIndex
-  }
+  }))
 
   return (
-    <RadioGroupContext.Provider value={ctx}>
-      {createElement(
-        as || "div",
-        { "aria-labelledby": labelledBy, role: "radiogroup", ...props },
-        children.map((kid, index) => {
-          return (
-            <RadioGroupIndexCtx.Provider key={index} value={index}>
+    <RadioGroupContext.Provider value={ctx()}>
+      <div aria-labelledby={props.labelledBy} role="radiogroup" {...props}>
+        <For each={props.children}>
+          {(kid, index) => (
+            <RadioGroupIndexCtx.Provider value={index()}>
               {kid}
             </RadioGroupIndexCtx.Provider>
-          )
-        })
-      )}
+          )}
+        </For>
+      </div>
     </RadioGroupContext.Provider>
   )
 }
 
 type RadioProps<V extends string> = {
-  as?: keyof HTMLElementTagNameMap | ReactFragment
   children: ReactNode
   id: string
   label: string
@@ -101,43 +89,33 @@ type RadioProps<V extends string> = {
   value: V
 } & Omit<HTMLProps<HTMLInputElement>, "onBlur" | "onFocus">
 
-function Radio<V extends string>({
-  as,
-  children,
-  onBlur,
-  onFocus,
-  value: valueProp,
-  ...props
-}: RadioProps<V>) {
-  let ref = useRef<HTMLDivElement | null>(null)
+function Radio<V extends string>(props: RadioProps<V>) {
+  let ref: HTMLDivElement
   let ctx = useContext(RadioGroupContext) as RadioGroupCtx<V>
   let index = useContext(RadioGroupIndexCtx)!
-  let { registerDescendant, setChecked, value, name } = ctx
-  let isCurrentRadioSelected = value == valueProp
 
-  useEffect(() => {
-    if (ref.current) {
-      registerDescendant(ref.current, valueProp)
+  let isCurrentRadioSelected = createMemo(() => ctx.value == props.value)
+
+  createEffect(() => {
+    if (ref) {
+      ctx.registerDescendant?.(ref, props.value)
     }
-  }, [valueProp])
+  })
 
-  return createElement(
-    as || "div",
-    {
-      ref,
-      "data-checked": isCurrentRadioSelected
-    },
-    <label htmlFor={props.id}>{props.label}</label>,
-    <input
-      defaultChecked={isCurrentRadioSelected}
-      id={props.id}
-      name={name}
-      onChange={() => {
-        setChecked(index)
-      }}
-      type="radio"
-      value={value}
-    />
+  return (
+    <div data-checked={isCurrentRadioSelected()} ref={ref}>
+      <label htmlFor={props.id}>{props.label}</label>
+      <input
+        checked={isCurrentRadioSelected()}
+        id={props.id}
+        name={ctx.name}
+        onChange={() => {
+          ctx.setChecked(index)
+        }}
+        type="radio"
+        value={ctx.value}
+      />
+    </div>
   )
 }
 

@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { useSelector } from "@xstate/react"
+import { onMount } from "solid-js"
 
 import { PhraseOutput } from "./phrase-output"
 
@@ -11,17 +10,20 @@ import {
 
 function GeneratedOutputImpl() {
   let generateActor = useGenerate()
-  let separators = useSelector(generateActor, (x) => x.context.separators)
-  let phrases = useSelector(generateActor, (x) => x.context.phrases)
-  let isIdle = useSelector(generateActor, (x) => x.matches("idle"))
-  let hasOutput = isIdle && phrases && separators
 
-  useEffect(() => {
+  let phraseCount = generateActor.getSnapshot()!.context.count
+  let separator = generateActor.getSnapshot()!.context.separatorKind
+  let isIdle = generateActor.getSnapshot()!.matches("idle")
+  let separators = generateActor.getSnapshot()!.context.separators
+  let phrases = generateActor.getSnapshot()!.context.phrases
+  let hasOutput = isIdle && separators && phrases
+
+  onMount(() => {
     generateActor.send({
       type: "HYDRATE_FROM_URL_PARAMS",
       value: location.search
     })
-  }, [])
+  })
 
   return (
     <div>

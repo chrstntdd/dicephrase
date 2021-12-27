@@ -1,4 +1,3 @@
-import React, { useEffect } from "react"
 import {
   getConfigWithDefaults,
   useSpringInstance,
@@ -8,12 +7,12 @@ import {
 import { spring } from "./spring"
 import { queueAnimationFrame, unqueueAnimationFrame } from "./raf"
 import { currentTime } from "./time"
+import { createEffect, onCleanup } from "solid-js"
 
 export function useSpring(
   target: number,
   config: Config = {}
 ): [number, boolean] {
-  const forceUpdate = React.useReducer((c) => c + 1, 0)[1]
   const newConfig = getConfigWithDefaults(target, config)
   const { state, config: oldConfig } = useSpringInstance(target, config)
 
@@ -26,24 +25,24 @@ export function useSpring(
     : spring({ x0, v0, t0, t, k, c, m, X })
   const moving = isMoving(x, v, t, newConfig)
 
-  useEffect(() => {
+  createEffect(() => {
     Object.assign(oldConfig, newConfig)
-  }, [newConfig.X, newConfig.k, newConfig.c, newConfig.m, newConfig.teleport])
+  })
 
-  useEffect(() => {
+  createEffect(() => {
     state.x0 = x
     state.v0 = v
     state.t0 = t
-  }, [x, v, t])
+  })
 
-  useEffect(() => {
+  createEffect(() => {
     const loop = (now: number) => {
       const { x0, v0, t0 } = state
       const { k, c, m, X, decimals } = oldConfig
       const { x: nextX } = spring({ x0, v0, t0, t: now, k, c, m, X })
       if (roundTo(nextX, decimals) !== roundTo(x0, decimals)) {
         state.raf = null
-        forceUpdate()
+        // forceUpdate()
       } else {
         state.raf = queueAnimationFrame(loop)
       }
@@ -56,13 +55,11 @@ export function useSpring(
     }
   })
 
-  useEffect(() => {
-    return () => {
-      if (state.raf != null) {
-        unqueueAnimationFrame(state.raf)
-      }
+  onCleanup(() => {
+    if (state.raf != null) {
+      unqueueAnimationFrame(state.raf)
     }
-  }, [])
+  })
 
   return [roundTo(x, newConfig.decimals), moving]
 }

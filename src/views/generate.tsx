@@ -1,10 +1,7 @@
-import type { FormEvent } from "react"
-import { useSelector } from "@xstate/react"
-
-import { RadioGroup, Radio } from "../components/rad-group"
+import { RadioGroup } from "../components/radio-group"
 
 import { GenerateProvider, useGenerate } from "../features/generate"
-import { PhraseOutput } from "./phrase-output"
+// import { PhraseOutput } from "./phrase-output"
 import * as styles from "./generate.css"
 
 const countId = "word-count-gr"
@@ -28,16 +25,17 @@ const WORD_COUNT_OPTS = [
 
 function GenerateImpl() {
   let generateActor = useGenerate()
-  let phraseCount = useSelector(generateActor, (x) => x.context.count)
-  let separator = useSelector(generateActor, (x) => x.context.separatorKind)
-  let isIdle = useSelector(generateActor, (x) => x.matches("idle"))
-  let separators = useSelector(generateActor, (x) => x.context.separators)
-  let phrases = useSelector(generateActor, (x) => x.context.phrases)
-  let hasOutput = isIdle && separators && phrases
+
+  let phraseCount = generateActor.getSnapshot()!.context.count
+  let separator = generateActor.getSnapshot()!.context.separatorKind
+  // let isIdle = generateActor.getSnapshot()!.matches("idle")
+  // let separators = generateActor.getSnapshot()!.context.separators
+  // let phrases = generateActor.getSnapshot()!.context.phrases
+  // let hasOutput = isIdle && separators && phrases
 
   let navToGeneratedPage = false
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: Event) {
     generateActor.send("GENERATE")
 
     //
@@ -46,68 +44,44 @@ function GenerateImpl() {
     }
   }
 
-  function handlePhraseCountChange(value: number) {
-    generateActor.send({ type: "SET_COUNT", value })
-  }
-
-  function handleSeparatorChange(value: string) {
-    generateActor.send({ type: "SET_SEP", value })
-  }
-
   return (
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
-      <fieldset>
+      <fieldset
+        onChange={(e) => {
+          // generateActor.send({ type: "SET_COUNT", value: e.target.value })
+        }}
+      >
         <legend id={countId}>Word count</legend>
         <RadioGroup
-          className={styles.baseRadioGroupContainer}
-          labelledBy={countId}
-          name="phrase-count"
-          onChange={handlePhraseCountChange}
+          class={styles.baseRadioGroupContainer}
           value={phraseCount}
+          name="phrase-count"
+          labelledBy={countId}
         >
-          {WORD_COUNT_OPTS.map((opt) => {
-            return (
-              <Radio
-                id={opt.id}
-                label={opt.label}
-                value={opt.value as unknown as string}
-                key={opt.id}
-              >
-                <span>{opt.label}</span>
-              </Radio>
-            )
-          })}
+          {WORD_COUNT_OPTS}
         </RadioGroup>
       </fieldset>
 
-      <fieldset>
+      <fieldset
+        onChange={(e) => {
+          // generateActor.send({ type: "SET_SEP", value: e.target.value })
+        }}
+      >
         <legend id={separatorId}>Phrase separator</legend>
         <RadioGroup
-          className={styles.baseRadioGroupContainer}
-          labelledBy={separatorId}
-          name="separator"
-          onChange={handleSeparatorChange}
+          class={styles.baseRadioGroupContainer}
           value={separator}
+          name="separator"
+          labelledBy={separatorId}
         >
-          {SEPARATOR_OPTS.map((opt) => {
-            return (
-              <Radio
-                id={opt.id}
-                label={opt.label}
-                value={opt.value as unknown as string}
-                key={opt.id}
-              >
-                <span>{opt.label}</span>
-              </Radio>
-            )
-          })}
+          {SEPARATOR_OPTS}
         </RadioGroup>
       </fieldset>
 
       <button className={styles.generateBtn} type="submit">
         Generate
       </button>
-      {hasOutput && (
+      {/* {hasOutput && (
         <PhraseOutput
           separators={separators}
           phrases={phrases}
@@ -115,7 +89,7 @@ function GenerateImpl() {
             generateActor.send("COPY_PHRASE")
           }}
         />
-      )}
+      )} */}
     </form>
   )
 }

@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState, Fragment, memo } from "react"
-
 import { Nothing } from "../components/nothing"
 import { useSpring } from "../lib/use-spring"
 import { useAriaLive } from "../lib/a11y/use-aria-live"
 
 import * as styles from "./phrase-output.css"
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js"
 
 let SPRING_CONFIG = { stiffness: 230, damping: 12, mass: 0.4, decimals: 2 }
 
@@ -17,10 +16,10 @@ function PhraseOutput({
   separators: string[]
   handleCopyPress: () => void
 }) {
-  let [status, setStatus] = useState<"idle" | "hidden" | "copy" | "copied">(
+  let [status, setStatus] = createSignal<"idle" | "hidden" | "copy" | "copied">(
     "idle"
   )
-  let toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  let toastTimerRef: ReturnType<typeof setTimeout>
   let phrasesExist = !!phrases.length
 
   function hideToast() {
@@ -28,8 +27,8 @@ function PhraseOutput({
   }
 
   function clearDismissTimer() {
-    if (toastTimerRef.current) {
-      clearTimeout(toastTimerRef.current)
+    if (toastTimerRef) {
+      clearTimeout(toastTimerRef)
     }
   }
 
@@ -39,17 +38,17 @@ function PhraseOutput({
     handleCopyPress()
     setStatus("copied")
 
-    toastTimerRef.current = setTimeout(hideToast, 4000)
+    toastTimerRef = setTimeout(hideToast, 4000)
   }
 
   /* Ensure cleanup */
-  useEffect(() => () => {
+  onCleanup(() => {
     clearDismissTimer()
   })
 
   return (
     <div>
-      <Help status={status} />
+      <Help status={status()} />
       <button
         type="button"
         aria-label="Copy passphrase to clipboard"
@@ -72,10 +71,10 @@ function PhraseOutput({
             let sep = separators[index]
 
             return (
-              <Fragment key={`${phrase}-${sep}-${index}`}>
+              <>
                 <Word content={phrase} offset={offset} />
                 {isLast ? <Nothing /> : <Word content={sep} offset={offset} />}
-              </Fragment>
+              </>
             )
           })}
         </div>
@@ -92,19 +91,19 @@ function PhraseOutput({
  * 3. dimisses after a short period
  */
 function Help({ status }: { status: "idle" | "hidden" | "copy" | "copied" }) {
-  let [vertTranslate, setVertTranslate] = useState(-0.6)
-  let sprungTrans = useSpring(vertTranslate, SPRING_CONFIG)[0]
+  let [vertTranslate, setVertTranslate] = createSignal(-0.6)
+  let sprungTrans = useSpring(vertTranslate(), SPRING_CONFIG)[0]
   let { polite } = useAriaLive()
 
-  useEffect(() => {
+  createEffect(() => {
     if (status === "hidden" || status === "idle") {
       setVertTranslate(-0.6)
     } else if (status === "copy" || status === "copied") {
       setVertTranslate(0)
     }
-  }, [status])
+  })
 
-  useEffect(() => {
+  createEffect(() => {
     if (status === "copy") {
       polite("Copy to clipboard")
     }
@@ -112,7 +111,7 @@ function Help({ status }: { status: "idle" | "hidden" | "copy" | "copied" }) {
     if (status === "copied") {
       polite("Copied to clipboard")
     }
-  }, [status])
+  })
 
   let hasContent = status === "copied" || status === "copy"
 
@@ -144,9 +143,9 @@ function Help({ status }: { status: "idle" | "hidden" | "copy" | "copied" }) {
 }
 
 function Word({ content, offset }: { content: string; offset: number }) {
-  let [arrived, setArrived] = useState(false)
+  let [arrived, setArrived] = createSignal(false)
 
-  useEffect(() => {
+  onMount(() => {
     let handle = setTimeout(() => {
       setArrived(true)
     }, offset)
@@ -156,19 +155,12 @@ function Word({ content, offset }: { content: string; offset: number }) {
         clearTimeout(handle)
       }
     }
-  }, [])
+  })
 
   return (
-    <div className={styles.word} style={{ opacity: arrived ? 1 : 0 }}>
+    <div className={styles.word} style={{ opacity: arrived() ? 1 : 0 }}>
       {content.split("").map((char, index) => {
-        return (
-          <Char
-            arrived={arrived}
-            offset={index * 22}
-            key={`${index}-${char}`}
-            content={char}
-          />
-        )
+        return <Char arrived={arrived()} offset={index * 22} content={char} />
       })}
     </div>
   )
@@ -183,10 +175,10 @@ function Char({
   offset: number
   arrived: boolean
 }) {
-  let [verticalTranslate, setVerticalTranslate] = useState(36)
-  let [sprungTrans] = useSpring(verticalTranslate, SPRING_CONFIG)
+  let [verticalTranslate, setVerticalTranslate] = createSignal(36)
+  let [sprungTrans] = useSpring(verticalTranslate(), SPRING_CONFIG)
 
-  useEffect(() => {
+  createEffect(() => {
     let handle = setTimeout(() => {
       if (arrived) {
         setVerticalTranslate(0)
@@ -198,9 +190,9 @@ function Char({
         clearTimeout(handle)
       }
     }
-  }, [arrived])
+  })
 
-  let unanimated = verticalTranslate === 36
+  let unanimated = verticalTranslate() === 36
 
   return (
     <span
@@ -215,5 +207,4 @@ function Char({
   )
 }
 
-let _PhraseOutput = memo(PhraseOutput)
-export { _PhraseOutput as PhraseOutput }
+export { PhraseOutput }

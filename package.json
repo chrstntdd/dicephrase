@@ -14,6 +14,7 @@
     "@xstate/react": "^1.6.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "solid-js": "^1.2.6",
     "xstate": "^4.26.1"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "rescript": "^9.1.4",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",
+    "vite-plugin-solid": "^2.1.4",
     "ws": "^8.4.0"
   }
 }

@@ -42,6 +42,11 @@ function PhraseOutput({
     toastTimerRef.current = setTimeout(hideToast, 4000)
   }
 
+  /* Ensure cleanup */
+  useEffect(() => () => {
+    clearDismissTimer()
+  })
+
   return (
     <div>
       <Help status={status} />
@@ -155,8 +160,7 @@ function Word({ content, offset }: { content: string; offset: number }) {
 
   return (
     <div className={styles.word} style={{ opacity: arrived ? 1 : 0 }}>
-      {/* TODO: figure out why the fallback is needed when generating a shorter phrase after a longer one */}
-      {(content || "").split("").map((char, index) => {
+      {content.split("").map((char, index) => {
         return (
           <Char
             arrived={arrived}

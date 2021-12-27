@@ -1,9 +1,9 @@
-import { useState } from "react"
 import type { FormEvent } from "react"
+import { useSelector } from "@xstate/react"
 
 import { RadioGroup, Radio } from "../components/rad-group"
-import { usePassphrase } from "../lib/use-passphrase"
 
+import { GenerateProvider, useGenerate } from "../features/generate"
 import { PhraseOutput } from "./phrase-output"
 import * as styles from "./generate.css"
 
@@ -26,23 +26,32 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
-function Generate() {
-  let [phraseCount, setPhraseCount] = useState(WORD_COUNT_OPTS[0].value)
-  let [separator, setSeparator] = useState(
-    SEPARATOR_OPTS[SEPARATOR_OPTS.length - 1].value
-  )
-
-  let [{ phrases, separators }, { generate, saveToClipboard }] = usePassphrase()
+function GenerateImpl() {
+  let generateActor = useGenerate()
+  let phraseCount = useSelector(generateActor, (x) => x.context.count)
+  let separator = useSelector(generateActor, (x) => x.context.separatorKind)
+  let isIdle = useSelector(generateActor, (x) => x.matches("idle"))
+  let separators = useSelector(generateActor, (x) => x.context.separators)
+  let phrases = useSelector(generateActor, (x) => x.context.phrases)
+  let hasOutput = isIdle && separators && phrases
 
   let navToGeneratedPage = false
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    generate(e.currentTarget)
+    generateActor.send("GENERATE")
 
     //
     if (!navToGeneratedPage) {
       e.preventDefault()
     }
+  }
+
+  function handlePhraseCountChange(value: number) {
+    generateActor.send({ type: "SET_COUNT", value })
+  }
+
+  function handleSeparatorChange(value: string) {
+    generateActor.send({ type: "SET_SEP", value })
   }
 
   return (
@@ -53,7 +62,7 @@ function Generate() {
           className={styles.baseRadioGroupContainer}
           labelledBy={countId}
           name="phrase-count"
-          onChange={setPhraseCount}
+          onChange={handlePhraseCountChange}
           value={phraseCount}
         >
           {WORD_COUNT_OPTS.map((opt) => {
@@ -77,7 +86,7 @@ function Generate() {
           className={styles.baseRadioGroupContainer}
           labelledBy={separatorId}
           name="separator"
-          onChange={setSeparator}
+          onChange={handleSeparatorChange}
           value={separator}
         >
           {SEPARATOR_OPTS.map((opt) => {
@@ -98,14 +107,24 @@ function Generate() {
       <button className={styles.generateBtn} type="submit">
         Generate
       </button>
-      {separators && phrases && (
+      {hasOutput && (
         <PhraseOutput
-          handleCopyPress={saveToClipboard}
           separators={separators}
           phrases={phrases}
+          handleCopyPress={() => {
+            generateActor.send("COPY_PHRASE")
+          }}
         />
       )}
     </form>
+  )
+}
+
+function Generate() {
+  return (
+    <GenerateProvider>
+      <GenerateImpl />
+    </GenerateProvider>
   )
 }
 

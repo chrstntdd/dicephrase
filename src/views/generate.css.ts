@@ -16,10 +16,17 @@ export const generateBtn = style({
 
   padding: vars.space["4x"],
   transition: "background 200ms ease-in-out",
+
+  "@media": {
+    "not all and (hover: none)": {
+      selectors: {
+        "&:hover": {
+          background: vars.color["teal-900"]
+        }
+      }
+    }
+  },
   selectors: {
-    "&:hover": {
-      background: vars.color["teal-900"]
-    },
     "&:focus": {
       background: vars.color["teal-900"],
       borderColor: vars.color["teal-900"]
@@ -91,6 +98,11 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   padding: vars.space["3x"]
 })
 
+globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
+  background: vars.color["teal-800"],
+  color: vars.color["teal-100"]
+})
+
 globalStyle(`${baseRadioGroupContainer} label`, {
   width: "100%",
   textAlign: "center",
@@ -104,7 +116,11 @@ globalStyle(`${baseRadioGroupContainer} label`, {
 })
 
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:hover`, {
-  background: vars.color["teal-900"]
+  "@media": {
+    "not all and (hover: none)": {
+      background: vars.color["teal-900"]
+    }
+  }
 })
 
 globalStyle(`${baseRadioGroupContainer} > *`, {
@@ -115,11 +131,6 @@ globalStyle(`${baseRadioGroupContainer} > *`, {
 })
 globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
   marginRight: vars.space["1x"]
-})
-
-globalStyle(`${baseRadioGroupContainer} [data-checked='true'] `, {
-  background: vars.color["teal-800"],
-  color: vars.color["teal-100"]
 })
 
 globalStyle(

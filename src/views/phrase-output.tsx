@@ -1,20 +1,15 @@
-import { Nothing } from "../components/nothing"
-import { useSpring } from "../lib/use-spring"
-import { useAriaLive } from "../lib/a11y/use-aria-live"
-
-import * as styles from "./phrase-output.css"
 import {
   createEffect,
-  createMemo,
   createSignal,
   For,
   Match,
   onCleanup,
-  onMount,
   Switch
 } from "solid-js"
+import { Nothing } from "../components/nothing"
+import { useAriaLive } from "../lib/a11y/use-aria-live"
 
-let SPRING_CONFIG = { stiffness: 230, damping: 12, mass: 0.4, decimals: 2 }
+import * as styles from "./phrase-output.css"
 
 function PhraseOutput(props: {
   phrases: string[]
@@ -46,7 +41,6 @@ function PhraseOutput(props: {
     toastTimerRef = setTimeout(hideToast, 4000)
   }
 
-  /* Ensure cleanup */
   onCleanup(() => {
     clearDismissTimer()
   })
@@ -72,18 +66,13 @@ function PhraseOutput(props: {
         <div class={styles.phrases}>
           <For each={props.phrases}>
             {(phrase, index) => {
-              let offset = index() * 17
               let isLast = index() === props.phrases.length - 1
               let sep = props.separators[index()]
 
               return (
                 <>
-                  <Word content={phrase} offset={offset} />
-                  {isLast ? (
-                    <Nothing />
-                  ) : (
-                    <Word content={sep} offset={offset} />
-                  )}
+                  <Word content={phrase} />
+                  {isLast ? <Nothing /> : <Word content={sep} />}
                 </>
               )
             }}
@@ -103,7 +92,6 @@ function PhraseOutput(props: {
  */
 function Help(props: { status: "idle" | "hidden" | "copy" | "copied" }) {
   let [vertTranslate, setVertTranslate] = createSignal(-0.6)
-  // let sprungTrans = useSpring(vertTranslate(), SPRING_CONFIG)[0]
   let { polite } = useAriaLive()
 
   createEffect(() => {
@@ -124,15 +112,10 @@ function Help(props: { status: "idle" | "hidden" | "copy" | "copied" }) {
     }
   })
 
-  let hasContent = createMemo(
-    () => props.status === "copied" || props.status === "copy"
-  )
-
   return (
     <div
       class={styles.helpText}
       style={{ transform: `translate(-50%, ${vertTranslate()}rem)` }}
-      hidden={!hasContent()}
     >
       <Switch fallback={<Nothing />}>
         <Match when={props.status === "copy"}>
@@ -157,63 +140,21 @@ function Help(props: { status: "idle" | "hidden" | "copy" | "copied" }) {
   )
 }
 
-function Word(props: { content: string; offset: number }) {
-  let [arrived, setArrived] = createSignal(false)
-
-  onMount(() => {
-    let handle = setTimeout(() => {
-      setArrived(true)
-    }, props.offset)
-
-    return () => {
-      if (handle) {
-        clearTimeout(handle)
-      }
-    }
-  })
-
+function Word(props: { content: string }) {
   return (
-    <div class={styles.word} style={{ opacity: arrived() ? 1 : 0 }}>
+    <div class={styles.word}>
       <For each={props.content.split("")}>
-        {(char, index) => {
-          return (
-            <Char arrived={arrived()} offset={index() * 22} content={char} />
-          )
-        }}
+        {(char, index) => <Char offset={index() * 22} content={char} />}
       </For>
     </div>
   )
 }
 
-function Char(props: { content: string; offset: number; arrived: boolean }) {
-  // let [verticalTranslate, setVerticalTranslate] = createSignal(36)
-  // let sprungTrans = useSpring(verticalTranslate(), SPRING_CONFIG)[0]
-
-  // createEffect(() => {
-  //   let handle = setTimeout(() => {
-  //     if (props.arrived) {
-  //       setVerticalTranslate(0)
-  //     }
-  //   }, props.offset)
-
-  //   return () => {
-  //     if (handle) {
-  //       clearTimeout(handle)
-  //     }
-  //   }
-  // })
-
-  // let unanimated = createMemo(() => verticalTranslate() === 36)
-
+function Char(props: { content: string; offset: number }) {
   return (
     <span
       class={styles.phraseChar}
-      // style={
-      //   {
-      // transform: `translateY(${unanimated() ? 0 : sprungTrans}px)`
-      // opacity: unanimated() ? 0 : 1
-      //   }
-      // }
+      style={{ "animation-delay": `${props.offset}ms` }}
     >
       {props.content}
     </span>

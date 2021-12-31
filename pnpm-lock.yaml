@@ -5,7 +5,7 @@ specifiers:
   '@types/node': ^17.0.5
   '@vanilla-extract/css': ^1.6.8
   '@vanilla-extract/vite-plugin': ^3.1.2
-  '@xstate/inspect': ^0.5.2
+  '@xstate/inspect': ^0.6.0
   esbuild: ^0.14.9
   fastify: ^3.25.3
   fastify-compress: ^4.0.1
@@ -18,18 +18,18 @@ specifiers:
   vite: ^2.7.9
   vite-plugin-solid: ^2.1.4
   ws: ^8.4.0
-  xstate: ^4.26.1
+  xstate: ^4.27.0
 
 dependencies:
   '@badrap/valita': 0.1.0
   solid-js: 1.2.6
-  xstate: 4.26.1
+  xstate: 4.27.0
 
 devDependencies:
   '@types/node': 17.0.5
   '@vanilla-extract/css': 1.6.8
   '@vanilla-extract/vite-plugin': 3.1.2_vite@2.7.9
-  '@xstate/inspect': 0.5.2_ws@8.4.0
+  '@xstate/inspect': 0.6.0_ws@8.4.0
   esbuild: 0.14.9
   fastify: 3.25.3
   fastify-compress: 4.0.1
@@ -415,10 +415,14 @@ packages:
       - ts-node
     dev: true
 
-  /@xstate/inspect/0.5.2_ws@8.4.0:
-    resolution: {integrity: sha512-DdqUPiKaHW6VpnVZcm8YMD8LBeS3B9bB3+VT/6VEyilgvf2MgYzho2dKOOkeZM0iDEadSmzGdDpz0jh7DSpMXQ==}
+  /@xstate/inspect/0.6.0_ws@8.4.0:
+    resolution: {integrity: sha512-MZgcFUurpgrjLzDDb+2KYp8GhSeJ5UtzTDa486x0es0xwCr0MFT9euD1xu0xqYH9b5UFY66LWt7AbMpZjgB+kw==}
     peerDependencies:
-      ws: ^7.3.1
+      '@types/ws': ^8.0.0
+      ws: ^8.0.0
+    peerDependenciesMeta:
+      '@types/ws':
+        optional: true
     dependencies:
       fast-safe-stringify: 2.1.1
       ws: 8.4.0
@@ -1929,8 +1933,8 @@ packages:
         optional: true
     dev: true
 
-  /xstate/4.26.1:
-    resolution: {integrity: sha512-JLofAEnN26l/1vbODgsDa+Phqa61PwDlxWu8+2pK+YbXf+y9pQSDLRvcYH2H1kkeUBA5fGp+xFL/zfE8jNMw4g==}
+  /xstate/4.27.0:
+    resolution: {integrity: sha512-ohOwDM9tViC/zSSmY9261CHblDPqiaAk5vyjVbi69uJv9fGWMzlm0VDQwM2OvC61GKfXVBeuWSMkL7LPUsTpfA==}
     dev: false
 
   /xtend/4.0.2:

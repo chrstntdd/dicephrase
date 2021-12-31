@@ -44,5 +44,6 @@ export const helpText = style({
   left: "50%",
   bottom: `calc(-1.2 * ${vars.fontSize["2x"]})`,
   whiteSpace: "nowrap",
-  willChange: "transform"
+  willChange: "transform",
+  transition: "transform 200ms ease-in-out"
 })

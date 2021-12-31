@@ -9,7 +9,7 @@ const GenCtx = createContext<ActorRefFrom<typeof generateMachine>>(
   undefined as any
 )
 
-function GenerateProvider(props: { children: ReactNode }) {
+function GenerateProvider(props: { children: any }) {
   let m = useMachine(generateMachine, { devTools: true })
 
   let actor = createMemo(() => m[2])

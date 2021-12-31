@@ -1,4 +1,4 @@
-import { onCleanup, batch } from "solid-js"
+import { onCleanup, batch, startTransition } from "solid-js"
 import { createStore } from "solid-js/store"
 import { interpret } from "xstate"
 import type { StateMachine, EventObject } from "xstate"

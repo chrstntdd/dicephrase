@@ -10,21 +10,19 @@ function RadioGroup(props: {
   return (
     <div
       aria-labelledby={props.labelledBy}
-      role="radiogroup"
       class={props.class}
+      role="radiogroup"
     >
       <For each={props.children}>
-        {(kid, i) => {
-          return (
-            <Radio
-              label={kid.label}
-              value={kid.value}
-              name={props.name}
-              id={`${props.name}-${i()}`}
-              checked={props.value == kid.value}
-            />
-          )
-        }}
+        {(kid, i) => (
+          <Radio
+            checked={props.value == kid.value}
+            id={`${props.name}-${i()}`}
+            label={kid.label}
+            name={props.name}
+            value={kid.value}
+          />
+        )}
       </For>
     </div>
   )
@@ -45,7 +43,7 @@ function Radio(props: {
         checked={props.checked}
         id={props.id}
         name={props.name}
-        value={props.id}
+        value={props.value}
       />
     </div>
   )

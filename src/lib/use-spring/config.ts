@@ -10,22 +10,22 @@ export function useSpringInstance(target: number, config: Config): Instance {
 
 export function getConfigWithDefaults(
   target: number,
-  { stiffness, damping, mass, decimals, teleport }: Config
+  cfg: Config
 ): InstanceConfig {
   return {
     X: target,
-    k: stiffness ?? 170,
-    c: damping ?? 26,
-    m: mass ?? 1,
-    teleport: teleport ?? false,
-    decimals: decimals ?? 2
+    k: cfg.stiffness ?? 170,
+    c: cfg.damping ?? 26,
+    m: cfg.mass ?? 1,
+    teleport: cfg.teleport ?? false,
+    decimals: cfg.decimals ?? 2
   }
 }
 
-function getInitialState(target: number, { from, initialSpeed }: Config) {
+function getInitialState(target: number, cfg: Config) {
   return {
-    x0: from ?? target,
-    v0: initialSpeed ?? 0,
+    x0: cfg.from ?? target,
+    v0: cfg.initialSpeed ?? 0,
     t0: currentTime(),
     raf: null
   }

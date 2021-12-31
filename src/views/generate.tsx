@@ -1,7 +1,12 @@
 import { RadioGroup } from "../components/radio-group"
 
-import { GenerateProvider, useGenerate } from "../features/generate"
-// import { PhraseOutput } from "./phrase-output"
+import { number } from "@badrap/valita"
+import { createMemo, Show } from "solid-js"
+
+import { generateMachine } from "../features/generate/generate.machine"
+import { PhraseOutput } from "./phrase-output"
+import { useMachine } from "../lib/solid-xstate/use-machine"
+
 import * as styles from "./generate.css"
 
 const countId = "word-count-gr"
@@ -23,20 +28,21 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
-function GenerateImpl() {
-  let generateActor = useGenerate()
+let countDecoder = number()
 
-  let phraseCount = generateActor.getSnapshot()!.context.count
-  let separator = generateActor.getSnapshot()!.context.separatorKind
-  // let isIdle = generateActor.getSnapshot()!.matches("idle")
-  // let separators = generateActor.getSnapshot()!.context.separators
-  // let phrases = generateActor.getSnapshot()!.context.phrases
-  // let hasOutput = isIdle && separators && phrases
+function Generate() {
+  let [state, send] = useMachine(generateMachine, { devTools: true })
+
+  let phraseCount = createMemo(() => state.context.count)
+  let separator = createMemo(() => state.context.separatorKind)
+  let separators = createMemo(() => state.context.separators)
+  let phrases = createMemo(() => state.context.phrases)
+  let hasOutput = createMemo(() => state.context.wlRecord)
 
   let navToGeneratedPage = false
 
   function handleSubmit(e: Event) {
-    generateActor.send("GENERATE")
+    send("GENERATE")
 
     //
     if (!navToGeneratedPage) {
@@ -48,13 +54,15 @@ function GenerateImpl() {
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
-          // generateActor.send({ type: "SET_COUNT", value: e.target.value })
+          let rawVal = parseInt(e.target.value, 10)
+          let value = countDecoder.parse(rawVal)
+          send({ type: "SET_COUNT", value })
         }}
       >
         <legend id={countId}>Word count</legend>
         <RadioGroup
           class={styles.baseRadioGroupContainer}
-          value={phraseCount}
+          value={phraseCount()}
           name="phrase-count"
           labelledBy={countId}
         >
@@ -64,13 +72,13 @@ function GenerateImpl() {
 
       <fieldset
         onChange={(e) => {
-          // generateActor.send({ type: "SET_SEP", value: e.target.value })
+          send({ type: "SET_SEP", value: e.target.value })
         }}
       >
         <legend id={separatorId}>Phrase separator</legend>
         <RadioGroup
           class={styles.baseRadioGroupContainer}
-          value={separator}
+          value={separator()}
           name="separator"
           labelledBy={separatorId}
         >
@@ -81,24 +89,16 @@ function GenerateImpl() {
       <button className={styles.generateBtn} type="submit">
         Generate
       </button>
-      {/* {hasOutput && (
+      <Show when={hasOutput()}>
         <PhraseOutput
-          separators={separators}
-          phrases={phrases}
+          separators={separators()}
+          phrases={phrases()}
           handleCopyPress={() => {
-            generateActor.send("COPY_PHRASE")
+            send("COPY_PHRASE")
           }}
         />
-      )} */}
+      </Show>
     </form>
-  )
-}
-
-function Generate() {
-  return (
-    <GenerateProvider>
-      <GenerateImpl />
-    </GenerateProvider>
   )
 }
 

@@ -82,7 +82,9 @@ let generateMachine = mod.createMachine(
             target: "generating",
             actions: [assignSep]
           },
-          COPY_PHRASE: "copying"
+          COPY_PHRASE: {
+            target: "copying"
+          }
         }
       },
 

@@ -3,15 +3,20 @@ import { useSpring } from "../lib/use-spring"
 import { useAriaLive } from "../lib/a11y/use-aria-live"
 
 import * as styles from "./phrase-output.css"
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js"
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  Match,
+  onCleanup,
+  onMount,
+  Switch
+} from "solid-js"
 
 let SPRING_CONFIG = { stiffness: 230, damping: 12, mass: 0.4, decimals: 2 }
 
-function PhraseOutput({
-  phrases,
-  separators,
-  handleCopyPress
-}: {
+function PhraseOutput(props: {
   phrases: string[]
   separators: string[]
   handleCopyPress: () => void
@@ -20,7 +25,7 @@ function PhraseOutput({
     "idle"
   )
   let toastTimerRef: ReturnType<typeof setTimeout>
-  let phrasesExist = !!phrases.length
+  let phrasesExist = !!props.phrases.length
 
   function hideToast() {
     setStatus("hidden")
@@ -35,7 +40,7 @@ function PhraseOutput({
   function handleCopyPhrase() {
     clearDismissTimer()
 
-    handleCopyPress()
+    props.handleCopyPress()
     setStatus("copied")
 
     toastTimerRef = setTimeout(hideToast, 4000)
@@ -52,7 +57,7 @@ function PhraseOutput({
       <button
         type="button"
         aria-label="Copy passphrase to clipboard"
-        className={styles.pressable}
+        class={styles.pressable}
         hidden={!phrasesExist}
         tabIndex={phrasesExist ? 0 : -1}
         onFocus={() => {
@@ -64,19 +69,25 @@ function PhraseOutput({
         }}
         onClick={phrasesExist ? handleCopyPhrase : undefined}
       >
-        <div className={styles.phrases}>
-          {phrases.map((phrase, index) => {
-            let offset = index * 17
-            let isLast = index === phrases.length - 1
-            let sep = separators[index]
+        <div class={styles.phrases}>
+          <For each={props.phrases}>
+            {(phrase, index) => {
+              let offset = index() * 17
+              let isLast = index() === props.phrases.length - 1
+              let sep = props.separators[index()]
 
-            return (
-              <>
-                <Word content={phrase} offset={offset} />
-                {isLast ? <Nothing /> : <Word content={sep} offset={offset} />}
-              </>
-            )
-          })}
+              return (
+                <>
+                  <Word content={phrase} offset={offset} />
+                  {isLast ? (
+                    <Nothing />
+                  ) : (
+                    <Word content={sep} offset={offset} />
+                  )}
+                </>
+              )
+            }}
+          </For>
         </div>
       </button>
     </div>
@@ -90,65 +101,69 @@ function PhraseOutput({
  * 2. obvs indicates the act of copying
  * 3. dimisses after a short period
  */
-function Help({ status }: { status: "idle" | "hidden" | "copy" | "copied" }) {
+function Help(props: { status: "idle" | "hidden" | "copy" | "copied" }) {
   let [vertTranslate, setVertTranslate] = createSignal(-0.6)
-  let sprungTrans = useSpring(vertTranslate(), SPRING_CONFIG)[0]
+  // let sprungTrans = useSpring(vertTranslate(), SPRING_CONFIG)[0]
   let { polite } = useAriaLive()
 
   createEffect(() => {
-    if (status === "hidden" || status === "idle") {
+    if (props.status === "hidden" || props.status === "idle") {
       setVertTranslate(-0.6)
-    } else if (status === "copy" || status === "copied") {
+    } else if (props.status === "copy" || props.status === "copied") {
       setVertTranslate(0)
     }
   })
 
   createEffect(() => {
-    if (status === "copy") {
+    if (props.status === "copy") {
       polite("Copy to clipboard")
     }
 
-    if (status === "copied") {
+    if (props.status === "copied") {
       polite("Copied to clipboard")
     }
   })
 
-  let hasContent = status === "copied" || status === "copy"
+  let hasContent = createMemo(
+    () => props.status === "copied" || props.status === "copy"
+  )
 
   return (
     <div
-      className={styles.helpText}
-      style={{ transform: `translate(-50%, ${sprungTrans}rem)` }}
-      hidden={!hasContent}
+      class={styles.helpText}
+      style={{ transform: `translate(-50%, ${vertTranslate()}rem)` }}
+      hidden={!hasContent()}
     >
-      {status === "copy" ? (
-        <>
-          Copy to clipboard{" "}
-          <span role="img" aria-label="clipboard">
-            📋
-          </span>
-        </>
-      ) : status === "copied" ? (
-        <>
-          Copied to clipboard{" "}
-          <span role="img" aria-label="memo">
-            📝
-          </span>
-        </>
-      ) : (
-        <Nothing />
-      )}
+      <Switch fallback={<Nothing />}>
+        <Match when={props.status === "copy"}>
+          <>
+            Copy to clipboard
+            <span role="img" aria-label="clipboard">
+              📋
+            </span>
+          </>
+        </Match>
+
+        <Match when={props.status === "copied"}>
+          <>
+            Copied to clipboard
+            <span role="img" aria-label="memo">
+              📝
+            </span>
+          </>
+        </Match>
+      </Switch>
     </div>
   )
 }
 
-function Word({ content, offset }: { content: string; offset: number }) {
+function Word(props: { content: string; offset: number }) {
   let [arrived, setArrived] = createSignal(false)
 
   onMount(() => {
     let handle = setTimeout(() => {
       setArrived(true)
-    }, offset)
+    }, props.offset)
 
     return () => {
       if (handle) {
@@ -158,51 +173,49 @@ function Word({ content, offset }: { content: string; offset: number }) {
   })
 
   return (
-    <div className={styles.word} style={{ opacity: arrived() ? 1 : 0 }}>
-      {content.split("").map((char, index) => {
-        return <Char arrived={arrived()} offset={index * 22} content={char} />
-      })}
+    <div class={styles.word} style={{ opacity: arrived() ? 1 : 0 }}>
+      <For each={props.content.split("")}>
+        {(char, index) => {
+          return (
+            <Char arrived={arrived()} offset={index() * 22} content={char} />
+          )
+        }}
+      </For>
     </div>
   )
 }
 
-function Char({
-  content,
-  offset,
-  arrived
-}: {
-  content: string
-  offset: number
-  arrived: boolean
-}) {
-  let [verticalTranslate, setVerticalTranslate] = createSignal(36)
-  let [sprungTrans] = useSpring(verticalTranslate(), SPRING_CONFIG)
+function Char(props: { content: string; offset: number; arrived: boolean }) {
+  // let [verticalTranslate, setVerticalTranslate] = createSignal(36)
+  // let sprungTrans = useSpring(verticalTranslate(), SPRING_CONFIG)[0]
 
-  createEffect(() => {
-    let handle = setTimeout(() => {
-      if (arrived) {
-        setVerticalTranslate(0)
-      }
-    }, offset)
+  // createEffect(() => {
+  //   let handle = setTimeout(() => {
+  //     if (props.arrived) {
+  //       setVerticalTranslate(0)
+  //     }
+  //   }, props.offset)
 
-    return () => {
-      if (handle) {
-        clearTimeout(handle)
-      }
-    }
-  })
+  //   return () => {
+  //     if (handle) {
+  //       clearTimeout(handle)
+  //     }
+  //   }
+  // })
 
-  let unanimated = verticalTranslate() === 36
+  // let unanimated = createMemo(() => verticalTranslate() === 36)
 
   return (
     <span
-      className={styles.phraseChar}
-      style={{
-        transform: `translateY(${unanimated ? 0 : sprungTrans}px)`,
-        opacity: unanimated ? 0 : 1
-      }}
+      class={styles.phraseChar}
+      // style={
+      //   {
+      // transform: `translateY(${unanimated() ? 0 : sprungTrans}px)`
+      // opacity: unanimated() ? 0 : 1
+      //   }
+      // }
     >
-      {content}
+      {props.content}
     </span>
   )
 }

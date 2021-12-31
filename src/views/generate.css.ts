@@ -16,10 +16,16 @@ export const generateBtn = style({
 
   padding: vars.space["4x"],
   transition: "background 200ms ease-in-out",
+  "@media": {
+    "not all and (hover: none)": {
+      selectors: {
+        "&:hover": {
+          background: vars.color["teal-900"]
+        }
+      }
+    }
+  },
   selectors: {
-    "&:hover": {
-      background: vars.color["teal-900"]
-    },
     "&:focus": {
       background: vars.color["teal-900"],
       borderColor: vars.color["teal-900"]
@@ -113,19 +119,12 @@ globalStyle(`${baseRadioGroupContainer} > *`, {
   borderColor: "transparent",
   borderWidth: "0"
 })
+
 globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
   marginRight: vars.space["1x"]
 })
 
-globalStyle(`${baseRadioGroupContainer} [data-checked='true'] `, {
+globalStyle(`${baseRadioGroupContainer} *:checked `, {
   background: vars.color["teal-800"],
   color: vars.color["teal-100"]
 })
-
-globalStyle(
-  `${baseRadioGroupContainer} [data-checked='true'] input[type='radio']`,
-  {
-    background: vars.color["teal-800"],
-    color: vars.color["teal-100"]
-  }
-)

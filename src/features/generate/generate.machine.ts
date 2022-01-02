@@ -1,5 +1,9 @@
 import { assign } from "xstate"
 import { createModel } from "xstate/lib/model"
+import type { ModelContextFrom } from "xstate/lib/model.types"
+
+import { parseParamsToPhraseConfig } from "../../lib/decoders"
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 
 import {
   fetchWordList,
@@ -54,12 +58,33 @@ let assignGeneratedPhrases = mod.assign((ctx) => {
     phrases: makePhrases(ctx)
   }
 })
+let assignParamsFromQueryString = mod.assign((ctx) => {
+  let x = parseParamsToPhraseConfig(location.search)
+  return {
+    ...ctx,
+    separatorKind: x.sep,
+    count: x.count
+  }
+})
+function syncToUrl(ctx: ModelContextFrom<typeof mod>) {
+  const url = new URL(location as unknown as string)
+  url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
+  url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
+
+  history.pushState(msgWithoutPayload(), "", url)
+}
 
 let generateMachine = mod.createMachine(
   {
     id: "dice-gen",
-    initial: "empty",
+    initial: "syncing_from_url",
     states: {
+      syncing_from_url: {
+        always: {
+          actions: assignParamsFromQueryString,
+          target: "empty"
+        }
+      },
       empty: {
         on: {
           GENERATE: "generating",
@@ -150,7 +175,10 @@ let generateMachine = mod.createMachine(
             }
           },
           error: {},
-          combining: { type: "final", exit: assignGeneratedPhrases }
+          combining: {
+            type: "final",
+            exit: [assignGeneratedPhrases, syncToUrl]
+          }
         }
       }
     }

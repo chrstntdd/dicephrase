@@ -1,10 +1,10 @@
-import { RadioGroup } from "../components/radio-group"
-
-import * as v from "@badrap/valita"
 import { createMemo, Show, lazy, Suspense } from "solid-js"
+import * as v from "@badrap/valita"
 
+import { RadioGroup } from "../components/radio-group"
 import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "../features/generate/constants"
 
 import * as styles from "./generate.css"
 
@@ -66,7 +66,7 @@ function Generate() {
         <RadioGroup
           class={styles.baseRadioGroupContainer}
           value={phraseCount()}
-          name="phrase-count"
+          name={PHRASE_COUNT_KEY}
           labelledBy={countId}
         >
           {WORD_COUNT_OPTS}
@@ -82,7 +82,7 @@ function Generate() {
         <RadioGroup
           class={styles.baseRadioGroupContainer}
           value={separator()}
-          name="separator"
+          name={SEPARATOR_KEY}
           labelledBy={separatorId}
         >
           {SEPARATOR_OPTS}

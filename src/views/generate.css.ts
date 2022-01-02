@@ -33,11 +33,12 @@ export const generateBtn = style({
 export const formEl = style({
   display: "flex",
   flexDirection: "column",
-  maxWidth: "768px"
+  maxWidth: "768px",
+  margin: "0 auto"
 })
 
 globalStyle(`${formEl} fieldset`, {
-  marginBottom: between(remToPx("0.2rem"), remToPx("0.8rem"), "320px", "768px"),
+  marginBottom: between(remToPx("0.2rem"), remToPx("0.4rem"), "320px", "768px"),
   marginLeft: 0,
   marginRight: 0,
   border: "none",
@@ -47,13 +48,7 @@ globalStyle(`${formEl} fieldset`, {
 })
 
 globalStyle(`${formEl} > div:last-child`, {
-  marginTop: between(remToPx("0.4rem"), remToPx("1rem"), "320px", "768px")
-  // marginLeft: 0,
-  // marginRight: 0,
-  // border: "none",
-  // fontSize: vars.fontSize["0x"],
-  // fontWeight: 600,
-  // padding: vars.space["1x"]
+  marginTop: between(remToPx("0.4rem"), remToPx("0.6rem"), "320px", "768px")
 })
 
 export const baseRadioGroupContainer = style({

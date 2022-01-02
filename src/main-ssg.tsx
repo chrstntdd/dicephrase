@@ -3,15 +3,14 @@
  * Server side app entry to get a plain ol html string for prerendering
  * or just SSR.
  */
-import { renderToString } from "react-dom/server"
+import { renderToStringAsync, generateHydrationScript } from "solid-js/web"
 import { App } from "./app"
 
 async function render(url: string) {
-  let vnode = <App url={url} />
+  let html = await renderToStringAsync(() => <App url={url} />)
+  let hydrationScript = generateHydrationScript()
 
-  let html = renderToString(vnode)
-
-  return { html }
+  return { html, hydrationScript }
 }
 
 export { render }

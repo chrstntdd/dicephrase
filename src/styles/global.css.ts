@@ -16,7 +16,8 @@ globalStyle("*", {
   WebkitTouchCallout: "none",
   backgroundColor: "transparent",
   fontSmooth: "antialiased",
-  position: "relative"
+  position: "relative",
+  background: vars.color["teal-1000"]
 })
 
 globalStyle("*, *:after, *:before", {

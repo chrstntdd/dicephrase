@@ -2,9 +2,6 @@ import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 import { between, remToPx } from "polished"
 
-globalStyle("*", {
-  background: vars.color["teal-1000"]
-})
 export const generateBtn = style({
   fontSize: vars.fontSize["1x"],
   borderColor: vars.color["teal-800"],
@@ -16,7 +13,6 @@ export const generateBtn = style({
 
   padding: vars.space["4x"],
   transition: "background 200ms ease-in-out",
-
   "@media": {
     "not all and (hover: none)": {
       selectors: {
@@ -42,7 +38,7 @@ export const formEl = style({
 })
 
 globalStyle(`${formEl} fieldset`, {
-  marginBottom: between(remToPx("0.2rem"), remToPx("0.8rem"), "320px", "768px"),
+  marginBottom: between(remToPx("0.2rem"), remToPx("0.4rem"), "320px", "768px"),
   marginLeft: 0,
   marginRight: 0,
   border: "none",
@@ -52,13 +48,7 @@ globalStyle(`${formEl} fieldset`, {
 })
 
 globalStyle(`${formEl} > div:last-child`, {
-  marginTop: between(remToPx("0.4rem"), remToPx("1rem"), "320px", "768px")
-  // marginLeft: 0,
-  // marginRight: 0,
-  // border: "none",
-  // fontSize: vars.fontSize["0x"],
-  // fontWeight: 600,
-  // padding: vars.space["1x"]
+  marginTop: between(remToPx("0.4rem"), remToPx("0.6rem"), "320px", "768px")
 })
 
 export const baseRadioGroupContainer = style({
@@ -129,14 +119,12 @@ globalStyle(`${baseRadioGroupContainer} > *`, {
   borderColor: "transparent",
   borderWidth: "0"
 })
+
 globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
   marginRight: vars.space["1x"]
 })
 
-globalStyle(
-  `${baseRadioGroupContainer} [data-checked='true'] input[type='radio']`,
-  {
-    background: vars.color["teal-800"],
-    color: vars.color["teal-100"]
-  }
-)
+globalStyle(`${baseRadioGroupContainer} *:checked `, {
+  background: vars.color["teal-800"],
+  color: vars.color["teal-100"]
+})

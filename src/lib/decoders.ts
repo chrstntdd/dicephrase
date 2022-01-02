@@ -1,19 +1,14 @@
 import * as v from "@badrap/valita"
 
 const phraseConfigSchema = v.object({
-  count: v
-    .number()
-    .assert((n) => n >= 6 && n <= 10)
-    .default(8),
-  sep: v
-    .union(
-      v.literal("\u00a0"),
-      v.literal("-"),
-      v.literal("."),
-      v.literal("$"),
-      v.literal("random")
-    )
-    .default("random")
+  count: v.number().assert((n) => n >= 6 && n <= 10),
+  sep: v.union(
+    v.literal("\u00a0"),
+    v.literal("-"),
+    v.literal("."),
+    v.literal("$"),
+    v.literal("random")
+  )
 })
 
 type PhraseConfig = v.Infer<typeof phraseConfigSchema>
@@ -32,10 +27,17 @@ function parseParamsToPhraseConfig(
   let count = +params.get("phrase-count")!
   let sep = params.get("separator")
 
-  return phraseConfigSchema.parse({
-    count,
-    sep
-  })
+  try {
+    return phraseConfigSchema.parse({
+      count,
+      sep
+    })
+  } catch (error) {
+    return {
+      count: 8,
+      sep: "random"
+    }
+  }
 }
 
 export { parseParamsToPhraseConfig }

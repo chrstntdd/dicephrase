@@ -1,6 +1,6 @@
-import type { HTMLProps } from "react"
+import type { JSX } from "solid-js/jsx-runtime"
 
-interface SkipToContentLinkProps extends HTMLProps<HTMLAnchorElement> {
+interface SkipToContentLinkProps {
   children?: JSX.Element
   contentId: string
 }

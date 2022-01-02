@@ -1,8 +1,10 @@
-import { Generate } from "./views/generate"
-import { GeneratedOutput } from "./views/generated-output"
-import { OfflineToast } from "./lib/offline-toast"
-import { Nothing } from "./components/nothing"
+import { lazy, Suspense, Switch, Match } from "solid-js"
+
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
+
+const Generate = lazy(() => import("./views/generate"))
+const GeneratedOutput = lazy(() => import("./views/generated-output"))
+const OfflineToast = lazy(() => import("./lib/offline-toast"))
 
 import * as styles from "./app.css"
 
@@ -24,23 +26,36 @@ function App({ url }: { url: string }) {
 
       <SkipNavContent id={SKIP_NAV_ID} />
 
-      <main>
-        {url === "/generate" ? (
-          <Generate />
-        ) : /* Match query params for count and separator */
-        url === "/generated" ? (
-          <GeneratedOutput />
-        ) : (
-          <div>
-            Welcome! Start by generating a <a href="/generate">passphrase</a>
-          </div>
-        )}
-      </main>
-      {globalThis.navigator && "serviceWorker" in globalThis.navigator ? (
-        <OfflineToast />
-      ) : (
-        <Nothing />
-      )}
+      <Suspense>
+        <main>
+          <Switch
+            fallback={
+              <div>
+                Welcome! Start by generating a{" "}
+                <a href="/generate">passphrase</a>
+              </div>
+            }
+          >
+            <Match when={url === "/generate"}>
+              <Generate />
+            </Match>
+
+            <Match when={url === "/generated"}>
+              <GeneratedOutput />
+            </Match>
+          </Switch>
+        </main>
+
+        <Switch>
+          <Match
+            when={
+              globalThis.navigator && "serviceWorker" in globalThis.navigator
+            }
+          >
+            <OfflineToast />
+          </Match>
+        </Switch>
+      </Suspense>
     </div>
   )
 }

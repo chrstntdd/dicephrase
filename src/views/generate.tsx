@@ -1,11 +1,14 @@
-import { useState } from "react"
-import type { FormEvent } from "react"
+import { RadioGroup } from "../components/radio-group"
 
-import { RadioGroup, Radio } from "../components/rad-group"
-import { usePassphrase } from "../lib/use-passphrase"
+import { number } from "@badrap/valita"
+import { createMemo, Show, lazy, Suspense } from "solid-js"
 
-import { PhraseOutput } from "./phrase-output"
+import { generateMachine } from "../features/generate/generate.machine"
+import { useMachine } from "../lib/solid-xstate/use-machine"
+
 import * as styles from "./generate.css"
+
+const PhraseOutput = lazy(() => import("./phrase-output"))
 
 const countId = "word-count-gr"
 const separatorId = "separator-gr"
@@ -26,20 +29,22 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
-function Generate() {
-  let [phraseCount, setPhraseCount] = useState(WORD_COUNT_OPTS[0].value)
-  let [separator, setSeparator] = useState(
-    SEPARATOR_OPTS[SEPARATOR_OPTS.length - 1].value
-  )
+let countDecoder = number()
 
-  let [{ phrases, separators }, { generate, saveToClipboard }] = usePassphrase()
+function Generate() {
+  let [state, send] = useMachine(generateMachine, { devTools: true })
+
+  let phraseCount = createMemo(() => state.context.count)
+  let separator = createMemo(() => state.context.separatorKind)
+  let separators = createMemo(() => state.context.separators)
+  let phrases = createMemo(() => state.context.phrases)
+  let hasOutput = createMemo(() => state.context.wlRecord)
 
   let navToGeneratedPage = false
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    generate(e.currentTarget)
+  function handleSubmit(e: Event) {
+    send("GENERATE")
 
-    //
     if (!navToGeneratedPage) {
       e.preventDefault()
     }
@@ -47,66 +52,58 @@ function Generate() {
 
   return (
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
-      <fieldset>
+      <fieldset
+        onChange={(e) => {
+          let rawVal = parseInt(e.target.value, 10)
+          let value = countDecoder.parse(rawVal)
+          send({ type: "SET_COUNT", value })
+        }}
+      >
         <legend id={countId}>Word count</legend>
         <RadioGroup
-          className={styles.baseRadioGroupContainer}
-          labelledBy={countId}
+          class={styles.baseRadioGroupContainer}
+          value={phraseCount()}
           name="phrase-count"
-          onChange={setPhraseCount}
-          value={phraseCount}
+          labelledBy={countId}
         >
-          {WORD_COUNT_OPTS.map((opt) => {
-            return (
-              <Radio
-                id={opt.id}
-                label={opt.label}
-                value={opt.value as unknown as string}
-                key={opt.id}
-              >
-                <span>{opt.label}</span>
-              </Radio>
-            )
-          })}
+          {WORD_COUNT_OPTS}
         </RadioGroup>
       </fieldset>
 
-      <fieldset>
-        <legend id={separatorId}>Phrase separator</legend>
+      <fieldset
+        onChange={(e) => {
+          send({ type: "SET_SEP", value: e.target.value })
+        }}
+      >
+        <legend id={separatorId}>Word separator</legend>
         <RadioGroup
-          className={styles.baseRadioGroupContainer}
-          labelledBy={separatorId}
+          class={styles.baseRadioGroupContainer}
+          value={separator()}
           name="separator"
-          onChange={setSeparator}
-          value={separator}
+          labelledBy={separatorId}
         >
-          {SEPARATOR_OPTS.map((opt) => {
-            return (
-              <Radio
-                id={opt.id}
-                label={opt.label}
-                value={opt.value as unknown as string}
-                key={opt.id}
-              >
-                <span>{opt.label}</span>
-              </Radio>
-            )
-          })}
+          {SEPARATOR_OPTS}
         </RadioGroup>
       </fieldset>
 
       <button className={styles.generateBtn} type="submit">
         Generate
       </button>
-      {separators && phrases && (
-        <PhraseOutput
-          handleCopyPress={saveToClipboard}
-          separators={separators}
-          phrases={phrases}
-        />
-      )}
+
+      {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
+      <Suspense>
+        <Show when={hasOutput()}>
+          <PhraseOutput
+            separators={separators()}
+            phrases={phrases()}
+            handleCopyPress={() => {
+              send("COPY_PHRASE")
+            }}
+          />
+        </Show>
+      </Suspense>
     </form>
   )
 }
 
-export { Generate }
+export default Generate

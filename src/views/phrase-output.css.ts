@@ -20,14 +20,6 @@ export const phrases = style({
   color: vars.color["teal-300"]
 })
 
-export const phraseContainer = style({
-  selectors: {
-    "&:hidden": {
-      opacity: 0
-    }
-  }
-})
-
 /**
  * @from https://medium.com/@dtinth/spring-animation-in-css-2039de6e1a03
  *
@@ -48,7 +40,7 @@ function lerp(a, b, p) {
   return a + p * (b - a)
 }
 
-function makeKeyframes() {
+function makeKeyframes(from: number, to: number) {
   let out = Object.create(null) as Record<string, any>
   const stops = 100
 
@@ -56,19 +48,18 @@ function makeKeyframes() {
     let t = i / stops
     let p = springWobbly(t)
 
-    out[i + "%"] = { transform: `translateY(${lerp(36, 0, p)}px)` }
+    out[i + "%"] = { transform: `translateY(${lerp(from, to, p)}px)` }
   }
 
   return out
 }
 
-const springLike = keyframes(makeKeyframes())
+const springLike = keyframes(makeKeyframes(36, 0))
 
 export const phraseChar = style({
-  display: "inline-block",
-  transition: "opacity 200ms ease-in-out",
   animation: `0.7s ${springLike} linear`,
-  animationFillMode: "both"
+  animationFillMode: "both",
+  display: "inline-block"
 })
 
 export const word = style({

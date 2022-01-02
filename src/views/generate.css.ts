@@ -2,9 +2,6 @@ import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 import { between, remToPx } from "polished"
 
-globalStyle("*", {
-  background: vars.color["teal-1000"]
-})
 export const generateBtn = style({
   fontSize: vars.fontSize["1x"],
   borderColor: vars.color["teal-800"],
@@ -36,8 +33,7 @@ export const generateBtn = style({
 export const formEl = style({
   display: "flex",
   flexDirection: "column",
-  maxWidth: "768px",
-  margin: "0 auto"
+  maxWidth: "768px"
 })
 
 globalStyle(`${formEl} fieldset`, {

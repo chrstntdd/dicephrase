@@ -47,4 +47,4 @@ function OfflineToast() {
   )
 }
 
-export { OfflineToast }
+export default OfflineToast

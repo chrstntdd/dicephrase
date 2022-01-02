@@ -1,3 +1,5 @@
+import type { JSX } from "solid-js/jsx-runtime"
+
 interface SkipToContentLinkProps {
   children?: JSX.Element
   contentId: string

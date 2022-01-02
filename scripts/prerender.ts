@@ -1,4 +1,3 @@
-// @ts-check
 import { writeFileSync } from "fs"
 import { resolve } from "path"
 import { build as viteBuild } from "vite"
@@ -7,20 +6,24 @@ main()
 
 async function main() {
   try {
-    const ssgOutput = await viteBuild({
+    await viteBuild({
+      mode: "ssg",
+      resolve: {
+        conditions: ["solid", "node"]
+      },
       build: {
         ssr: true,
         outDir: resolve("dist-ssg"),
         rollupOptions: {
+          external: ["solid-js", "solid-js/web"],
           input: resolve("src", "main-ssg.tsx")
         }
       }
     })
 
-    const clientOutput = await viteBuild({
-      build: {
-        // For now...
-        cssCodeSplit: false
+    let clientOutput = await viteBuild({
+      resolve: {
+        conditions: ["solid"]
       }
     })
 
@@ -30,7 +33,9 @@ async function main() {
       (m) => m.fileName === "index.html"
     ).source
 
-    let render = (await import(resolve("dist-ssg", "main-ssg.js"))).render
+    let ssgEntryPath = resolve("dist-ssg", "main-ssg.js")
+
+    let render = (await import(ssgEntryPath)).render
 
     let pages = [
       { path: "/", title: "dicephrase" },
@@ -40,13 +45,15 @@ async function main() {
 
     let MOUNT_POINT = "<!--ssr-outlet-->"
     let DOCUMENT_TITLE = "<!--doc-title-->"
+    let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
 
-    for (const { path, title } of pages) {
-      let { html: appAsHTML } = await render(path)
+    for (let { path, title } of pages) {
+      let { html: appAsHTML, hydrationScript } = await render(path)
 
       let doc = template
         .replace(MOUNT_POINT, appAsHTML)
         .replace(DOCUMENT_TITLE, title)
+        .replace(HYDRATION_SCRIPT, hydrationScript)
 
       let destinationPath =
         path === "/"
@@ -59,6 +66,9 @@ async function main() {
 
       writeFileSync(resolve("dist", destinationPath), doc)
     }
+
+    console.log("🥳 Pre-rendered the pages")
+    process.exit(0)
   } catch (error) {
     console.error(error)
   }

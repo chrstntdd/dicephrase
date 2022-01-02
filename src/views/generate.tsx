@@ -1,13 +1,14 @@
 import { RadioGroup } from "../components/radio-group"
 
 import { number } from "@badrap/valita"
-import { createMemo, Show } from "solid-js"
+import { createMemo, Show, lazy, Suspense } from "solid-js"
 
 import { generateMachine } from "../features/generate/generate.machine"
-import { PhraseOutput } from "./phrase-output"
 import { useMachine } from "../lib/solid-xstate/use-machine"
 
 import * as styles from "./generate.css"
+
+const PhraseOutput = lazy(() => import("./phrase-output"))
 
 const countId = "word-count-gr"
 const separatorId = "separator-gr"
@@ -44,7 +45,6 @@ function Generate() {
   function handleSubmit(e: Event) {
     send("GENERATE")
 
-    //
     if (!navToGeneratedPage) {
       e.preventDefault()
     }
@@ -75,7 +75,7 @@ function Generate() {
           send({ type: "SET_SEP", value: e.target.value })
         }}
       >
-        <legend id={separatorId}>Phrase separator</legend>
+        <legend id={separatorId}>Word separator</legend>
         <RadioGroup
           class={styles.baseRadioGroupContainer}
           value={separator()}
@@ -89,17 +89,21 @@ function Generate() {
       <button className={styles.generateBtn} type="submit">
         Generate
       </button>
-      <Show when={hasOutput()}>
-        <PhraseOutput
-          separators={separators()}
-          phrases={phrases()}
-          handleCopyPress={() => {
-            send("COPY_PHRASE")
-          }}
-        />
-      </Show>
+
+      {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
+      <Suspense>
+        <Show when={hasOutput()}>
+          <PhraseOutput
+            separators={separators()}
+            phrases={phrases()}
+            handleCopyPress={() => {
+              send("COPY_PHRASE")
+            }}
+          />
+        </Show>
+      </Suspense>
     </form>
   )
 }
 
-export { Generate }
+export default Generate

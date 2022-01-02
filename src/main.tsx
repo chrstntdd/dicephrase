@@ -1,6 +1,7 @@
 import { render, hydrate } from "solid-js/web"
 import { inspect } from "@xstate/inspect"
 
+import "./styles/base.css"
 import "./styles/global.css"
 import { App } from "./app"
 

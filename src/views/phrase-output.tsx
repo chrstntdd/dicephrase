@@ -161,4 +161,4 @@ function Char(props: { content: string; offset: number }) {
   )
 }
 
-export { PhraseOutput }
+export default PhraseOutput

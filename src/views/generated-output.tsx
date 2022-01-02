@@ -1,25 +1,26 @@
-import { onMount } from "solid-js"
-
-import { PhraseOutput } from "./phrase-output"
+import { onMount, lazy, createMemo } from "solid-js"
 
 import * as styles from "./generated-output.css"
 import {
   SimpleGenerateProvider,
   useGenerate
 } from "../features/generate/provider-simple"
+import { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
+import { useMachine } from "../lib/solid-xstate/use-machine"
 
-function GeneratedOutputImpl() {
-  let generateActor = useGenerate()
+const PhraseOutput = lazy(() => import("./phrase-output"))
 
-  let phraseCount = generateActor.getSnapshot()!.context.count
-  let separator = generateActor.getSnapshot()!.context.separatorKind
-  let isIdle = generateActor.getSnapshot()!.matches("idle")
-  let separators = generateActor.getSnapshot()!.context.separators
-  let phrases = generateActor.getSnapshot()!.context.phrases
-  let hasOutput = isIdle && separators && phrases
+function GeneratedOutput() {
+  let [state, send] = useMachine(simpleGenerateMachine, { devTools: true })
+
+  // let phraseCount = createMemo(() => state.context.count)
+  // let separator = createMemo(() => state.context.separatorKind)
+  let separators = createMemo(() => state.context.separators)
+  let phrases = createMemo(() => state.context.phrases)
+  let hasOutput = createMemo(() => state.context.wlRecord)
 
   onMount(() => {
-    generateActor.send({
+    send({
       type: "HYDRATE_FROM_URL_PARAMS",
       value: location.search
     })
@@ -27,13 +28,12 @@ function GeneratedOutputImpl() {
 
   return (
     <div>
-      Here is your passphrase:
-      {hasOutput && (
+      {hasOutput() && (
         <PhraseOutput
-          separators={separators}
-          phrases={phrases}
+          separators={separators()}
+          phrases={phrases()}
           handleCopyPress={() => {
-            generateActor.send("COPY_PHRASE")
+            send("COPY_PHRASE")
           }}
         />
       )}
@@ -44,12 +44,4 @@ function GeneratedOutputImpl() {
   )
 }
 
-function GeneratedOutput() {
-  return (
-    <SimpleGenerateProvider>
-      <GeneratedOutputImpl />
-    </SimpleGenerateProvider>
-  )
-}
-
-export { GeneratedOutput }
+export default GeneratedOutput

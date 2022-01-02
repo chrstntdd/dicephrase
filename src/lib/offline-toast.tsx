@@ -1,12 +1,11 @@
-import { useAriaLive } from "../lib/a11y/use-aria-live"
-
 import * as styles from "./offline-toast.css"
-import { onMount, createSignal } from "solid-js"
+import { onMount, createSignal, onCleanup } from "solid-js"
+
+import { setStatus } from "../lib/a11y/aria-live-msg.js"
 
 function OfflineToast() {
   let [visualText, setVisualText] = createSignal("")
   let [vertTranslate, setVertTranslate] = createSignal(2.4)
-  let { polite } = useAriaLive()
 
   onMount(() => {
     let handle: ReturnType<typeof setTimeout> | undefined
@@ -19,7 +18,7 @@ function OfflineToast() {
           setVertTranslate(0)
           let msg = "Ready to work offline"
           setVisualText(msg)
-          polite(msg)
+          setStatus(msg)
 
           handle = setTimeout(() => {
             setVisualText("")
@@ -29,11 +28,11 @@ function OfflineToast() {
       }
     })
 
-    return () => {
+    onCleanup(() => {
       if (handle) {
         clearTimeout(handle)
       }
-    }
+    })
   })
 
   return (

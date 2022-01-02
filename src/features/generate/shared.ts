@@ -2,6 +2,7 @@ import { make_wl_keys } from "../../lib/WordList.bs.js"
 import { assert } from "../../lib/assert"
 import { shuffle } from "../../lib/shuffle"
 import { copyTextToClipboard } from "../../lib/clippy.js"
+import { setStatus } from "../../lib/a11y/aria-live-msg.js"
 
 export function msgWithoutPayload(): {} {
   return Object.create(null)
@@ -100,4 +101,49 @@ export function makeSeparators(ctx: {
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min
+}
+
+export const PHRASE_OUTPUT = {
+  initial: "unfocused",
+  states: {
+    unfocused: {
+      on: {
+        FOCUS_OUTPUT: "focused"
+      }
+    },
+    focused: {
+      initial: "idle",
+      on: {
+        BLUR_OUTPUT: "unfocused"
+      },
+      entry: [
+        () => {
+          setStatus("Copy to clipboard")
+        }
+      ],
+      states: {
+        idle: {
+          on: { COPY_PHRASE: "copying" }
+        },
+        copying: {
+          invoke: {
+            src: copyPhraseToClipboard,
+            onDone: "copied",
+            onError: "idle"
+          }
+        },
+        copied: {
+          entry: [
+            () => {
+              setStatus("Copied to clipboard")
+            }
+          ],
+          after: { 4000: "hidden" }
+        },
+        hidden: {
+          on: { COPY_PHRASE: "copying" }
+        }
+      }
+    }
+  }
 }

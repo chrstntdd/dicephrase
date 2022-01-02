@@ -1,6 +1,6 @@
 import { RadioGroup } from "../components/radio-group"
 
-import { number } from "@badrap/valita"
+import * as v from "@badrap/valita"
 import { createMemo, Show, lazy, Suspense } from "solid-js"
 
 import { generateMachine } from "../features/generate/generate.machine"
@@ -29,10 +29,13 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
-let countDecoder = number()
+let countDecoder = v.number()
 
 function Generate() {
-  let [state, send] = useMachine(generateMachine, { devTools: true })
+  let [state, send, service] = useMachine(
+    generateMachine,
+    import.meta.env.DEV ? { devTools: true } : undefined
+  )
 
   let phraseCount = createMemo(() => state.context.count)
   let separator = createMemo(() => state.context.separatorKind)
@@ -94,6 +97,7 @@ function Generate() {
       <Suspense>
         <Show when={hasOutput()}>
           <PhraseOutput
+            service={service}
             separators={separators()}
             phrases={phrases()}
             handleCopyPress={() => {

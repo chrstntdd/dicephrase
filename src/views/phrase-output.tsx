@@ -1,13 +1,10 @@
-import {
-  createEffect,
-  createSignal,
-  For,
-  Match,
-  onCleanup,
-  Switch
-} from "solid-js"
+import { For, Match, Switch } from "solid-js"
+import { ActorRefFrom } from "xstate"
+
 import { Nothing } from "../components/nothing"
-import { useAriaLive } from "../lib/a11y/use-aria-live"
+import { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
+import { generateMachine } from "../features/generate/generate.machine"
+import { useActor } from "../lib/solid-xstate/use-actor"
 
 import * as styles from "./phrase-output.css"
 
@@ -15,39 +12,28 @@ function PhraseOutput(props: {
   phrases: string[]
   separators: string[]
   handleCopyPress: () => void
+  service: any
 }) {
-  let [status, setStatus] = createSignal<"idle" | "hidden" | "copy" | "copied">(
-    "idle"
-  )
-  let toastTimerRef: ReturnType<typeof setTimeout>
   let phrasesExist = !!props.phrases.length
-
-  function hideToast() {
-    setStatus("hidden")
-  }
-
-  function clearDismissTimer() {
-    if (toastTimerRef) {
-      clearTimeout(toastTimerRef)
-    }
-  }
+  let [state, send] = useActor<
+    ActorRefFrom<typeof simpleGenerateMachine | typeof generateMachine>
+  >(props.service)
 
   function handleCopyPhrase() {
-    clearDismissTimer()
-
-    props.handleCopyPress()
-    setStatus("copied")
-
-    toastTimerRef = setTimeout(hideToast, 4000)
+    send("COPY_PHRASE")
   }
-
-  onCleanup(() => {
-    clearDismissTimer()
-  })
 
   return (
     <div>
-      <Help status={status()} />
+      <Help
+        status={
+          state().matches("idle.phrase_output.focused.idle")
+            ? "copy"
+            : state().matches("idle.phrase_output.focused.copied")
+            ? "copied"
+            : "idle"
+        }
+      />
       <button
         type="button"
         aria-label="Copy passphrase to clipboard"
@@ -55,11 +41,10 @@ function PhraseOutput(props: {
         hidden={!phrasesExist}
         tabIndex={phrasesExist ? 0 : -1}
         onFocus={() => {
-          setStatus("copy")
+          send("FOCUS_OUTPUT")
         }}
         onBlur={() => {
-          setStatus("idle")
-          clearDismissTimer()
+          send("BLUR_OUTPUT")
         }}
         onClick={phrasesExist ? handleCopyPhrase : undefined}
       >
@@ -83,41 +68,10 @@ function PhraseOutput(props: {
   )
 }
 
-/**
- * lil help text. Rendered alongside the phrase output. Hidden to
- * begin with,
- * 1. appears as "copy" first when focus enters the button
- * 2. obvs indicates the act of copying
- * 3. dimisses after a short period
- */
-function Help(props: { status: "idle" | "hidden" | "copy" | "copied" }) {
-  let [vertTranslate, setVertTranslate] = createSignal(-0.6)
-  let { polite } = useAriaLive()
-
-  createEffect(() => {
-    if (props.status === "hidden" || props.status === "idle") {
-      setVertTranslate(-0.6)
-    } else if (props.status === "copy" || props.status === "copied") {
-      setVertTranslate(0)
-    }
-  })
-
-  createEffect(() => {
-    if (props.status === "copy") {
-      polite("Copy to clipboard")
-    }
-
-    if (props.status === "copied") {
-      polite("Copied to clipboard")
-    }
-  })
-
+function Help(props: { status: "idle" | "copy" | "copied" }) {
   return (
-    <div
-      class={styles.helpText}
-      style={{ transform: `translate(-50%, ${vertTranslate()}rem)` }}
-    >
-      <Switch fallback={<Nothing />}>
+    <div data-hide={props.status === "idle"} class={styles.helpText}>
+      <Switch>
         <Match when={props.status === "copy"}>
           <>
             Copy to clipboard

@@ -2,11 +2,11 @@ import { assign } from "xstate"
 import { createModel } from "xstate/lib/model"
 
 import {
-  copyPhraseToClipboard,
   fetchWordList,
   makePhrases,
   makeSeparators,
   msgWithoutPayload,
+  PHRASE_OUTPUT,
   retryDelay
 } from "./shared"
 
@@ -25,7 +25,9 @@ let mod = createModel(
       GENERATE: msgWithoutPayload,
       SET_COUNT: (value: number) => ({ value }),
       SET_SEP: (value: string) => ({ value }),
-      COPY_PHRASE: msgWithoutPayload
+      COPY_PHRASE: msgWithoutPayload,
+      FOCUS_OUTPUT: msgWithoutPayload,
+      BLUR_OUTPUT: msgWithoutPayload
     }
   }
 )
@@ -72,6 +74,7 @@ let generateMachine = mod.createMachine(
         }
       },
       idle: {
+        type: "parallel",
         on: {
           GENERATE: "generating",
           SET_COUNT: {
@@ -81,10 +84,11 @@ let generateMachine = mod.createMachine(
           SET_SEP: {
             target: "generating",
             actions: [assignSep]
-          },
-          COPY_PHRASE: {
-            target: "copying"
           }
+        },
+        states: {
+          main: {},
+          phrase_output: PHRASE_OUTPUT
         }
       },
 
@@ -147,14 +151,6 @@ let generateMachine = mod.createMachine(
           },
           error: {},
           combining: { type: "final", exit: assignGeneratedPhrases }
-        }
-      },
-      copying: {
-        invoke: {
-          src: copyPhraseToClipboard,
-          onDone: "idle",
-          // TODO: maybe notify?
-          onError: "idle"
         }
       }
     }

@@ -74,5 +74,11 @@ export const helpText = style({
   bottom: `calc(-1.2 * ${vars.fontSize["2x"]})`,
   whiteSpace: "nowrap",
   willChange: "transform",
-  transition: "transform 200ms ease-in-out"
+  transition: "transform 200ms ease-in-out",
+  transform: `translate(-50%, -0.6rem)`,
+  selectors: {
+    '&[data-hide="false"]': {
+      transform: `translate(-50%, ${vars.space["2x"]})`
+    }
+  }
 })

@@ -1,16 +1,16 @@
 import { lazy, Suspense, Switch, Match } from "solid-js"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
+import OfflineToast from "./lib/offline-toast"
 
 const Generate = lazy(() => import("./views/generate"))
 const GeneratedOutput = lazy(() => import("./views/generated-output"))
-const OfflineToast = lazy(() => import("./lib/offline-toast"))
 
 import * as styles from "./app.css"
 
 const SKIP_NAV_ID = "app-skip-nav"
 
-function App({ url }: { url: string }) {
+function App(props: { url: string }) {
   return (
     <div className={styles.appGutter}>
       <SkipToContentLink
@@ -26,8 +26,8 @@ function App({ url }: { url: string }) {
 
       <SkipNavContent id={SKIP_NAV_ID} />
 
-      <Suspense>
-        <main>
+      <main>
+        <Suspense>
           <Switch
             fallback={
               <div>
@@ -36,26 +36,18 @@ function App({ url }: { url: string }) {
               </div>
             }
           >
-            <Match when={url === "/generate"}>
+            <Match when={props.url === "/generate"}>
               <Generate />
             </Match>
 
-            <Match when={url === "/generated"}>
+            <Match when={props.url === "/generated"}>
               <GeneratedOutput />
             </Match>
           </Switch>
-        </main>
+        </Suspense>
+      </main>
 
-        <Switch>
-          <Match
-            when={
-              globalThis.navigator && "serviceWorker" in globalThis.navigator
-            }
-          >
-            <OfflineToast />
-          </Match>
-        </Switch>
-      </Suspense>
+      <OfflineToast />
     </div>
   )
 }

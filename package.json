@@ -9,7 +9,9 @@
     "tc": "tsc --noEmit",
     "preview": "vite preview",
     "re:build": "rescript",
-    "re:start": "rescript build -w"
+    "re:start": "rescript build -w",
+    "test": "vitest",
+    "coverage": "vitest --coverage"
   },
   "dependencies": {
     "@badrap/valita": "^0.1.0",
@@ -32,6 +34,7 @@
     "typescript": "^4.4.4",
     "vite": "^2.7.10",
     "vite-plugin-solid": "^2.1.4",
+    "vitest": "^0.0.127",
     "ws": "^8.4.0"
   },
   "pnpm": {

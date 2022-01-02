@@ -36,7 +36,7 @@ function springWobbly(t: number) {
   )
 }
 
-function lerp(a, b, p) {
+function lerp(a: number, b: number, p: number) {
   return a + p * (b - a)
 }
 

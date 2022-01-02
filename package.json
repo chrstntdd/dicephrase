@@ -6,6 +6,7 @@
     "dev": "vite",
     "dev:l": "bun vite",
     "build": "rescript && NODE_ENV='production' tsm scripts/prerender.ts",
+    "tc": "tsc --noEmit",
     "preview": "vite preview",
     "re:build": "rescript",
     "re:start": "rescript build -w"

@@ -57,7 +57,7 @@ function Generate() {
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
-          let rawVal = parseInt(e.target.value, 10)
+          let rawVal = parseInt((e.target as HTMLInputElement).value, 10)
           let value = countDecoder.parse(rawVal)
           send({ type: "SET_COUNT", value })
         }}
@@ -75,7 +75,7 @@ function Generate() {
 
       <fieldset
         onChange={(e) => {
-          send({ type: "SET_SEP", value: e.target.value })
+          send({ type: "SET_SEP", value: (e.target as HTMLInputElement).value })
         }}
       >
         <legend id={separatorId}>Word separator</legend>

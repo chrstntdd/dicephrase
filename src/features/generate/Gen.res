@@ -76,7 +76,7 @@ type t<'a> = Js.Array2.t<'a>
 @new external make_array_of_size: int => t<'a> = "Array"
 
 @genType
-let combine_zip = (a1, a2) => {
+let combine_zip = (. a1, a2) => {
   open Js.Array2
 
   let a_size = length(a1)

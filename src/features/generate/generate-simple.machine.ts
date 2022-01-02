@@ -1,5 +1,5 @@
 import { assign } from "xstate"
-import { createModel } from "xstate/lib/model"
+import { createModel } from "xstate/lib/model.js"
 
 import { parseParamsToPhraseConfig } from "../../lib/decoders"
 

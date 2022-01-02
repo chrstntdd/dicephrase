@@ -1,5 +1,5 @@
 import { assign } from "xstate"
-import { createModel } from "xstate/lib/model"
+import { createModel } from "xstate/lib/model.js"
 import type { ModelContextFrom } from "xstate/lib/model.types"
 
 import { parseParamsToPhraseConfig } from "../../lib/decoders"
@@ -59,7 +59,7 @@ let assignGeneratedPhrases = mod.assign((ctx) => {
   }
 })
 let assignParamsFromQueryString = mod.assign((ctx) => {
-  let x = parseParamsToPhraseConfig(location.search)
+  let x = parseParamsToPhraseConfig(globalThis.location?.search)
   return {
     ...ctx,
     separatorKind: x.sep,
@@ -67,7 +67,7 @@ let assignParamsFromQueryString = mod.assign((ctx) => {
   }
 })
 function syncToUrl(ctx: ModelContextFrom<typeof mod>) {
-  const url = new URL(location as unknown as string)
+  const url = new URL(globalThis.location as unknown as string)
   url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
   url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
 

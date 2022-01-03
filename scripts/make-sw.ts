@@ -33,7 +33,7 @@ ESB.buildSync({
 console.info("Built the service worker!")
 
 function buildPrecacheList() {
-  let filesToPrecache = new Set(['"about.html"'])
+  let filesToPrecache = new Set(['"about.html"', '"generate.html"'])
 
   for (const { name } of walkSync(resolve("dist"), {
     filter: (n) =>

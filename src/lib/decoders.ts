@@ -20,6 +20,7 @@ function parseParamsToPhraseConfig(target: string): PhraseConfig {
   // Note the non null (!)
   // which allows the prefix (+) type conversion to a number
   // Thankfully, the validator keeps it safe from untrusted input
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let count = +params.get(PHRASE_COUNT_KEY)!
   let sep = params.get(SEPARATOR_KEY)
 

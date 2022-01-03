@@ -43,7 +43,7 @@ let mod = createModel(
  */
 let assignCount = mod.assign({ count: (_, e) => e.value }, "SET_COUNT")
 let assignSep = mod.assign({ separatorKind: (_, e) => e.value }, "SET_SEP")
-let assignAb = mod.assign({ ab: (_) => new AbortController() })
+let assignAb = mod.assign({ ab: () => new AbortController() })
 let incrementRetry = mod.assign({ attemptCount: (ctx) => ctx.attemptCount + 1 })
 let cancelPending = mod.assign({
   ab: (ctx) => {

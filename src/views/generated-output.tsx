@@ -1,4 +1,4 @@
-import { onMount, lazy, createMemo, Show, createEffect } from "solid-js"
+import { onMount, lazy, createMemo, Show } from "solid-js"
 
 import { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"

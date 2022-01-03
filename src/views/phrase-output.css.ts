@@ -1,4 +1,4 @@
-import { keyframes, style } from "@vanilla-extract/css"
+import { CSSProperties, keyframes, style } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
 export const pressable = style({
@@ -41,7 +41,7 @@ function lerp(a: number, b: number, p: number) {
 }
 
 function makeKeyframes(from: number, to: number) {
-  let out = Object.create(null) as Record<string, any>
+  let out = Object.create(null) as Record<string, CSSProperties>
   const stops = 100
 
   for (let i = 0; i <= stops; i++) {

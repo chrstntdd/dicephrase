@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, no-empty */
+
 function assert(value: boolean, message?: string): asserts value
 function assert<T>(
   value: T | null | undefined,

@@ -4,7 +4,7 @@ import { setStatus } from "../../lib/a11y/aria-live-msg"
 
 import { combine_zip, make_wl_keys, shuffle } from "./Gen.gen"
 
-export function msgWithoutPayload(): {} {
+export function msgWithoutPayload(): Record<string, never> {
   return Object.create(null)
 }
 
@@ -32,7 +32,9 @@ export function retryDelay(ctx: { attemptCount: number }) {
 }
 
 export async function fetchWordList(ctx: { ab?: AbortController }) {
-  const r = await fetch("/wl-2016.json", { signal: ctx.ab!.signal })
+  const r = await fetch("/wl-2016.json", {
+    signal: (ctx.ab as NonNullable<typeof ctx.ab>).signal
+  })
   assert(r.ok)
   return await r.json()
 }

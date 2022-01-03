@@ -1,11 +1,15 @@
 import { For } from "solid-js"
 
-function RadioGroup(props: {
+function RadioGroup<V>(props: {
   class: string
   name: string
   labelledBy: string
-  children: any[]
-  value: string | number
+  children: {
+    value: V
+    label: string
+    id: string
+  }[]
+  value: V
 }) {
   return (
     <div
@@ -28,11 +32,11 @@ function RadioGroup(props: {
   )
 }
 
-function Radio(props: {
+function Radio<V>(props: {
   label: string
   name: string
   id: string
-  value: number | string
+  value: V
   checked: boolean
 }) {
   return (
@@ -43,7 +47,7 @@ function Radio(props: {
         checked={props.checked}
         id={props.id}
         name={props.name}
-        value={props.value}
+        value={props.value as unknown as string}
       />
     </div>
   )

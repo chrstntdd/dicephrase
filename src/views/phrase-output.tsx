@@ -1,9 +1,9 @@
 import { For, Match, Switch } from "solid-js"
-import { ActorRefFrom } from "xstate"
+import type { ActorRefFrom } from "xstate"
 
 import { Nothing } from "../components/nothing"
-import { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
-import { generateMachine } from "../features/generate/generate.machine"
+import type { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
+import type { generateMachine } from "../features/generate/generate.machine"
 import { useActor } from "../lib/solid-xstate/use-actor"
 
 import * as styles from "./phrase-output.css"
@@ -12,12 +12,10 @@ function PhraseOutput(props: {
   phrases: string[]
   separators: string[]
   handleCopyPress: () => void
-  service: any
+  service: ActorRefFrom<typeof simpleGenerateMachine | typeof generateMachine>
 }) {
   let phrasesExist = !!props.phrases.length
-  let [state, send] = useActor<
-    ActorRefFrom<typeof simpleGenerateMachine | typeof generateMachine>
-  >(props.service)
+  let [state, send] = useActor(props.service)
 
   function handleCopyPhrase() {
     send("COPY_PHRASE")

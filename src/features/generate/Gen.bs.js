@@ -20,7 +20,7 @@ function make_wl_keys(count, getRandomValues) {
     }
     _idx = idx + 1 | 0;
     continue ;
-  };
+  }
 }
 
 function shuffle(arr) {
@@ -34,7 +34,7 @@ function shuffle(arr) {
     var t = items[len];
     items[len] = items[idx];
     items[idx] = t;
-  };
+  }
   return items;
 }
 
@@ -53,7 +53,7 @@ function combine_zip(a1, a2) {
     out.push(b_item);
     _idx = idx + 1 | 0;
     continue ;
-  };
+  }
 }
 
 export {

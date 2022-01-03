@@ -39,7 +39,7 @@ let mod = createModel(
  *
  * @see https://github.com/statelyai/xstate/issues/2886
  */
-let assignAb = mod.assign({ ab: (_) => new AbortController() })
+let assignAb = mod.assign({ ab: () => new AbortController() })
 let incrementRetry = mod.assign({ attemptCount: (ctx) => ctx.attemptCount + 1 })
 let cancelPending = mod.assign({
   ab: (ctx) => {

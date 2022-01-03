@@ -11,8 +11,8 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
 
   switch (true) {
     case request.method === "GET" &&
-      (request.url === "/" ||
-        request.headers.get("accept")?.includes("text/html")): {
+      (request.url === "/" || request.url === "/generate") &&
+      request.headers.get("accept")?.includes("text/html"): {
       return (
         /**
          * @description
@@ -24,7 +24,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
             "[onfetch] Failed. Serving cached offline fallback " + error
           )
 
-          return caches.match("/index.html") as Promise<Response>
+          return caches.match("/generate.html") as Promise<Response>
         })
       )
     }

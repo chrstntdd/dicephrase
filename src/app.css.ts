@@ -2,8 +2,8 @@ import { style } from "@vanilla-extract/css"
 import { vars } from "./styles/vars.css"
 
 export const pageTile = style({
-  color: vars.color["teal-100"],
-  fontFamily: vars.fontFamily.headingSerif,
+  color: vars.color["teal-200"],
+  fontFamily: vars.fontFamily.serif,
   margin: `0 0 ${vars.space["2x"]} 0`,
   fontSize: vars.fontSize["3x"]
 })

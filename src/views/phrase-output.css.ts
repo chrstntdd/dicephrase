@@ -6,7 +6,8 @@ export const pressable = style({
   borderStyle: "solid",
   borderWidth: vars.space["1x"],
   borderColor: vars.color["teal-800"],
-  color: "inherit",
+  color: vars.color["teal-300"],
+  fontWeight: 900,
   fontSize: vars.fontSize["3x"],
   overflow: "hidden",
   padding: vars.space["1x"],
@@ -16,8 +17,7 @@ export const pressable = style({
 export const phrases = style({
   display: "flex",
   flexWrap: "wrap",
-  overflow: "hidden",
-  color: vars.color["teal-300"]
+  overflow: "hidden"
 })
 
 /**

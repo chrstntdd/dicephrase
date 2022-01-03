@@ -1,9 +1,19 @@
 import { globalStyle, globalFontFace } from "@vanilla-extract/css"
 import { vars } from "./vars.css"
 
-globalFontFace("Bakersville", {
+globalFontFace("manrope", {
   src: [
-    'url(/fonts/Libre_Baskerville/LibreBaskerville-Regular.ttf) format("truetype")'
+    'url(/fonts/manrope/fonts/otf/Manrope-Medium.otf) format("otf")',
+    'url(/fonts/manrope/fonts/webfonts/Manrope-Regular.woff2) format("woff2")',
+    'url(/fonts/manrope/fonts/ttf/Manrope-Regular.ttf) format("truetype")'
+  ],
+  fontWeight: 400,
+  fontDisplay: "swap"
+})
+
+globalFontFace("DMSerif", {
+  src: [
+    'url(/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf) format("truetype")'
   ],
   fontWeight: 400,
   fontDisplay: "swap"
@@ -69,9 +79,4 @@ globalStyle("#root", {
 
 globalStyle("a, a:active", {
   color: "inherit"
-})
-
-// Disable default focus styles, we apply this as needed with <FocusRing/>
-globalStyle("input[type='text']*:focus", {
-  outline: "none"
 })

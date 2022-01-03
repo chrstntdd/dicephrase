@@ -56,8 +56,8 @@ export const vars = createGlobalTheme(":root", {
     full: "99999px"
   },
   fontFamily: {
-    body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-    headingSerif: "Bakersville"
+    body: 'manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    serif: "DMSeric"
   },
   fontSize: {
     "0x": fontSizeScale(0),

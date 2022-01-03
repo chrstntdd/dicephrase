@@ -34,7 +34,8 @@ export const formEl = style({
   display: "flex",
   flexDirection: "column",
   maxWidth: "768px",
-  margin: "0 auto"
+  margin: "0 auto",
+  color: vars.color["teal-200"]
 })
 
 globalStyle(`${formEl} fieldset`, {
@@ -88,11 +89,6 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   padding: vars.space["3x"]
 })
 
-globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
-  background: vars.color["teal-800"],
-  color: vars.color["teal-100"]
-})
-
 globalStyle(`${baseRadioGroupContainer} label`, {
   width: "100%",
   textAlign: "center",
@@ -124,7 +120,7 @@ globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
   marginRight: vars.space["1x"]
 })
 
-globalStyle(`${baseRadioGroupContainer} *:checked `, {
+globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
   background: vars.color["teal-800"],
-  color: vars.color["teal-100"]
+  color: vars.color["teal-200"]
 })

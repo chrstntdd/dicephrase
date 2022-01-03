@@ -1,5 +1,6 @@
 import { handleRequest } from "./network"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const sw: ServiceWorkerGlobalScope & typeof globalThis = self as any
 
 const buildAssets = JSON.parse(__PRECACHE_BUILD_ASSETS__)

@@ -1,9 +1,10 @@
-import { make_wl_keys } from "../../lib/WordList.bs.js"
 import { assert } from "../../lib/assert"
-import { shuffle } from "../../lib/shuffle"
-import { copyTextToClipboard } from "../../lib/clippy.js"
+import { copyTextToClipboard } from "../../lib/clippy"
+import { setStatus } from "../../lib/a11y/aria-live-msg"
 
-export function msgWithoutPayload(): {} {
+import { combine_zip, make_wl_keys, shuffle } from "./Gen.gen"
+
+export function msgWithoutPayload(): Record<string, never> {
   return Object.create(null)
 }
 
@@ -31,7 +32,9 @@ export function retryDelay(ctx: { attemptCount: number }) {
 }
 
 export async function fetchWordList(ctx: { ab?: AbortController }) {
-  const r = await fetch("/wl-2016.json", { signal: ctx.ab!.signal })
+  const r = await fetch("/wl-2016.json", {
+    signal: (ctx.ab as NonNullable<typeof ctx.ab>).signal
+  })
   assert(r.ok)
   return await r.json()
 }
@@ -40,26 +43,10 @@ export async function copyPhraseToClipboard(ctx: {
   phrases: string[]
   separators: string[]
 }) {
-  let pw = combineZip(ctx.phrases, ctx.separators)
+  let pw = combine_zip(ctx.phrases, ctx.separators)
   await copyTextToClipboard(pw.join(""))
 }
 
-function combineZip<T>(a: T[], b: T[]): T[] {
-  let c = []
-
-  for (let index = 0; index < a.length; index++) {
-    const element = a[index]
-
-    c.push(element)
-    let el = b[index]
-
-    if (el) {
-      c.push(el)
-    }
-  }
-
-  return c
-}
 export function shouldRetry(ctx: { attemptCount: number }): boolean {
   return ctx.attemptCount < 7
 }
@@ -68,7 +55,7 @@ export function makePhrases(ctx: {
   count: number
   wlRecord: Record<string, string>
 }): string[] {
-  let keys = make_wl_keys(ctx.count)
+  let keys = make_wl_keys(ctx.count, (b) => crypto.getRandomValues(b))
   let phrases = new Array<string>(keys.length)
 
   for (let index = 0; index < keys.length; index++) {
@@ -79,7 +66,7 @@ export function makePhrases(ctx: {
   return phrases
 }
 export function makeSeparators(ctx: {
-  separatorKind: any
+  separatorKind: string
   count: number
 }): string[] {
   let sepCount = ctx.count - 1
@@ -100,4 +87,49 @@ export function makeSeparators(ctx: {
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min
+}
+
+export const PHRASE_OUTPUT = {
+  initial: "unfocused",
+  states: {
+    unfocused: {
+      on: {
+        FOCUS_OUTPUT: "focused"
+      }
+    },
+    focused: {
+      initial: "idle",
+      on: {
+        BLUR_OUTPUT: "unfocused"
+      },
+      entry: [
+        () => {
+          setStatus("Copy to clipboard")
+        }
+      ],
+      states: {
+        idle: {
+          on: { COPY_PHRASE: "copying" }
+        },
+        copying: {
+          invoke: {
+            src: copyPhraseToClipboard,
+            onDone: "copied",
+            onError: "idle"
+          }
+        },
+        copied: {
+          entry: [
+            () => {
+              setStatus("Copied to clipboard")
+            }
+          ],
+          after: { 4000: "hidden" }
+        },
+        hidden: {
+          on: { COPY_PHRASE: "copying" }
+        }
+      }
+    }
+  }
 }

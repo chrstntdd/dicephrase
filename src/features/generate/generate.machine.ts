@@ -1,12 +1,16 @@
 import { assign } from "xstate"
-import { createModel } from "xstate/lib/model"
+import { createModel } from "xstate/lib/model.js"
+import type { ModelContextFrom } from "xstate/lib/model.types"
+
+import { parseParamsToPhraseConfig } from "../../lib/decoders"
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 
 import {
-  copyPhraseToClipboard,
   fetchWordList,
   makePhrases,
   makeSeparators,
   msgWithoutPayload,
+  PHRASE_OUTPUT,
   retryDelay
 } from "./shared"
 
@@ -25,7 +29,9 @@ let mod = createModel(
       GENERATE: msgWithoutPayload,
       SET_COUNT: (value: number) => ({ value }),
       SET_SEP: (value: string) => ({ value }),
-      COPY_PHRASE: msgWithoutPayload
+      COPY_PHRASE: msgWithoutPayload,
+      FOCUS_OUTPUT: msgWithoutPayload,
+      BLUR_OUTPUT: msgWithoutPayload
     }
   }
 )
@@ -37,7 +43,7 @@ let mod = createModel(
  */
 let assignCount = mod.assign({ count: (_, e) => e.value }, "SET_COUNT")
 let assignSep = mod.assign({ separatorKind: (_, e) => e.value }, "SET_SEP")
-let assignAb = mod.assign({ ab: (_) => new AbortController() })
+let assignAb = mod.assign({ ab: () => new AbortController() })
 let incrementRetry = mod.assign({ attemptCount: (ctx) => ctx.attemptCount + 1 })
 let cancelPending = mod.assign({
   ab: (ctx) => {
@@ -52,12 +58,33 @@ let assignGeneratedPhrases = mod.assign((ctx) => {
     phrases: makePhrases(ctx)
   }
 })
+let assignParamsFromQueryString = mod.assign((ctx) => {
+  let x = parseParamsToPhraseConfig(globalThis.location?.search)
+  return {
+    ...ctx,
+    separatorKind: x.sep,
+    count: x.count
+  }
+})
+function syncToUrl(ctx: ModelContextFrom<typeof mod>) {
+  const url = new URL(globalThis.location as unknown as string)
+  url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
+  url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
+
+  history.pushState(msgWithoutPayload(), "", url)
+}
 
 let generateMachine = mod.createMachine(
   {
     id: "dice-gen",
-    initial: "empty",
+    initial: "syncing_from_url",
     states: {
+      syncing_from_url: {
+        always: {
+          actions: assignParamsFromQueryString,
+          target: "empty"
+        }
+      },
       empty: {
         on: {
           GENERATE: "generating",
@@ -72,6 +99,7 @@ let generateMachine = mod.createMachine(
         }
       },
       idle: {
+        type: "parallel",
         on: {
           GENERATE: "generating",
           SET_COUNT: {
@@ -81,10 +109,11 @@ let generateMachine = mod.createMachine(
           SET_SEP: {
             target: "generating",
             actions: [assignSep]
-          },
-          COPY_PHRASE: {
-            target: "copying"
           }
+        },
+        states: {
+          main: {},
+          phrase_output: PHRASE_OUTPUT
         }
       },
 
@@ -146,15 +175,10 @@ let generateMachine = mod.createMachine(
             }
           },
           error: {},
-          combining: { type: "final", exit: assignGeneratedPhrases }
-        }
-      },
-      copying: {
-        invoke: {
-          src: copyPhraseToClipboard,
-          onDone: "idle",
-          // TODO: maybe notify?
-          onError: "idle"
+          combining: {
+            type: "final",
+            exit: [assignGeneratedPhrases, syncToUrl]
+          }
         }
       }
     }

@@ -1,15 +1,16 @@
 import { assign } from "xstate"
-import { createModel } from "xstate/lib/model"
+import { createModel } from "xstate/lib/model.js"
+
 import { parseParamsToPhraseConfig } from "../../lib/decoders"
 
 import {
-  copyPhraseToClipboard,
   fetchWordList,
   makePhrases,
   makeSeparators,
   msgWithoutPayload,
   retryDelay,
-  shouldRetry
+  shouldRetry,
+  PHRASE_OUTPUT
 } from "./shared"
 
 let mod = createModel(
@@ -26,7 +27,9 @@ let mod = createModel(
     events: {
       CANCEL: msgWithoutPayload,
       HYDRATE_FROM_URL_PARAMS: (value: string) => ({ value }),
-      COPY_PHRASE: msgWithoutPayload
+      COPY_PHRASE: msgWithoutPayload,
+      FOCUS_OUTPUT: msgWithoutPayload,
+      BLUR_OUTPUT: msgWithoutPayload
     }
   }
 )
@@ -36,7 +39,7 @@ let mod = createModel(
  *
  * @see https://github.com/statelyai/xstate/issues/2886
  */
-let assignAb = mod.assign({ ab: (_) => new AbortController() })
+let assignAb = mod.assign({ ab: () => new AbortController() })
 let incrementRetry = mod.assign({ attemptCount: (ctx) => ctx.attemptCount + 1 })
 let cancelPending = mod.assign({
   ab: (ctx) => {
@@ -75,8 +78,10 @@ let simpleGenerateMachine = mod.createMachine(
         }
       },
       idle: {
-        on: {
-          COPY_PHRASE: "copying"
+        type: "parallel",
+        states: {
+          main: {},
+          phrase_output: PHRASE_OUTPUT
         }
       },
       generating: {
@@ -112,14 +117,6 @@ let simpleGenerateMachine = mod.createMachine(
           },
           error: {},
           combining: { type: "final", exit: assignGeneratedPhrases }
-        }
-      },
-      copying: {
-        invoke: {
-          src: copyPhraseToClipboard,
-          onDone: "idle",
-          // TODO: maybe notify?
-          onError: "idle"
         }
       }
     }

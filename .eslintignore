@@ -1,0 +1,11 @@
+/dist
+/dist-ssg
+/node_modules
+index.html
+vite.config.ts
+
+*.css
+*.bs.js
+*.res
+*.gen.ts
+*.gen.tsx

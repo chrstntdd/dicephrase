@@ -3,8 +3,8 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
     event.request.cache === "only-if-cached" &&
     event.request.mode !== "same-origin"
   ) {
-    // @ts-ignore
-    return
+    // Ooooof
+    return undefined as unknown as Promise<Response>
   }
 
   const request = event.request
@@ -38,6 +38,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
           const cache = await caches.open(__SW_CACHE_KEY__)
           const cachedResponse = await cache.match("/index.html")
 
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return cachedResponse!
         })
   }

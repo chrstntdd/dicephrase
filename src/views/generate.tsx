@@ -1,10 +1,10 @@
-import { RadioGroup } from "../components/radio-group"
-
-import { number } from "@badrap/valita"
 import { createMemo, Show, lazy, Suspense } from "solid-js"
+import * as v from "@badrap/valita"
 
+import { RadioGroup } from "../components/radio-group"
 import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "../features/generate/constants"
 
 import * as styles from "./generate.css"
 
@@ -29,10 +29,13 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
-let countDecoder = number()
+let countDecoder = v.number()
 
 function Generate() {
-  let [state, send] = useMachine(generateMachine, { devTools: true })
+  let [state, send, service] = useMachine(
+    generateMachine,
+    import.meta.env.DEV ? { devTools: true } : undefined
+  )
 
   let phraseCount = createMemo(() => state.context.count)
   let separator = createMemo(() => state.context.separatorKind)
@@ -54,7 +57,7 @@ function Generate() {
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
-          let rawVal = parseInt(e.target.value, 10)
+          let rawVal = parseInt((e.target as HTMLInputElement).value, 10)
           let value = countDecoder.parse(rawVal)
           send({ type: "SET_COUNT", value })
         }}
@@ -63,7 +66,7 @@ function Generate() {
         <RadioGroup
           class={styles.baseRadioGroupContainer}
           value={phraseCount()}
-          name="phrase-count"
+          name={PHRASE_COUNT_KEY}
           labelledBy={countId}
         >
           {WORD_COUNT_OPTS}
@@ -72,14 +75,14 @@ function Generate() {
 
       <fieldset
         onChange={(e) => {
-          send({ type: "SET_SEP", value: e.target.value })
+          send({ type: "SET_SEP", value: (e.target as HTMLInputElement).value })
         }}
       >
         <legend id={separatorId}>Word separator</legend>
         <RadioGroup
           class={styles.baseRadioGroupContainer}
           value={separator()}
-          name="separator"
+          name={SEPARATOR_KEY}
           labelledBy={separatorId}
         >
           {SEPARATOR_OPTS}
@@ -94,6 +97,7 @@ function Generate() {
       <Suspense>
         <Show when={hasOutput()}>
           <PhraseOutput
+            service={service}
             separators={separators()}
             phrases={phrases()}
             handleCopyPress={() => {

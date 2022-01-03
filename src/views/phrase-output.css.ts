@@ -1,4 +1,4 @@
-import { keyframes, style } from "@vanilla-extract/css"
+import { CSSProperties, keyframes, style } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
 export const pressable = style({
@@ -36,12 +36,12 @@ function springWobbly(t: number) {
   )
 }
 
-function lerp(a, b, p) {
+function lerp(a: number, b: number, p: number) {
   return a + p * (b - a)
 }
 
 function makeKeyframes(from: number, to: number) {
-  let out = Object.create(null) as Record<string, any>
+  let out = Object.create(null) as Record<string, CSSProperties>
   const stops = 100
 
   for (let i = 0; i <= stops; i++) {
@@ -74,5 +74,11 @@ export const helpText = style({
   bottom: `calc(-1.2 * ${vars.fontSize["2x"]})`,
   whiteSpace: "nowrap",
   willChange: "transform",
-  transition: "transform 200ms ease-in-out"
+  transition: "transform 200ms ease-in-out",
+  transform: `translate(-50%, -0.6rem)`,
+  selectors: {
+    '&[data-hide="false"]': {
+      transform: `translate(-50%, ${vars.space["2x"]})`
+    }
+  }
 })

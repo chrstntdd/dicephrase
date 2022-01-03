@@ -11,15 +11,24 @@ async function main() {
       resolve: {
         conditions: ["solid", "node"]
       },
+      publicDir: undefined,
       build: {
         ssr: true,
         outDir: resolve("dist-ssg"),
         rollupOptions: {
+          output: {
+            format: "esm"
+          },
           external: ["solid-js", "solid-js/web"],
           input: resolve("src", "main-ssg.tsx")
         }
       }
     })
+    /* Ensure we can run as a module with plain js extensions */
+    writeFileSync(
+      resolve("dist-ssg", "package.json"),
+      JSON.stringify({ type: "module" })
+    )
 
     let clientOutput = await viteBuild({
       resolve: {

@@ -1,4 +1,5 @@
-import { CSSProperties, keyframes, style } from "@vanilla-extract/css"
+import type { CSSProperties } from "@vanilla-extract/css"
+import { keyframes, style } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
 export const pressable = style({

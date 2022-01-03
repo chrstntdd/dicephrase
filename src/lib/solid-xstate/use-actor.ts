@@ -1,4 +1,5 @@
-import { Accessor, createSignal, onCleanup } from "solid-js"
+import { createSignal, onCleanup } from "solid-js"
+import type { Accessor } from "solid-js"
 import type { ActorRef } from "xstate"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -2,13 +2,14 @@ import { resolve, relative } from "path"
 import { execSync } from "child_process"
 
 import ESB from "esbuild"
-import { walkSync } from "./walk.js"
+
+import { walkSync } from "./walk"
 
 let commitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
 const filesToPrecache = buildPrecacheList()
 
-const SHARED_CFG = {
+const SHARED_CFG: ESB.BuildOptions = {
   bundle: true,
   entryPoints: ["src/sw/sw.ts"],
   platform: "browser",

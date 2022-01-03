@@ -1,13 +1,30 @@
-import { readdir, readdirSync, stat, statSync } from "fs"
+import { Dirent, readdir, readdirSync, stat, Stats, statSync } from "fs"
 import { resolve } from "path"
 import { promisify } from "util"
 
-let asyncReadDir = promisify(readdir)
-let asyncStat = promisify(stat)
+const asyncReadDir = promisify(readdir)
+const asyncStat = promisify(stat)
 
-const readDirOpts = { withFileTypes: true }
+interface FileData {
+  name: string
+  data: Dirent | Stats
+}
 
-let _filter = (fileName, predicate) =>
+interface WalkOptions {
+  /** Filter yielded results with a predicate */
+  filter?: (fileName: string) => boolean
+  includeDirs: boolean
+  includeFiles: boolean
+  /** Limit the how deep the search through the file system goes */
+  maxDepth?: number
+  /** Handle errors that may be thrown when reading a directory */
+  onError?: (err: Error) => void
+}
+
+const readDirOpts = { withFileTypes: true } as const
+
+/** @private */
+let _filter = (fileName: string, predicate?: (n: string) => boolean): boolean =>
   typeof predicate === "function" ? predicate(fileName) : true
 
 /**
@@ -22,8 +39,8 @@ async function* walk(
     includeFiles = true,
     maxDepth = Infinity,
     onError
-  } = {}
-) {
+  } = {} as WalkOptions
+): AsyncIterableIterator<FileData> {
   if (maxDepth < 0) return
 
   if (includeDirs && _filter(rootDir, filter)) {
@@ -32,12 +49,12 @@ async function* walk(
 
   if (maxDepth < 1 && !_filter(rootDir, filter)) return
 
-  let dirContents = []
+  let dirContents: ReturnType<typeof readdirSync> = []
 
   try {
     dirContents = await asyncReadDir(rootDir, readDirOpts)
   } catch (error) {
-    onError?.(error)
+    typeof onError === "function" && onError(error)
   }
 
   for (let directoryEntry of dirContents) {
@@ -75,8 +92,8 @@ function* walkSync(
     includeFiles = true,
     maxDepth = Infinity,
     onError
-  } = {}
-) {
+  } = {} as WalkOptions
+): IterableIterator<FileData> {
   if (maxDepth < 0) return
 
   if (includeDirs && _filter(rootDir, filter)) {
@@ -85,12 +102,12 @@ function* walkSync(
 
   if (maxDepth < 1 && !_filter(rootDir, filter)) return
 
-  let dirContents = []
+  let dirContents: ReturnType<typeof readdirSync> = []
 
   try {
     dirContents = readdirSync(rootDir, readDirOpts)
   } catch (error) {
-    onError?.(error)
+    typeof onError === "function" && onError(error)
   }
 
   for (let directoryEntry of dirContents) {
@@ -112,4 +129,5 @@ function* walkSync(
   }
 }
 
+export type { WalkOptions, FileData }
 export { walk, walkSync }

@@ -10,6 +10,7 @@
     "lint:fix": "eslint src/ --fix",
     "lint": "eslint 'src/**'",
     "preview": "vite preview",
+    "preview-t": "tsm scripts/sfs.ts",
     "re:build": "rescript",
     "re:start": "rescript build -w",
     "tc": "tsc --noEmit",

@@ -37,7 +37,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
         .then((response) => response || fetch(event.request))
         .catch(async () => {
           let cache = await caches.open(__SW_CACHE_KEY__)
-          let cachedResponse = await cache.match("/index.html")
+          let cachedResponse = await cache.match("/generate.html")
 
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return cachedResponse!

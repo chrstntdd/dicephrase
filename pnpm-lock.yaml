@@ -24,7 +24,7 @@ specifiers:
   polished: ^4.1.3
   prettier: ^2.5.1
   rescript: ^9.1.4
-  solid-js: ^1.3.1
+  solid-js: 1.2.6
   tsm: ^2.2.1
   typescript: ^4.5.4
   vite: beta
@@ -35,7 +35,7 @@ specifiers:
 
 dependencies:
   '@badrap/valita': 0.1.0
-  solid-js: 1.3.1
+  solid-js: 1.2.6
   xstate: 4.27.0
 
 devDependencies:
@@ -2712,8 +2712,13 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /solid-js/1.2.6:
+    resolution: {integrity: sha512-NvPHJ5Vj5f+ZJWIioickrC55seovSkDtm5NzSpnoUk3z4tATv0STpy5iuGNEn51ZORUcwpZzrMAtOCGziXU1XA==}
+    dev: false
+
   /solid-js/1.3.1:
     resolution: {integrity: sha512-umBPwS/d7K5+NxojUok/t8xgXdMbIOkFLs/sk4DliFTsl3nbguHgkcAt3KWE6XhA8Xr1xKx5P+g75B8+VP0CzQ==}
+    dev: true
 
   /solid-refresh/0.4.0_solid-js@1.3.1:
     resolution: {integrity: sha512-5XCUz845n/sHPzKK2i2G2EeV61tAmzv6SqzqhXcPaYhrgzVy7nKTQaBpKK8InKrriq9Z2JFF/mguIU00t/73xw==}

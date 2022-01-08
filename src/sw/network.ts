@@ -7,11 +7,12 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
     return undefined as unknown as Promise<Response>
   }
 
-  const request = event.request
+  let request = event.request
+  let reqUrl = new URL(request.url)
 
   switch (true) {
     case request.method === "GET" &&
-      (request.url === "/" || request.url === "/generate") &&
+      (reqUrl.pathname === "/" || reqUrl.pathname === "/generate") &&
       request.headers.get("accept")?.includes("text/html"): {
       return (
         /**
@@ -35,8 +36,8 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
         .match(event.request)
         .then((response) => response || fetch(event.request))
         .catch(async () => {
-          const cache = await caches.open(__SW_CACHE_KEY__)
-          const cachedResponse = await cache.match("/index.html")
+          let cache = await caches.open(__SW_CACHE_KEY__)
+          let cachedResponse = await cache.match("/generate.html")
 
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return cachedResponse!

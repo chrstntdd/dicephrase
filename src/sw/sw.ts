@@ -42,8 +42,4 @@ sw.addEventListener("activate", (event) => {
   )
 })
 
-sw.addEventListener("upgrade", () => {
-  //
-})
-
 sw.addEventListener("fetch", (event) => event.respondWith(handleRequest(event)))

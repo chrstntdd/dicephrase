@@ -7,6 +7,7 @@
     "coverage": "vitest --coverage",
     "dev:l": "bun vite",
     "dev": "vite",
+    "fmt": "prettier src --write",
     "lint:fix": "eslint src/ --fix",
     "lint": "eslint 'src/**'",
     "preview": "vite preview",
@@ -17,7 +18,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@badrap/valita": "^0.1.0",
     "solid-js": "1.2.6",
     "xstate": "^4.27.0"
   },
@@ -106,5 +106,11 @@
     "rules": {
       "prefer-const": 0
     }
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
   }
 }

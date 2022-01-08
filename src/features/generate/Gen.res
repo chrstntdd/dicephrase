@@ -98,3 +98,89 @@ let combine_zip = (. a1, a2) => {
 
   combine_inner(0, out)
 }
+
+@val external parseInt: (string, int) => int = "parseInt"
+
+@val external isNaN: int => bool = "isNaN"
+
+let str_to_int = s => {
+  let nt = parseInt(s, 10)
+  switch nt->isNaN {
+  | false => Some(nt)
+  | _ => None
+  }
+}
+
+type t_url_search = {get: (. string) => Js.null<string>}
+@new external make_url_search: string => t_url_search = "URLSearchParams"
+
+@module("./constants")
+external count_key: string = "PHRASE_COUNT_KEY"
+@module("./constants")
+external sep_key: string = "SEPARATOR_KEY"
+@module("./constants")
+external count_min: int = "PHRASE_COUNT_MIN"
+@module("./constants")
+external count_max: int = "PHRASE_COUNT_MAX"
+@module("./constants")
+external count_fallback: int = "PHRASE_COUNT_FALLBACK"
+@module("./constants")
+external sep_fallback: string = "SEPARATOR_FALLBACK"
+
+type separator = [#"\u00a0" | #"-" | #"." | #"$" | #random]
+
+@genType
+type phase_cfg = {
+  count: int,
+  sep: string, // polymorphic ^^^?
+}
+
+// Lighter Caml_option.nullable_to_opt
+let nullable_to_option = n => {
+  if Js.Null.empty != n {
+    Js.Option.some(Js.Null.getUnsafe(n))
+  } else {
+    None
+  }
+}
+
+@genType
+let parse_qs_to_phrase_config = qs => {
+  open Js.Option
+  let url_inst = qs->make_url_search
+  let count_from_qs = url_inst.get(. count_key)->nullable_to_option
+  let sep_from_qs = url_inst.get(. sep_key)->nullable_to_option
+
+  let count = count_from_qs |> andThen((. x) => {
+    let count_int = str_to_int(x)
+
+    andThen((. x) => {
+      if x >= count_min && x <= count_max {
+        count_int
+      } else {
+        None
+      }
+    }, count_int)
+  })
+
+  let sep = sep_from_qs |> andThen((. s) => {
+    if Js.Re.test_(%re("/(random|\u00a0|-|\.|\$)/"), s) {
+      Some(s)
+    } else {
+      None
+    }
+  })
+
+  switch (count, sep) {
+  | (Some(c), Some(s)) => {count: c, sep: s}
+  | _ => {count: count_fallback, sep: sep_fallback}
+  }
+}
+
+@genType
+let parse_count_val = v => {
+  switch str_to_int(v) {
+  | Some(vi) => vi
+  | _ => count_fallback
+  }
+}

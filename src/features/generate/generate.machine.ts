@@ -2,7 +2,7 @@ import { assign } from "xstate"
 import { createModel } from "xstate/lib/model.js"
 import type { ModelContextFrom } from "xstate/lib/model.types"
 
-import { parseParamsToPhraseConfig } from "../../lib/decoders"
+import { parse_qs_to_phrase_config } from "./Gen.gen"
 import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 
 import {
@@ -59,7 +59,7 @@ let assignGeneratedPhrases = mod.assign((ctx) => {
   }
 })
 let assignParamsFromQueryString = mod.assign((ctx) => {
-  let x = parseParamsToPhraseConfig(globalThis.location?.search)
+  let x = parse_qs_to_phrase_config(globalThis.location?.search)
   return {
     ...ctx,
     separatorKind: x.sep,

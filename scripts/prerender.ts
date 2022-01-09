@@ -5,11 +5,9 @@ import { build as viteBuild } from "vite"
 main()
 
 async function main() {
-  let CSP_META_TAG = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'" />`
   let MOUNT_POINT = "<!--ssr-outlet-->"
   let DOCUMENT_TITLE = "<!--doc-title-->"
   let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
-  let CSP_TAG = "<!-- CSP_TAG -->"
   try {
     await viteBuild({
       mode: "ssg",
@@ -65,7 +63,6 @@ async function main() {
         .replace(MOUNT_POINT, appAsHTML)
         .replace(DOCUMENT_TITLE, title)
         .replace(HYDRATION_SCRIPT, hydrationScript)
-        .replace(CSP_TAG, CSP_META_TAG)
 
       let destinationPath =
         path === "/"

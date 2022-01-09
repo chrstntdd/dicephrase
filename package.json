@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "NODE_ENV='production' tsm scripts/prerender.ts",
+    "build": "NODE_ENV='production' tsm scripts/prerender.ts && cp _headers dist",
     "coverage": "vitest --coverage",
     "dev:l": "bun vite",
     "dev": "vite",

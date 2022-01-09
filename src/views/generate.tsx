@@ -1,10 +1,10 @@
 import { createMemo, Show, lazy, Suspense } from "solid-js"
-import * as v from "@badrap/valita"
 
 import { RadioGroup } from "../components/radio-group"
 import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
 import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "../features/generate/constants"
+import { parse_count_val } from "../features/generate/Gen.gen"
 
 import * as styles from "./generate.css"
 
@@ -28,8 +28,6 @@ const WORD_COUNT_OPTS = [
   { value: 9, label: "9", id: "count-9" },
   { value: 10, label: "10", id: "count-10" }
 ]
-
-let countDecoder = v.number()
 
 function Generate() {
   let [state, send, service] = useMachine(
@@ -57,8 +55,7 @@ function Generate() {
     <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
-          let rawVal = parseInt((e.target as HTMLInputElement).value, 10)
-          let value = countDecoder.parse(rawVal)
+          let value = parse_count_val((e.target as HTMLInputElement).value)
           send({ type: "SET_COUNT", value })
         }}
       >

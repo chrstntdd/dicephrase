@@ -38,4 +38,8 @@ server.get("/generate", (_, reply) => {
   reply.sendFile("generate.html")
 })
 
+server.get("/generated", (_, reply) => {
+  reply.sendFile("generated.html")
+})
+
 await server.listen(PORT, ADDR)

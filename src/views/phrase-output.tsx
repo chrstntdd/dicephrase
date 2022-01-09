@@ -9,8 +9,8 @@ import { useActor } from "../lib/solid-xstate/use-actor"
 import * as styles from "./phrase-output.css"
 
 function PhraseOutput(props: {
-  phrases: string[]
-  separators: string[]
+  phrases: readonly string[]
+  separators: readonly string[]
   handleCopyPress: () => void
   service: ActorRefFrom<typeof simpleGenerateMachine | typeof generateMachine>
 }) {

@@ -37,7 +37,7 @@ function GeneratedOutput() {
         />
       </Show>
 
-      <a className={styles.backToGenerateLink} href="/generate">
+      <a class={styles.backToGenerateLink} href="/generate">
         Generate another passphrase
       </a>
     </div>

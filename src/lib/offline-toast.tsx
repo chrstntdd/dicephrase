@@ -37,7 +37,7 @@ function OfflineToast() {
 
   return (
     <div
-      className={styles.backdrop}
+      class={styles.backdrop}
       style={{ transform: `translate(-50%, ${vertTranslate()}rem)` }}
     >
       <div>{visualText()}</div>

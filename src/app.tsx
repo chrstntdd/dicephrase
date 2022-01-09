@@ -12,14 +12,14 @@ const SKIP_NAV_ID = "app-skip-nav"
 
 function App(props: { url: string }) {
   return (
-    <div className={styles.appGutter}>
+    <div class={styles.appGutter}>
       <SkipToContentLink
         contentId={SKIP_NAV_ID}
         aria-label="Skip to main content"
       />
 
       <header>
-        <h1 className={styles.pageTile}>
+        <h1 class={styles.pageTile}>
           <a href="/generate">Dicephrase</a>
         </h1>
       </header>

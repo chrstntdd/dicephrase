@@ -52,7 +52,7 @@ function Generate() {
   }
 
   return (
-    <form action="/generated" className={styles.formEl} onSubmit={handleSubmit}>
+    <form action="/generated" class={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
           let value = parse_count_val((e.target as HTMLInputElement).value)
@@ -86,7 +86,7 @@ function Generate() {
         </RadioGroup>
       </fieldset>
 
-      <button className={styles.generateBtn} type="submit">
+      <button class={styles.generateBtn} type="submit">
         Generate
       </button>
 

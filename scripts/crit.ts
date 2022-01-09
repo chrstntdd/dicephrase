@@ -20,7 +20,7 @@ let css = Array.from(
   })
 )
 
-let x = await Promise.all(
+await Promise.all(
   srcHtml.map(async ({ name, data }) => {
     let htmlWithInlinedCSS: string = (
       await crit.generate({
@@ -34,5 +34,3 @@ let x = await Promise.all(
     return writeFile(resolve(name), htmlWithInlinedCSS, "utf-8")
   })
 )
-
-console.log({ x })

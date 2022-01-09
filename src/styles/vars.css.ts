@@ -23,8 +23,6 @@ export const vars = createGlobalTheme(":root", {
     "8x": spaceScale(8)
   },
   color: {
-    white: "#fff",
-
     "teal-50": "#07100c",
     "teal-100": "#13261c",
     "teal-200": "#1c3c2c",
@@ -39,12 +37,7 @@ export const vars = createGlobalTheme(":root", {
     "teal-1100": "#ecf8f2"
   },
   borderRadius: {
-    "0x": borderRadiusScale(0),
-    "1x": borderRadiusScale(1),
-    "2x": borderRadiusScale(2),
     "3x": borderRadiusScale(3),
-    "4x": borderRadiusScale(4),
-    "5x": borderRadiusScale(5),
     full: "99999px"
   },
   fontFamily: {
@@ -55,16 +48,6 @@ export const vars = createGlobalTheme(":root", {
     "0x": fontSizeScale(0),
     "1x": fontSizeScale(1),
     "2x": fontSizeScale(2),
-    "3x": fontSizeScale(3),
-    "4x": fontSizeScale(4),
-    "5x": fontSizeScale(5)
-  },
-  lineHeight: {
-    "0x": lineHeightScale(0),
-    "1x": lineHeightScale(1),
-    "2x": lineHeightScale(2),
-    "3x": lineHeightScale(3),
-    "4x": lineHeightScale(4),
-    "5x": lineHeightScale(5)
+    "3x": fontSizeScale(3)
   }
 })

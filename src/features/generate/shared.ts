@@ -1,8 +1,7 @@
 import { assert } from "../../lib/assert"
-import { copyTextToClipboard } from "../../lib/clippy"
 import { setStatus } from "../../lib/a11y/aria-live-msg"
 
-import { combine_zip, make_wl_keys, shuffle } from "./Gen.gen"
+import { make_wl_keys, shuffle } from "./Gen.gen"
 
 export function msgWithoutPayload(): Record<string, never> {
   return Object.create(null)
@@ -37,14 +36,6 @@ export async function fetchWordList(ctx: { ab?: AbortController }) {
   })
   assert(r.ok)
   return await r.json()
-}
-
-export async function copyPhraseToClipboard(ctx: {
-  phrases: string[]
-  separators: string[]
-}) {
-  let pw = combine_zip(ctx.phrases, ctx.separators)
-  await copyTextToClipboard(pw.join(""))
 }
 
 export function shouldRetry(ctx: { attemptCount: number }): boolean {
@@ -113,7 +104,12 @@ export const PHRASE_OUTPUT = {
         },
         copying: {
           invoke: {
-            src: copyPhraseToClipboard,
+            src: async (ctx) => {
+              let m = await import("./copy").then(
+                (m) => m.copyPhraseToClipboard
+              )
+              return m(ctx)
+            },
             onDone: "copied",
             onError: "idle"
           }

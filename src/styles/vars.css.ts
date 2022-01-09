@@ -22,18 +22,18 @@ export const vars = createGlobalTheme(":root", {
     "8x": spaceScale(8)
   },
   color: {
-    "teal-50": "#07100c",
-    "teal-100": "#13261c",
-    "teal-200": "#1c3c2c",
-    "teal-300": "#1d533e",
-    "teal-400": "#117156",
-    "teal-500": "#039474",
-    "teal-600": "#11b495",
-    "teal-700": "#2bc3a7",
-    "teal-800": "#51d1b9",
-    "teal-900": "#7fdecc",
-    "teal-1000": "#b4ebdf",
-    "teal-1100": "#ecf8f2"
+    "primary-50": "#07100c",
+    "primary-100": "#13261c",
+    "primary-200": "#1c3c2c",
+    "primary-300": "#1d533e",
+    "primary-400": "#117156",
+    "primary-500": "#039474",
+    "primary-600": "#11b495",
+    "primary-700": "#2bc3a7",
+    "primary-800": "#51d1b9",
+    "primary-900": "#7fdecc",
+    "primary-1000": "#b4ebdf",
+    "primary-1100": "#ecf8f2"
   },
   borderRadius: {
     "3x": borderRadiusScale(3),

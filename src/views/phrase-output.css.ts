@@ -8,8 +8,8 @@ export const pressable = style({
   borderRadius: vars.borderRadius["3x"],
   borderStyle: "solid",
   borderWidth: vars.space["1x"],
-  borderColor: vars.color["teal-800"],
-  color: vars.color["teal-300"],
+  borderColor: vars.color["primary-800"],
+  color: vars.color["primary-300"],
   fontWeight: 900,
   fontSize: vars.fontSize["3x"],
   overflow: "hidden",
@@ -17,13 +17,13 @@ export const pressable = style({
   width: "100%",
   "@media": {
     ...supportsHover({
-      background: vars.color["teal-900"]
+      background: vars.color["primary-900"]
     })
   },
   selectors: {
     "&:focus-visible": {
-      background: vars.color["teal-900"],
-      borderColor: vars.color["teal-900"]
+      background: vars.color["primary-900"],
+      borderColor: vars.color["primary-900"]
     }
   }
 })
@@ -77,7 +77,12 @@ const springLike = keyframes(makeKeyframes(36, 0))
 export const phraseChar = style({
   animation: `0.7s ${springLike} linear`,
   animationFillMode: "both",
-  display: "inline-block"
+  display: "inline-block",
+  selectors: {
+    "&[data-sep]": {
+      color: vars.color["primary-600"]
+    }
+  }
 })
 
 export const word = style({

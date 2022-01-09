@@ -27,7 +27,7 @@ globalStyle("*", {
   backgroundColor: "transparent",
   fontSmooth: "antialiased",
   position: "relative",
-  background: vars.color["teal-1000"]
+  background: vars.color["primary-1000"]
 })
 
 globalStyle("*, *:after, *:before", {
@@ -88,5 +88,5 @@ globalStyle("input,button,a", {
 
 globalStyle("*:focus,*:focus-visible", {
   outline: 0,
-  boxShadow: `0 0 0 2px ${vars.color["teal-400"]}`
+  boxShadow: `0 0 0 2px ${vars.color["primary-400"]}`
 })

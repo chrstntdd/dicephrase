@@ -6,23 +6,23 @@ import { supportsHover } from "../styles/util"
 
 export const generateBtn = style({
   fontSize: vars.fontSize["1x"],
-  borderColor: vars.color["teal-800"],
+  borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius["full"],
   borderStyle: "solid",
   borderWidth: vars.space["0x"],
-  color: vars.color["teal-300"],
+  color: vars.color["primary-300"],
   fontWeight: 600,
   padding: vars.space["4x"],
   transition: "background 200ms ease-in-out",
   "@media": {
     ...supportsHover({
-      background: vars.color["teal-900"]
+      background: vars.color["primary-900"]
     })
   },
   selectors: {
     "&:focus-visible": {
-      background: vars.color["teal-900"],
-      borderColor: vars.color["teal-900"]
+      background: vars.color["primary-900"],
+      borderColor: vars.color["primary-900"]
     }
   }
 })
@@ -32,7 +32,7 @@ export const formEl = style({
   flexDirection: "column",
   maxWidth: "768px",
   margin: "0 auto",
-  color: vars.color["teal-200"]
+  color: vars.color["primary-200"]
 })
 
 globalStyle(`${formEl} fieldset`, {
@@ -55,10 +55,10 @@ export const baseRadioGroupContainer = style({
   alignItems: "center",
   borderStyle: "solid",
   borderWidth: vars.space["0x"],
-  borderColor: vars.color["teal-800"],
+  borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius.full,
   padding: vars.space["0x"],
-  color: vars.color["teal-300"]
+  color: vars.color["primary-300"]
 })
 
 globalStyle(`${baseRadioGroupContainer} > div`, {
@@ -81,7 +81,7 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   width: "100%",
   borderStyle: "solid",
   borderWidth: vars.space["0x"],
-  borderColor: vars.color["teal-800"],
+  borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius.full,
   padding: vars.space["3x"]
 })
@@ -90,7 +90,7 @@ globalStyle(`${baseRadioGroupContainer} label`, {
   width: "100%",
   textAlign: "center",
   background: "transparent",
-  borderColor: vars.color["teal-800"],
+  borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius["full"],
   borderStyle: "solid",
   borderWidth: vars.space["0x"],
@@ -101,7 +101,7 @@ globalStyle(`${baseRadioGroupContainer} label`, {
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:hover`, {
   "@media": {
     "not all and (hover: none)": {
-      background: vars.color["teal-900"]
+      background: vars.color["primary-900"]
     }
   }
 })
@@ -118,6 +118,6 @@ globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
 })
 
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
-  background: vars.color["teal-800"],
-  color: vars.color["teal-200"]
+  background: vars.color["primary-800"],
+  color: vars.color["primary-200"]
 })

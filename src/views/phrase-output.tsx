@@ -55,7 +55,7 @@ function PhraseOutput(props: {
                 <>
                   <Word content={phrase} />
                   <Show when={!isLast}>
-                    <Word content={sep} />
+                    <Word content={sep} sep />
                   </Show>
                 </>
               )
@@ -93,20 +93,23 @@ function Help(props: { status: "idle" | "copy" | "copied" }) {
   )
 }
 
-function Word(props: { content: string }) {
+function Word(props: { content: string; sep?: boolean }) {
   return (
     <div class={styles.word}>
       <For each={props.content.split("")}>
-        {(char, index) => <Char offset={index() * 22} content={char} />}
+        {(char, index) => (
+          <Char offset={index() * 22} content={char} sep={props.sep} />
+        )}
       </For>
     </div>
   )
 }
 
-function Char(props: { content: string; offset: number }) {
+function Char(props: { content: string; offset: number; sep?: boolean }) {
   return (
     <span
       class={styles.phraseChar}
+      data-sep={props.sep}
       style={{ "animation-delay": `${props.offset}ms` }}
     >
       {props.content}

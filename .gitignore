@@ -5,6 +5,7 @@ dist-ssr
 *.local
 *.pem
 dist-ssg
+public/sw.js
 
 # ReScript deps
 lib

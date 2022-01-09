@@ -8,7 +8,7 @@ globalFontFace("manrope", {
     'url(/fonts/manrope/fonts/ttf/Manrope-Regular.ttf) format("truetype")'
   ],
   fontWeight: 400,
-  fontDisplay: "optional"
+  fontDisplay: "swap"
 })
 
 globalFontFace("DMSerif", {
@@ -16,7 +16,7 @@ globalFontFace("DMSerif", {
     'url(/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf) format("truetype")'
   ],
   fontWeight: 400,
-  fontDisplay: "optional"
+  fontDisplay: "swap"
 })
 
 globalStyle("*", {

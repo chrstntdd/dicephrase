@@ -1,7 +1,6 @@
-import { For, Match, Switch } from "solid-js"
+import { For, Match, Switch, Show } from "solid-js"
 import type { ActorRefFrom } from "xstate"
 
-import { Nothing } from "../components/nothing"
 import type { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
 import type { generateMachine } from "../features/generate/generate.machine"
 import { useActor } from "../lib/solid-xstate/use-actor"
@@ -55,7 +54,9 @@ function PhraseOutput(props: {
               return (
                 <>
                   <Word content={phrase} />
-                  {isLast ? <Nothing /> : <Word content={sep} />}
+                  <Show when={!isLast}>
+                    <Word content={sep} />
+                  </Show>
                 </>
               )
             }}

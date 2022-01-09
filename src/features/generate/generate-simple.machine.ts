@@ -1,7 +1,7 @@
 import { assign } from "xstate"
 import { createModel } from "xstate/lib/model.js"
 
-import { parseParamsToPhraseConfig } from "../../lib/decoders"
+import { parse_qs_to_phrase_config } from "./Gen.gen"
 
 import {
   fetchWordList,
@@ -56,7 +56,7 @@ let assignGeneratedPhrases = mod.assign((ctx) => {
 })
 
 let assignParamsFromURL = mod.assign((ctx, event) => {
-  let x = parseParamsToPhraseConfig(event.value)
+  let x = parse_qs_to_phrase_config(event.value)
   return {
     ...ctx,
     separatorKind: x.sep,

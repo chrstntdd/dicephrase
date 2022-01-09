@@ -5,6 +5,11 @@ import { build as viteBuild } from "vite"
 main()
 
 async function main() {
+  let CSP_META_TAG = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'" />`
+  let MOUNT_POINT = "<!--ssr-outlet-->"
+  let DOCUMENT_TITLE = "<!--doc-title-->"
+  let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
+  let CSP_TAG = "<!-- CSP_TAG -->"
   try {
     await viteBuild({
       mode: "ssg",
@@ -49,12 +54,9 @@ async function main() {
     let pages = [
       { path: "/", title: "dicephrase" },
       { path: "/generate", title: "dicephrase | generate" },
+      { path: "/generated", title: "dicephrase | generated" },
       { path: "/about", title: "dicephrase | about" }
     ]
-
-    let MOUNT_POINT = "<!--ssr-outlet-->"
-    let DOCUMENT_TITLE = "<!--doc-title-->"
-    let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
 
     for (let { path, title } of pages) {
       let { html: appAsHTML, hydrationScript } = await render(path)
@@ -63,6 +65,7 @@ async function main() {
         .replace(MOUNT_POINT, appAsHTML)
         .replace(DOCUMENT_TITLE, title)
         .replace(HYDRATION_SCRIPT, hydrationScript)
+        .replace(CSP_TAG, CSP_META_TAG)
 
       let destinationPath =
         path === "/"
@@ -71,6 +74,8 @@ async function main() {
           ? "about.html"
           : path === "/generate"
           ? "generate.html"
+          : path === "/generated"
+          ? "generated.html"
           : "FALLBACK.html"
 
       writeFileSync(resolve("dist", destinationPath), doc)

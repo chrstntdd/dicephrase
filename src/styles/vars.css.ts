@@ -23,14 +23,6 @@ export const vars = createGlobalTheme(":root", {
     "8x": spaceScale(8)
   },
   color: {
-    brand: "#fff",
-    brandAccent: "#fff",
-    brandAccentActive: "#fff",
-    brandAccentHover: "#fff",
-    brandAccentSoft: "#fff",
-    brandAccentSoftActive: "#fff",
-    brandAccentSoftHover: "#fff",
-
     white: "#fff",
 
     "teal-50": "#07100c",

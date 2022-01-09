@@ -1,5 +1,7 @@
 import type { CSSProperties } from "@vanilla-extract/css"
-import { keyframes, style } from "@vanilla-extract/css"
+import { keyframes, style, globalStyle } from "@vanilla-extract/css"
+
+import { supportsHover } from "../styles/util"
 import { vars } from "../styles/vars.css"
 
 export const pressable = style({
@@ -12,7 +14,22 @@ export const pressable = style({
   fontSize: vars.fontSize["3x"],
   overflow: "hidden",
   padding: vars.space["1x"],
-  width: "100%"
+  width: "100%",
+  "@media": {
+    ...supportsHover({
+      background: vars.color["teal-900"]
+    })
+  },
+  selectors: {
+    "&:focus-visible": {
+      background: vars.color["teal-900"],
+      borderColor: vars.color["teal-900"]
+    }
+  }
+})
+
+globalStyle(`${pressable} *`, {
+  background: "transparent"
 })
 
 export const phrases = style({

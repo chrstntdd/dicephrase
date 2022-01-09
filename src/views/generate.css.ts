@@ -2,6 +2,8 @@ import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 import { between, remToPx } from "polished"
 
+import { supportsHover } from "../styles/util"
+
 export const generateBtn = style({
   fontSize: vars.fontSize["1x"],
   borderColor: vars.color["teal-800"],
@@ -10,20 +12,15 @@ export const generateBtn = style({
   borderWidth: vars.space["0x"],
   color: vars.color["teal-300"],
   fontWeight: 600,
-
   padding: vars.space["4x"],
   transition: "background 200ms ease-in-out",
   "@media": {
-    "not all and (hover: none)": {
-      selectors: {
-        "&:hover": {
-          background: vars.color["teal-900"]
-        }
-      }
-    }
+    ...supportsHover({
+      background: vars.color["teal-900"]
+    })
   },
   selectors: {
-    "&:focus": {
+    "&:focus-visible": {
       background: vars.color["teal-900"],
       borderColor: vars.color["teal-900"]
     }

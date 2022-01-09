@@ -80,3 +80,13 @@ globalStyle("#root", {
 globalStyle("a, a:active", {
   color: "inherit"
 })
+
+// For nice smooth animations
+globalStyle("input,button,a", {
+  transition: "box-shadow 200ms ease-in-out"
+})
+
+globalStyle("*:focus,*:focus-visible", {
+  outline: 0,
+  boxShadow: `0 0 0 2px ${vars.color["teal-400"]}`
+})

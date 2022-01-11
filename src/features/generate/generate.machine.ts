@@ -99,7 +99,6 @@ let generateMachine = mod.createMachine(
         }
       },
       idle: {
-        type: "parallel",
         on: {
           GENERATE: "generating",
           SET_COUNT: {
@@ -111,10 +110,7 @@ let generateMachine = mod.createMachine(
             actions: [assignSep]
           }
         },
-        states: {
-          main: {},
-          phrase_output: PHRASE_OUTPUT
-        }
+        ...PHRASE_OUTPUT
       },
 
       generating: {

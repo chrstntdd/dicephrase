@@ -43,8 +43,11 @@ function PhraseOutput(props: {
         }}
         onClick={
           phrasesExist
-            ? () => {
-                send("COPY_PHRASE")
+            ? (e) => {
+                ;(e.target as HTMLDivElement).focus()
+                requestAnimationFrame(() => {
+                  send("COPY_PHRASE")
+                })
               }
             : undefined
         }

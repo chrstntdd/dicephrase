@@ -66,6 +66,8 @@ let assignParamsFromQueryString = mod.assign((ctx) => {
     count: x.count
   }
 })
+let resetRetries = mod.assign({ attemptCount: 0 })
+
 function syncToUrl(ctx: ModelContextFrom<typeof mod>) {
   const url = new URL(globalThis.location as unknown as string)
   url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
@@ -170,10 +172,12 @@ let generateMachine = mod.createMachine(
               }
             }
           },
-          error: {},
+          error: {
+            entry: [resetRetries]
+          },
           combining: {
             type: "final",
-            exit: [assignGeneratedPhrases, syncToUrl]
+            exit: [assignGeneratedPhrases, syncToUrl, resetRetries]
           }
         }
       }

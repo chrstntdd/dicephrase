@@ -16,34 +16,38 @@ function PhraseOutput(props: {
   let phrasesExist = !!props.phrases.length
   let [state, send] = useActor(props.service)
 
-  function handleCopyPhrase() {
-    send("COPY_PHRASE")
-  }
-
   return (
     <div>
       <Help
         status={
-          state().matches("idle.phrase_output.focused.idle")
+          state().matches("idle.focused.idle")
             ? "copy"
-            : state().matches("idle.phrase_output.focused.copied")
+            : state().matches("idle.focused.copied")
             ? "copied"
             : "idle"
         }
       />
-      <button
-        type="button"
+      {/* Unable to use a native button due to children & safari  */}
+      {/* being safari https://stackoverflow.com/questions/42758815/safari-focus-event-doesnt-work-on-button-element */}
+      <div
+        role="button"
+        tabIndex={phrasesExist ? 0 : -1}
         aria-label="Copy passphrase to clipboard"
         class={styles.pressable}
         hidden={!phrasesExist}
-        tabIndex={phrasesExist ? 0 : -1}
         onFocus={() => {
           send("FOCUS_OUTPUT")
         }}
         onBlur={() => {
           send("BLUR_OUTPUT")
         }}
-        onClick={phrasesExist ? handleCopyPhrase : undefined}
+        onClick={
+          phrasesExist
+            ? () => {
+                send("COPY_PHRASE")
+              }
+            : undefined
+        }
       >
         <div class={styles.phrases}>
           <For each={props.phrases}>
@@ -62,7 +66,7 @@ function PhraseOutput(props: {
             }}
           </For>
         </div>
-      </button>
+      </div>
     </div>
   )
 }

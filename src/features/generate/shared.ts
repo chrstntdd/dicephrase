@@ -1,5 +1,8 @@
+import type { ContextFrom } from "xstate"
 import { assert } from "../../lib/assert"
 import { setStatus } from "../../lib/a11y/aria-live-msg"
+import type { generateMachine } from "./generate.machine"
+import type { simpleGenerateMachine } from "./generate-simple.machine"
 
 import { make_wl_keys, shuffle } from "./Gen.gen"
 
@@ -23,7 +26,7 @@ export const RANDOM_SEPARATOR_OPTS = [
 ]
 
 export function retryDelay(ctx: { attemptCount: number }) {
-  // Trying: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+  // From: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
   const CAP = 2000
   const BASE = 10
 
@@ -104,7 +107,11 @@ export const PHRASE_OUTPUT = {
         },
         copying: {
           invoke: {
-            src: async (ctx) => {
+            src: async (
+              ctx: ContextFrom<
+                typeof generateMachine | typeof simpleGenerateMachine
+              >
+            ) => {
               let m = await import("./copy").then(
                 (m) => m.copyPhraseToClipboard
               )

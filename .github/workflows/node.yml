@@ -44,3 +44,6 @@ jobs:
 
       - name: Test
         run: pnpm test
+        env:
+          IS_NET: true
+          NODE_ENV: test

@@ -1,15 +1,2 @@
 node_modules
 .DS_Store
-dist
-dist-ssr
-*.local
-*.pem
-dist-ssg
-public/sw.js
-
-# ReScript deps
-lib
-.bsb.lock
-.merlin
-# Allow app's lib
-!src/lib

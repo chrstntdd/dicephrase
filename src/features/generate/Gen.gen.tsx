@@ -5,6 +5,7 @@
 import * as GenBS__Es6Import from "./Gen.bs"
 const GenBS: any = GenBS__Es6Import
 
+// @ts-ignore
 import type { TypedArray2_Uint32Array_t as Js_TypedArray2_Uint32Array_t } from "./Js.gen"
 
 // tslint:disable-next-line:interface-over-type-literal

@@ -1,50 +1,27 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest"
-
-import { chromium, devices } from "playwright"
-import type { Page, ChromiumBrowser } from "playwright"
+import { test, expect } from "@playwright/test"
+import type { Page } from "@playwright/test"
 import { resolve } from "path"
 
-import { E2E_SCREENSHOT_DIR } from "../scripts/mod"
+import { E2E_SCREENSHOT_DIR } from "../config"
 
-describe("App e2e", () => {
-  let browser: ChromiumBrowser, page: Page
+async function setupPage(page: Page, baseURL: string) {
+  await page.goto(baseURL + "generate", { waitUntil: "networkidle" })
+}
 
-  beforeAll(async () => {
-    let iPhone = devices["iPhone SE"]
-
-    let b = await chromium.launch({ headless: false })
-
-    let context = await b.newContext({
-      ...iPhone,
-      permissions: ["clipboard-write", "clipboard-read"],
-      ignoreHTTPSErrors: true,
-      colorScheme: "dark"
-    })
-
-    let p = await context.newPage()
-
-    await p.goto("https://localhost:3001/generate")
-
-    page = p
-    browser = b
-  })
-
-  beforeEach(async () => {
-    await page.reload()
-    await page.goto("https://localhost:3001/generate")
-  })
-
-  afterAll(async () => {
+test.describe("App e2e", () => {
+  test.afterAll(async ({ browser }) => {
     await browser.close()
   })
 
-  it("shows the heading", async () => {
+  test("shows the heading", async ({ page, baseURL }) => {
+    await setupPage(page, baseURL!)
     let heading = await page.$("h1")
 
     expect(await heading.textContent()).toEqual("Dicephrase")
   })
 
-  it("shows the default values checked", async () => {
+  test("shows the default values checked", async ({ page, baseURL }) => {
+    await setupPage(page, baseURL!)
     let defaultWordCount = await page.$("input[type='radio'][value='8']")
 
     expect(await defaultWordCount.isChecked()).toBeTruthy()
@@ -54,7 +31,11 @@ describe("App e2e", () => {
     expect(await defaultSep.isChecked()).toBeTruthy()
   })
 
-  it("should show the results after pressing the generate button", async () => {
+  test("should show the results after pressing the generate button", async ({
+    page,
+    baseURL
+  }) => {
+    await setupPage(page, baseURL!)
     let genBtn = await page.$("button[type='submit']")
 
     await genBtn.click()
@@ -70,7 +51,22 @@ describe("App e2e", () => {
     })
   })
 
-  it("should copy the results to the clipboard after the press of the output", async () => {
+  test("should copy the results to the clipboard after the press of the output", async ({
+    page,
+    browserName,
+    context,
+    browser,
+    contextOptions,
+    baseURL
+  }) => {
+    if (browserName === "chromium") {
+      let ctx = await browser.newContext({
+        ...context,
+        permissions: ["clipboard-write", "clipboard-read"]
+      })
+      page = await ctx.newPage()
+    }
+    await setupPage(page, baseURL!)
     let genBtn = await page.$("button[type='submit']")
 
     await genBtn.click()
@@ -93,7 +89,11 @@ describe("App e2e", () => {
     expect(visualPassword).toEqual(passwordInClipboard)
   })
 
-  it("should update the URL on change of form inputs", async () => {
+  test("should update the URL on change of form inputs", async ({
+    page,
+    baseURL
+  }) => {
+    await setupPage(page, baseURL!)
     let genBtn = await page.$("button[type='submit']")
 
     await genBtn.click()

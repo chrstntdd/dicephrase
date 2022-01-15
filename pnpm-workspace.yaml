@@ -1,0 +1,6 @@
+packages:
+  - "apps/**"
+  - "pkgs/**"
+  # Ignores
+  - "!**/test/**"
+  - "!**/__tests__/**"

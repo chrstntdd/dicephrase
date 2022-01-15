@@ -9,6 +9,9 @@ let IS_NET = process.env.IS_NET === "true"
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   return {
+    test: {
+      exclude: ["e2e", "node_modules", "dist", ".idea", ".git", ".cache"]
+    },
     plugins: [
       vanillaExtractPlugin(),
       solid(

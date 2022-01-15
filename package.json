@@ -108,7 +108,8 @@
       "import"
     ],
     "rules": {
-      "prefer-const": 0
+      "prefer-const": 0,
+      "@typescript-eslint/no-extra-semi": 0
     }
   },
   "prettier": {

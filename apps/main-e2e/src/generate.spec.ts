@@ -54,18 +54,18 @@ test.describe("App e2e", () => {
   test("should copy the results to the clipboard after the press of the output", async ({
     page,
     browserName,
-    context,
     browser,
     contextOptions,
     baseURL
   }) => {
-    if (browserName === "chromium") {
-      let ctx = await browser.newContext({
-        ...context,
-        permissions: ["clipboard-write", "clipboard-read"]
-      })
-      page = await ctx.newPage()
-    }
+    // Only chrome has nice support for verifying the copy functionality works
+    if (browserName !== "chromium") return
+
+    let ctx = await browser.newContext({
+      ...contextOptions,
+      permissions: ["clipboard-write", "clipboard-read"]
+    })
+    page = await ctx.newPage()
     await setupPage(page, baseURL!)
     let genBtn = await page.$("button[type='submit']")
 

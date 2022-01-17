@@ -15,7 +15,7 @@
     "re:build": "rescript",
     "re:start": "rescript build -w",
     "tc": "tsc --noEmit",
-    "test": "vitest"
+    "test": "echo missing!"
   },
   "dependencies": {
     "solid-js": "1.2.6",

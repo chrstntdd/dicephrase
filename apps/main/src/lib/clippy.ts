@@ -1,5 +1,5 @@
 async function copyTextToClipboard(text: string) {
-  if (!navigator.clipboard) {
+  if (!navigator.clipboard?.writeText) {
     let fallbackCopy = await import("./clippy-fallback").then((m) => m.default)
     fallbackCopy(text)
     return

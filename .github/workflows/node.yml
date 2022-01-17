@@ -37,13 +37,13 @@ jobs:
           run_install: true
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm --filter "dicephrase" lint
 
       - name: Type check
-        run: pnpm tc
+        run: pnpm --filter "dicephrase" tc
 
       - name: Test
-        run: pnpm test
+        run: pnpm --filter "dicephrase" test
         env:
           IS_NET: true
           NODE_ENV: test

@@ -1,0 +1,75 @@
+{
+  "name": "dicephrase-e2e",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "playwright": "^1.17.2"
+  },
+  "eslintConfig": {
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
+      }
+    },
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "prettier",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
+        "parserOptions": {
+          "project": [
+            "./tsconfig.json"
+          ]
+        }
+      },
+      {
+        "files": [
+          "*.spec.ts",
+          "*.spec.tsx"
+        ],
+        "rules": {
+          "@typescript-eslint/ban-ts-comment": 0
+        }
+      }
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "import"
+    ],
+    "rules": {
+      "prefer-const": 0,
+      "@typescript-eslint/no-extra-semi": 0
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
+  },
+  "dependencies": {
+    "@playwright/test": "^1.17.2"
+  }
+}

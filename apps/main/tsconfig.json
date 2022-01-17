@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
+    "module": "ESNEXT",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNEXT",
+    "useDefineForClassFields": true
+  },
+  "include": ["./src"],
+  "exclude": ["./src/**/*.gen.tsx"]
+}

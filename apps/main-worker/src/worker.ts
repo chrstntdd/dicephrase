@@ -79,9 +79,10 @@ class DocumentHandler {
 
     if (comment.text.trim() === "EDGE_DATA") {
       comment.replace(
-        `<script>window.EDGE_DATA = '{ phrases: ${JSON.stringify(
-          this.phrases
-        )}, separators: ${JSON.stringify(this.separators)} }'</script>`,
+        `<script id='edge-data'>window.EDGE_DATA = '${JSON.stringify({
+          separators: this.separators,
+          phrases: this.phrases
+        })}'</script>`,
         {
           html: true
         }

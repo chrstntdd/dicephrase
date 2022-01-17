@@ -6,7 +6,7 @@ const localPkgJson = JSON.parse(readFileSync("./package.json", "utf-8"))
 /** @type ES.BuildOptions */
 const SHARED_ESBUILD_OPTIONS = {
   bundle: true,
-  entryPoints: ["./src/Gen.gen.tsx"],
+  entryPoints: ["./src/index.ts"],
   minify: true,
   target: "esnext"
 }

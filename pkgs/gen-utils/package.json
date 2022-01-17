@@ -1,0 +1,30 @@
+{
+  "name": "gen-utils",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "description": "Shared utilities for generating a passphrase",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/gen-utils.mod.js",
+      "require": "./dist/gen-utils.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "browser": "./dist/gen-utils.mod.js",
+  "types": "./dist/types/Gen.gen.d.ts",
+  "module": "./dist/gen-utils.mod.js",
+  "main": "./dist/gen-utils.cjs",
+  "scripts": {
+    "re:build": "rescript",
+    "re:start": "rescript build -w",
+    "emit-types": "tsc --emitDeclarationOnly",
+    "test": "vitest",
+    "build": "pnpm re:build && node make.js && pnpm emit-types"
+  },
+  "devDependencies": {
+    "gentype": "^4.3.0",
+    "rescript": "^9.1.4",
+    "vitest": "^0.1.19"
+  }
+}

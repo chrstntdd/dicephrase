@@ -1,10 +1,10 @@
 import { createMemo, Show, lazy, Suspense } from "solid-js"
+import { parse_count_val } from "gen-utils"
 
 import { RadioGroup } from "../components/radio-group"
 import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
 import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "../features/generate/constants"
-import { parse_count_val } from "../features/generate/Gen.gen"
 
 import * as styles from "./generate.css"
 

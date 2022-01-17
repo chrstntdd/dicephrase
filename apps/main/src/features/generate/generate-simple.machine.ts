@@ -1,7 +1,7 @@
 import { assign } from "xstate"
 import { createModel } from "xstate/lib/model.js"
 
-import { parse_qs_to_phrase_config } from "./Gen.gen"
+import { parse_qs_to_phrase_config } from "gen-utils"
 
 import {
   fetchWordList,

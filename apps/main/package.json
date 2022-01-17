@@ -4,7 +4,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "NODE_ENV='production' tsm scripts/prerender.ts && cp _headers dist && tsm scripts/crit.ts",
-    "gen:crit": "tsm scripts/crit.ts",
     "coverage": "vitest --coverage",
     "dev:l": "bun vite",
     "dev": "vite",
@@ -20,7 +19,8 @@
   },
   "dependencies": {
     "solid-js": "1.2.6",
-    "xstate": "^4.27.0"
+    "xstate": "^4.27.0",
+    "gen-utils": "0.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",
@@ -29,7 +29,6 @@
     "@vanilla-extract/css": "^1.6.8",
     "@vanilla-extract/vite-plugin": "^3.1.2",
     "@xstate/inspect": "^0.6.0",
-    "critical": "^4.0.1",
     "esbuild": "^0.14.10",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
@@ -39,11 +38,9 @@
     "fastify": "^3.25.3",
     "fastify-compress": "^4.0.1",
     "fastify-static": "^4.5.0",
-    "gentype": "^4.3.0",
     "html-minifier-terser": "^7.0.0-alpha.1",
     "polished": "^4.1.3",
     "prettier": "^2.5.1",
-    "rescript": "^9.1.4",
     "tsm": "^2.2.1",
     "typescript": "^4.5.4",
     "vite": "beta",

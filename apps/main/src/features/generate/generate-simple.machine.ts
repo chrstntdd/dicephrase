@@ -107,7 +107,7 @@ let simpleGenerateMachine = mod.createMachine(
         entry: [
           send({
             type: "HYDRATE_FROM_URL_PARAMS",
-            value: globalThis.location.search
+            value: globalThis.location?.search
           })
         ],
         on: {

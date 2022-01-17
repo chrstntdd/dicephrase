@@ -105,7 +105,10 @@ let simpleGenerateMachine = mod.createMachine(
       /* Fallback, generate on client if edge fails */
       configuring: {
         entry: [
-          send({ type: "HYDRATE_FROM_URL_PARAMS", value: location.search })
+          send({
+            type: "HYDRATE_FROM_URL_PARAMS",
+            value: globalThis.location.search
+          })
         ],
         on: {
           HYDRATE_FROM_URL_PARAMS: {

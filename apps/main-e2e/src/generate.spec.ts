@@ -15,18 +15,18 @@ test.describe("App e2e", () => {
 
   test("shows the heading", async ({ page, baseURL }) => {
     await setupPage(page, baseURL!)
-    let heading = await page.$("h1")
+    let heading = page.locator("h1")
 
     expect(await heading.textContent()).toEqual("Dicephrase")
   })
 
   test("shows the default values checked", async ({ page, baseURL }) => {
     await setupPage(page, baseURL!)
-    let defaultWordCount = await page.$("input[type='radio'][value='8']")
+    let defaultWordCount = page.locator("input[type='radio'][value='8']")
 
     expect(await defaultWordCount.isChecked()).toBeTruthy()
 
-    let defaultSep = await page.$("input[type='radio'][value='random']")
+    let defaultSep = page.locator("input[type='radio'][value='random']")
 
     expect(await defaultSep.isChecked()).toBeTruthy()
   })
@@ -36,7 +36,7 @@ test.describe("App e2e", () => {
     baseURL
   }) => {
     await setupPage(page, baseURL!)
-    let genBtn = await page.$("button[type='submit']")
+    let genBtn = page.locator("button[type='submit']")
 
     await genBtn.click()
 
@@ -67,7 +67,8 @@ test.describe("App e2e", () => {
     })
     page = await ctx.newPage()
     await setupPage(page, baseURL!)
-    let genBtn = await page.$("button[type='submit']")
+    // TODO: figure out why using a locator here fails
+    let genBtn = (await page.$("button[type='submit']"))!
 
     await genBtn.click()
 
@@ -94,7 +95,7 @@ test.describe("App e2e", () => {
     baseURL
   }) => {
     await setupPage(page, baseURL!)
-    let genBtn = await page.$("button[type='submit']")
+    let genBtn = page.locator("button[type='submit']")
 
     await genBtn.click()
     await page.waitForNavigation()

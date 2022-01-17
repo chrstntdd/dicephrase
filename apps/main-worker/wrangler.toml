@@ -1,0 +1,19 @@
+name="dicephrase-generated"
+type = "javascript"
+routes = ["*dicephrase.xyz/generated*"]
+compatibility_date = "2022-01-17"
+
+[build]
+command = "pnpm build"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]
+
+
+[build.upload]
+# Need all fields 
+# See https://github.com/cloudflare/wrangler/issues/1951
+main = "worker.js"
+dir = "./dist"
+format = "modules"

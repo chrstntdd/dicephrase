@@ -2,7 +2,7 @@ import { assign } from "xstate"
 import { createModel } from "xstate/lib/model.js"
 import type { ModelContextFrom } from "xstate/lib/model.types"
 
-import { parse_qs_to_phrase_config } from "./Gen.gen"
+import { parse_qs_to_phrase_config } from "gen-utils"
 import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 
 import {

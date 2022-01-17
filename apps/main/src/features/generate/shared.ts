@@ -4,7 +4,7 @@ import { setStatus } from "../../lib/a11y/aria-live-msg"
 import type { generateMachine } from "./generate.machine"
 import type { simpleGenerateMachine } from "./generate-simple.machine"
 
-import { make_wl_keys, shuffle } from "./Gen.gen"
+import { make_wl_keys, shuffle } from "gen-utils"
 
 export function msgWithoutPayload(): Record<string, never> {
   return Object.create(null)

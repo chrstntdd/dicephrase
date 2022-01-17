@@ -1,6 +1,6 @@
 import { copyTextToClipboard } from "../../lib/clippy"
 
-import { combine_zip } from "./Gen.gen"
+import { combine_zip } from "gen-utils"
 
 export async function copyPhraseToClipboard(ctx: {
   phrases: string[]

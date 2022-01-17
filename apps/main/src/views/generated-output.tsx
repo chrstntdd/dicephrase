@@ -15,13 +15,14 @@ function GeneratedOutput() {
 
   let separators = createMemo(() => state.context.separators)
   let phrases = createMemo(() => state.context.phrases)
-  let hasOutput = createMemo(() => state.context.wlRecord)
+  let hasOutput = createMemo(
+    () =>
+      state.context.wlRecord ||
+      (state.context.separators && state.context.phrases)
+  )
 
   onMount(() => {
-    send({
-      type: "HYDRATE_FROM_URL_PARAMS",
-      value: location.search
-    })
+    send("HYDRATE_FROM_EDGE")
   })
 
   return (

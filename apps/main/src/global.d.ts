@@ -10,3 +10,7 @@ declare const __SW_CACHE_KEY__: string
  * to support offline usage
  */
 declare const __PRECACHE_BUILD_ASSETS__: string
+
+interface Window extends Window {
+  EDGE_DATA: string | null
+}

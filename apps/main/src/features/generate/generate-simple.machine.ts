@@ -1,7 +1,9 @@
-import { assign } from "xstate"
+import { assign, send } from "xstate"
 import { createModel } from "xstate/lib/model.js"
 
 import { parse_qs_to_phrase_config } from "gen-utils"
+
+import { assert } from "../../lib/assert"
 
 import {
   fetchWordList,
@@ -27,6 +29,7 @@ let mod = createModel(
     events: {
       CANCEL: msgWithoutPayload,
       HYDRATE_FROM_URL_PARAMS: (value: string) => ({ value }),
+      HYDRATE_FROM_EDGE: msgWithoutPayload,
       COPY_PHRASE: msgWithoutPayload,
       FOCUS_OUTPUT: msgWithoutPayload,
       BLUR_OUTPUT: msgWithoutPayload
@@ -64,12 +67,46 @@ let assignParamsFromURL = mod.assign((ctx, event) => {
   }
 }, "HYDRATE_FROM_URL_PARAMS")
 
+function cleanupEdgeData() {
+  window.EDGE_DATA = null
+  document.getElementById("edge-data")?.remove()
+}
+
 let simpleGenerateMachine = mod.createMachine(
   {
     id: "dice-gen-simple",
-    initial: "configuring",
+    initial: "prep",
     states: {
+      prep: {
+        on: {
+          HYDRATE_FROM_EDGE: "hydrating_from_edge"
+        }
+      },
+      hydrating_from_edge: {
+        invoke: {
+          src: async () => {
+            assert(window.EDGE_DATA)
+
+            return JSON.parse(window.EDGE_DATA)
+          },
+          onDone: {
+            target: "idle",
+            actions: [
+              assign({
+                separators: (_, e) => e.data.separators,
+                phrases: (_, e) => e.data.phrases
+              })
+            ]
+          },
+          onError: "configuring"
+        },
+        exit: [cleanupEdgeData]
+      },
+      /* Fallback, generate on client if edge fails */
       configuring: {
+        entry: [
+          send({ type: "HYDRATE_FROM_URL_PARAMS", value: location.search })
+        ],
         on: {
           HYDRATE_FROM_URL_PARAMS: {
             actions: assignParamsFromURL,

@@ -78,7 +78,8 @@ globalStyle("#root", {
 })
 
 globalStyle("a, a:active", {
-  color: "inherit"
+  color: "inherit",
+  background: "inherit"
 })
 
 // For nice smooth animations

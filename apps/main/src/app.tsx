@@ -5,6 +5,7 @@ import OfflineToast from "./lib/offline-toast"
 
 const Generate = lazy(() => import("./views/generate"))
 const GeneratedOutput = lazy(() => import("./views/generated-output"))
+const About = lazy(() => import("./views/about"))
 
 import * as styles from "./app.css"
 
@@ -18,30 +19,31 @@ function App(props: { url: string }) {
         aria-label="Skip to main content"
       />
 
-      <header>
+      <header class={styles.header}>
         <h1 class={styles.pageTile}>
           <a href="/generate">Dicephrase</a>
         </h1>
+
+        <nav>
+          <a href="/about">About</a>
+        </nav>
       </header>
 
       <SkipNavContent id={SKIP_NAV_ID} />
 
       <main>
         <Suspense>
-          <Switch
-            fallback={
-              <div>
-                Welcome! Start by generating a{" "}
-                <a href="/generate">passphrase</a>
-              </div>
-            }
-          >
+          <Switch fallback={<Generate />}>
             <Match when={props.url === "/generate"}>
               <Generate />
             </Match>
 
             <Match when={props.url === "/generated"}>
               <GeneratedOutput />
+            </Match>
+
+            <Match when={props.url === "/about"}>
+              <About />
             </Match>
           </Switch>
         </Suspense>

@@ -2,10 +2,10 @@ import { copyTextToClipboard } from "../../lib/clippy"
 
 import { combine_zip } from "gen-utils"
 
-export async function copyPhraseToClipboard(ctx: {
-  phrases: string[]
+export async function copyPhraseToClipboard(
+  phrases: string[],
   separators: string[]
-}) {
-  let pw = combine_zip(ctx.phrases, ctx.separators)
+) {
+  let pw = combine_zip(phrases, separators)
   await copyTextToClipboard(pw.join(""))
 }

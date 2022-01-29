@@ -1,89 +1,56 @@
-import { assign } from "xstate"
-import { createModel } from "xstate/lib/model.js"
-import type { ModelContextFrom } from "xstate/lib/model.types"
+import { createMachine, assign } from "xstate"
 
 import { parse_qs_to_phrase_config } from "gen-utils"
-import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 
+import { assert } from "../../lib/assert"
+import { setStatus } from "../../lib/a11y/aria-live-msg"
+
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 import {
   fetchWordList,
   makePhrases,
   makeSeparators,
   msgWithoutPayload,
-  PHRASE_OUTPUT,
   retryDelay
 } from "./shared"
 
-let mod = createModel(
-  {
-    count: 8,
-    separatorKind: "random",
-    separators: undefined as unknown as string[],
-    phrases: undefined as unknown as string[],
-    ab: undefined as AbortController | undefined,
-    attemptCount: 0,
-    wlRecord: undefined as unknown as Record<string, string>
-  },
-  {
-    events: {
-      GENERATE: msgWithoutPayload,
-      SET_COUNT: (value: number) => ({ value }),
-      SET_SEP: (value: string) => ({ value }),
-      COPY_PHRASE: msgWithoutPayload,
-      FOCUS_OUTPUT: msgWithoutPayload,
-      BLUR_OUTPUT: msgWithoutPayload
-    }
-  }
-)
-
-/**
- * @description Defining actions here instead of the machine config to keep type safety
- *
- * @see https://github.com/statelyai/xstate/issues/2886
- */
-let assignCount = mod.assign({ count: (_, e) => e.value }, "SET_COUNT")
-let assignSep = mod.assign({ separatorKind: (_, e) => e.value }, "SET_SEP")
-let assignAb = mod.assign({ ab: () => new AbortController() })
-let incrementRetry = mod.assign({ attemptCount: (ctx) => ctx.attemptCount + 1 })
-let cancelPending = mod.assign({
-  ab: (ctx) => {
-    ctx.ab?.abort()
-    return ctx.ab
-  }
-})
-let assignGeneratedPhrases = mod.assign((ctx) => {
-  return {
-    ...ctx,
-    separators: makeSeparators(ctx),
-    phrases: makePhrases(ctx)
-  }
-})
-let assignParamsFromQueryString = mod.assign((ctx) => {
-  let x = parse_qs_to_phrase_config(globalThis.location?.search)
-  return {
-    ...ctx,
-    separatorKind: x.sep,
-    count: x.count
-  }
-})
-let resetRetries = mod.assign({ attemptCount: 0 })
-
-function syncToUrl(ctx: ModelContextFrom<typeof mod>) {
-  const url = new URL(globalThis.location as unknown as string)
-  url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
-  url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
-
-  history.pushState(msgWithoutPayload(), "", url)
-}
-
-let generateMachine = mod.createMachine(
+let generateMachine = createMachine(
   {
     id: "dice-gen",
     initial: "syncing_from_url",
+    tsTypes: {} as import("./generate.machine.typegen").Typegen0,
+    schema: {
+      events: {} as
+        | { type: "GENERATE" }
+        | { type: "SET_COUNT"; value: number }
+        | { type: "SET_SEP"; value: string }
+        | { type: "COPY_PHRASE" }
+        | { type: "FOCUS_OUTPUT" }
+        | { type: "BLUR_OUTPUT" },
+      services: {} as {
+        fetchWordList: {
+          data: Record<string, string>
+        }
+      },
+      context: {} as {
+        ab?: AbortController
+        attemptCount: number
+        count: number
+        phrases?: string[]
+        separatorKind: string
+        separators?: string[]
+        wlRecord?: Record<string, string>
+      }
+    },
+    context: {
+      attemptCount: 0,
+      count: 8,
+      separatorKind: "random"
+    },
     states: {
       syncing_from_url: {
         always: {
-          actions: assignParamsFromQueryString,
+          actions: "assignParamsFromQueryString",
           target: "empty"
         }
       },
@@ -92,11 +59,11 @@ let generateMachine = mod.createMachine(
           GENERATE: "generating",
           SET_COUNT: {
             target: "generating",
-            actions: [assignCount]
+            actions: ["assignCount"]
           },
           SET_SEP: {
             target: "generating",
-            actions: [assignSep]
+            actions: ["assignSep"]
           }
         }
       },
@@ -105,14 +72,48 @@ let generateMachine = mod.createMachine(
           GENERATE: "generating",
           SET_COUNT: {
             target: "generating",
-            actions: [assignCount]
+            actions: ["assignCount"]
           },
           SET_SEP: {
             target: "generating",
-            actions: [assignSep]
+            actions: ["assignSep"]
           }
         },
-        ...PHRASE_OUTPUT
+        initial: "unfocused",
+        states: {
+          unfocused: {
+            on: {
+              FOCUS_OUTPUT: "focused"
+            }
+          },
+          focused: {
+            initial: "idle",
+            on: {
+              BLUR_OUTPUT: "unfocused"
+            },
+            entry: ["announceCopy"],
+            states: {
+              idle: {
+                on: { COPY_PHRASE: "copying" }
+              },
+              copying: {
+                invoke: {
+                  id: "copyToClipboard",
+                  src: "copyToClipboard",
+                  onDone: "copied",
+                  onError: "idle"
+                }
+              },
+              copied: {
+                entry: ["announceCopied"],
+                after: { 4000: "hidden" }
+              },
+              hidden: {
+                on: { COPY_PHRASE: "copying" }
+              }
+            }
+          }
+        }
       },
 
       generating: {
@@ -120,7 +121,7 @@ let generateMachine = mod.createMachine(
         onDone: "idle",
         // Handles exit+re-entry when new messages come in that interrupt the work
         // and reset the progress
-        exit: [cancelPending],
+        exit: ["cancelPending"],
         on: {
           GENERATE: {
             target: "generating",
@@ -129,12 +130,12 @@ let generateMachine = mod.createMachine(
           SET_COUNT: {
             target: "generating",
             internal: false,
-            actions: [assignCount]
+            actions: ["assignCount"]
           },
           SET_SEP: {
             target: "generating",
             internal: false,
-            actions: [assignSep]
+            actions: ["assignSep"]
           }
         },
         states: {
@@ -147,19 +148,17 @@ let generateMachine = mod.createMachine(
             }
           },
           fetching_wl: {
-            entry: assignAb,
+            entry: "assignAb",
             invoke: {
+              id: "fetchWordList",
               src: "fetchWordList",
               onDone: {
                 target: "combining",
                 /* TODO: Figure out if we can use regular assign here */
-                actions: [assign({ wlRecord: (_, event) => event.data })]
+                actions: ["assignWordList"]
               },
               onError: [
-                {
-                  cond: (ctx) => ctx.attemptCount < 7,
-                  target: "retrying"
-                },
+                { cond: "shouldRetry", target: "retrying" },
                 { target: "error" }
               ]
             }
@@ -168,27 +167,78 @@ let generateMachine = mod.createMachine(
             after: {
               REQUEST_BACK_OFF_DELAY: {
                 target: "fetching_wl",
-                actions: [incrementRetry]
+                actions: ["incrementRetry"]
               }
             }
           },
           error: {
-            entry: [resetRetries]
+            entry: ["resetRetries"]
           },
           combining: {
             type: "final",
-            exit: [assignGeneratedPhrases, syncToUrl, resetRetries]
+            exit: ["assignGeneratedPhrases", "syncToUrl", "resetRetries"]
           }
         }
       }
     }
   },
   {
+    actions: {
+      assignWordList: assign({ wlRecord: (_, event) => event.data }),
+      resetRetries: assign({ attemptCount: (_) => 0 }),
+      assignParamsFromQueryString: assign((ctx) => {
+        let x = parse_qs_to_phrase_config(globalThis.location?.search)
+        return {
+          ...ctx,
+          separatorKind: x.sep,
+          count: x.count
+        }
+      }),
+      assignGeneratedPhrases: assign((ctx) => {
+        assert(ctx.wlRecord)
+        return {
+          ...ctx,
+          separators: makeSeparators(ctx),
+          phrases: makePhrases(ctx.count, ctx.wlRecord)
+        }
+      }),
+      cancelPending: assign({
+        ab: (ctx) => {
+          ctx.ab?.abort()
+          return ctx.ab
+        }
+      }),
+
+      assignCount: assign({ count: (_, e) => e.value }),
+      assignSep: assign({ separatorKind: (_, e) => e.value }),
+      assignAb: assign({ ab: (_) => new AbortController() }),
+      incrementRetry: assign({ attemptCount: (ctx) => ctx.attemptCount + 1 }),
+
+      syncToUrl: (ctx) => {
+        const url = new URL(globalThis.location as unknown as string)
+        url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
+        url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
+
+        history.pushState(msgWithoutPayload(), "", url)
+      },
+      announceCopy: () => {
+        setStatus("Copy to clipboard")
+      },
+      announceCopied: () => {
+        setStatus("Copied to clipboard")
+      }
+    },
     guards: {
-      needsToFetchWl: (ctx) => !ctx.wlRecord
+      needsToFetchWl: (ctx) => !ctx.wlRecord,
+      shouldRetry: (ctx) => ctx.attemptCount < 7
     },
     services: {
-      fetchWordList
+      fetchWordList,
+      copyToClipboard: async (ctx) => {
+        let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return m(ctx.phrases!, ctx.separators!)
+      }
     },
     delays: {
       REQUEST_BACK_OFF_DELAY: retryDelay

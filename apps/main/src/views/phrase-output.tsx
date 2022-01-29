@@ -1,7 +1,6 @@
 import { For, Match, Switch, Show } from "solid-js"
 import type { ActorRefFrom } from "xstate"
 
-import type { simpleGenerateMachine } from "../features/generate/generate-simple.machine"
 import type { generateMachine } from "../features/generate/generate.machine"
 import { useActor } from "../lib/solid-xstate/use-actor"
 
@@ -11,7 +10,7 @@ function PhraseOutput(props: {
   phrases: readonly string[]
   separators: readonly string[]
   handleCopyPress: () => void
-  service: ActorRefFrom<typeof simpleGenerateMachine | typeof generateMachine>
+  service: ActorRefFrom<typeof generateMachine>
 }) {
   let phrasesExist = !!props.phrases.length
   let [state, send] = useActor(props.service)

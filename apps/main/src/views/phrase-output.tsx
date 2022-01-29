@@ -41,13 +41,17 @@ function PhraseOutput(props: {
         onBlur={() => {
           send("BLUR_OUTPUT")
         }}
+        onKeyPress={(e) => {
+          // Handle both https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role#keyboard_interactions
+          if (e.key === "Enter" || e.key === " ") {
+            send("COPY_PHRASE")
+          }
+        }}
         onClick={
           phrasesExist
             ? (e) => {
                 ;(e.target as HTMLDivElement).focus()
-                requestAnimationFrame(() => {
-                  send("COPY_PHRASE")
-                })
+                send("COPY_PHRASE")
               }
             : undefined
         }

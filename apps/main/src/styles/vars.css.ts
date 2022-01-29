@@ -36,6 +36,7 @@ export const vars = createGlobalTheme(":root", {
     "primary-1100": "#ecf8f2"
   },
   borderRadius: {
+    "2x": borderRadiusScale(2),
     "3x": borderRadiusScale(3),
     full: "99999px"
   },

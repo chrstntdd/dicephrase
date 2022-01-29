@@ -11,3 +11,9 @@ export const pageTile = style({
 export const appGutter = style({
   padding: `env(safe-area-inset-top) calc(env(safe-area-inset-right) + ${vars.space["2x"]}) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + ${vars.space["2x"]})`
 })
+
+export const header = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between"
+})

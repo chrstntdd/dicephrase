@@ -4,7 +4,6 @@ import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import OfflineToast from "./lib/offline-toast"
 
 const Generate = lazy(() => import("./views/generate"))
-const GeneratedOutput = lazy(() => import("./views/generated-output"))
 const About = lazy(() => import("./views/about"))
 
 import * as styles from "./app.css"
@@ -36,10 +35,6 @@ function App(props: { url: string }) {
           <Switch fallback={<Generate />}>
             <Match when={props.url === "/generate"}>
               <Generate />
-            </Match>
-
-            <Match when={props.url === "/generated"}>
-              <GeneratedOutput />
             </Match>
 
             <Match when={props.url === "/about"}>

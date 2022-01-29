@@ -31,6 +31,9 @@ const WORD_COUNT_OPTS = [
 
 function Generate() {
   let [state, send, service] = useMachine(
+    // @ts-expect-error Typing kinda sux with the handrolled useMachine
+    // Once it's merged, we should use the official solid useMachine
+    // https://github.com/statelyai/xstate/pull/2932
     generateMachine,
     import.meta.env.DEV ? { devTools: true } : undefined
   )
@@ -41,14 +44,10 @@ function Generate() {
   let phrases = createMemo(() => state.context.phrases)
   let hasOutput = createMemo(() => state.context.wlRecord)
 
-  let navToGeneratedPage = false
-
   function handleSubmit(e: Event) {
     send("GENERATE")
 
-    if (!navToGeneratedPage) {
-      e.preventDefault()
-    }
+    e.preventDefault()
   }
 
   return (
@@ -95,8 +94,10 @@ function Generate() {
         <Show when={hasOutput()}>
           <PhraseOutput
             service={service}
-            separators={separators()}
-            phrases={phrases()}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            separators={separators()!}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            phrases={phrases()!}
             handleCopyPress={() => {
               send("COPY_PHRASE")
             }}

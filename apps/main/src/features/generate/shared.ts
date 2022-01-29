@@ -1,8 +1,4 @@
-import type { ContextFrom } from "xstate"
 import { assert } from "../../lib/assert"
-import { setStatus } from "../../lib/a11y/aria-live-msg"
-import type { generateMachine } from "./generate.machine"
-import type { simpleGenerateMachine } from "./generate-simple.machine"
 
 import { make_wl_keys, shuffle } from "gen-utils"
 
@@ -33,7 +29,9 @@ export function retryDelay(ctx: { attemptCount: number }) {
   return randomBetween(0, Math.min(CAP, BASE * 2 ** ctx.attemptCount))
 }
 
-export async function fetchWordList(ctx: { ab?: AbortController }) {
+export async function fetchWordList(ctx: {
+  ab?: AbortController
+}): Promise<Record<string, string>> {
   const r = await fetch("/wl-2016.json", {
     signal: (ctx.ab as NonNullable<typeof ctx.ab>).signal
   })
@@ -45,16 +43,16 @@ export function shouldRetry(ctx: { attemptCount: number }): boolean {
   return ctx.attemptCount < 7
 }
 
-export function makePhrases(ctx: {
-  count: number
+export function makePhrases(
+  count: number,
   wlRecord: Record<string, string>
-}): string[] {
-  let keys = make_wl_keys(ctx.count, (b) => crypto.getRandomValues(b))
+): string[] {
+  let keys = make_wl_keys(count, (b) => crypto.getRandomValues(b))
   let phrases = new Array<string>(keys.length)
 
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index]
-    phrases[index] = ctx.wlRecord[key]
+    phrases[index] = wlRecord[key]
   }
 
   return phrases
@@ -81,58 +79,4 @@ export function makeSeparators(ctx: {
 
 function randomBetween(min: number, max: number) {
   return Math.random() * (max - min) + min
-}
-
-export const PHRASE_OUTPUT = {
-  initial: "unfocused",
-  states: {
-    unfocused: {
-      on: {
-        FOCUS_OUTPUT: "focused"
-      }
-    },
-    focused: {
-      initial: "idle",
-      on: {
-        BLUR_OUTPUT: "unfocused"
-      },
-      entry: [
-        () => {
-          setStatus("Copy to clipboard")
-        }
-      ],
-      states: {
-        idle: {
-          on: { COPY_PHRASE: "copying" }
-        },
-        copying: {
-          invoke: {
-            src: async (
-              ctx: ContextFrom<
-                typeof generateMachine | typeof simpleGenerateMachine
-              >
-            ) => {
-              let m = await import("./copy").then(
-                (m) => m.copyPhraseToClipboard
-              )
-              return m(ctx)
-            },
-            onDone: "copied",
-            onError: "idle"
-          }
-        },
-        copied: {
-          entry: [
-            () => {
-              setStatus("Copied to clipboard")
-            }
-          ],
-          after: { 4000: "hidden" }
-        },
-        hidden: {
-          on: { COPY_PHRASE: "copying" }
-        }
-      }
-    }
-  }
 }

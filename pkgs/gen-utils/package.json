@@ -25,6 +25,6 @@
   "devDependencies": {
     "gentype": "^4.3.0",
     "rescript": "^9.1.4",
-    "vitest": "^0.1.19"
+    "vitest": "^0.3.4"
   }
 }

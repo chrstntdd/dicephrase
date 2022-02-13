@@ -50,9 +50,7 @@ async function main() {
     let render = (await import(ssgEntryPath)).render
 
     let pages = [
-      { path: "/", title: "dicephrase" },
-      { path: "/generate", title: "dicephrase | generate" },
-      { path: "/generated", title: "dicephrase | generated" },
+      { path: "/", title: "dicephrase | generate" },
       { path: "/about", title: "dicephrase | about" }
     ]
 

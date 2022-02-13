@@ -7,7 +7,7 @@ import { vars } from "../styles/vars.css"
 export const pressable = style({
   borderRadius: vars.borderRadius["3x"],
   borderStyle: "solid",
-  borderWidth: vars.space["1x"],
+  borderWidth: vars.space["0x"],
   borderColor: vars.color["primary-800"],
   color: vars.color["primary-300"],
   fontWeight: 900,

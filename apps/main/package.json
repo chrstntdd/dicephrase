@@ -23,12 +23,14 @@
     "xstate": "^4.29.0"
   },
   "devDependencies": {
+    "@parcel/css": "^1.2.0",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
     "@vanilla-extract/css": "^1.6.8",
     "@vanilla-extract/vite-plugin": "^3.1.2",
     "@xstate/inspect": "^0.6.0",
+    "browserslist": "^4.19.1",
     "esbuild": "^0.14.10",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
@@ -122,5 +124,11 @@
     "tabWidth": 2,
     "trailingComma": "none",
     "useTabs": false
-  }
+  },
+  "browserslist": [
+    "> 2%",
+    "not IE <= 11",
+    "not dead",
+    "no op_mini all"
+  ]
 }

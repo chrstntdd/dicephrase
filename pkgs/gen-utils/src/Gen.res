@@ -114,18 +114,12 @@ let str_to_int = s => {
 type t_url_search = {get: (. string) => Js.null<string>}
 @new external make_url_search: string => t_url_search = "URLSearchParams"
 
-@module("./constants")
-external count_key: string = "PHRASE_COUNT_KEY"
-@module("./constants")
-external sep_key: string = "SEPARATOR_KEY"
-@module("./constants")
-external count_min: int = "PHRASE_COUNT_MIN"
-@module("./constants")
-external count_max: int = "PHRASE_COUNT_MAX"
-@module("./constants")
-external count_fallback: int = "PHRASE_COUNT_FALLBACK"
-@module("./constants")
-external sep_fallback: string = "SEPARATOR_FALLBACK"
+@module("./constants") external count_key: string = "PHRASE_COUNT_KEY"
+@module("./constants") external sep_key: string = "SEPARATOR_KEY"
+@module("./constants") external count_min: int = "PHRASE_COUNT_MIN"
+@module("./constants") external count_max: int = "PHRASE_COUNT_MAX"
+@module("./constants") external count_fallback: int = "PHRASE_COUNT_FALLBACK"
+@module("./constants") external sep_fallback: string = "SEPARATOR_FALLBACK"
 
 type separator = [#"\u00a0" | #"-" | #"." | #"$" | #random]
 

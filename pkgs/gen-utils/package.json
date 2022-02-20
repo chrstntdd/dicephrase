@@ -20,11 +20,18 @@
     "re:start": "rescript build -w",
     "emit-types": "tsc --emitDeclarationOnly",
     "test": "vitest",
-    "build": "pnpm re:build && node make.js && pnpm emit-types"
+    "build": "pnpm re:build && node make.js && pnpm emit-types",
+    "fmt": "prettier src --write"
   },
   "devDependencies": {
     "gentype": "^4.3.0",
     "rescript": "^9.1.4",
-    "vitest": "^0.3.4"
+    "vitest": "^0.4.2"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
   }
 }

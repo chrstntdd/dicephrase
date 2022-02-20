@@ -1,16 +1,18 @@
 import { createMachine, assign } from "xstate"
 
-import { parse_qs_to_phrase_config } from "gen-utils"
+import {
+  parse_qs_to_phrase_config,
+  PHRASE_COUNT_KEY,
+  SEPARATOR_KEY
+} from "gen-utils"
 
 import { assert } from "../../lib/assert"
 import { setStatus } from "../../lib/a11y/aria-live-msg"
 
-import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "./constants"
 import {
   fetchWordList,
   makePhrases,
   makeSeparators,
-  msgWithoutPayload,
   retryDelay
 } from "./shared"
 
@@ -154,7 +156,6 @@ let generateMachine = createMachine(
               src: "fetchWordList",
               onDone: {
                 target: "combining",
-                /* TODO: Figure out if we can use regular assign here */
                 actions: ["assignWordList"]
               },
               onError: [
@@ -219,7 +220,7 @@ let generateMachine = createMachine(
         url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
         url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
 
-        history.pushState(msgWithoutPayload(), "", url)
+        history.pushState({}, "", url)
       },
       announceCopy: () => {
         setStatus("Copy to clipboard")

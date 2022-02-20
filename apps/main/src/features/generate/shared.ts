@@ -1,25 +1,6 @@
 import { assert } from "../../lib/assert"
 
-import { make_wl_keys, shuffle } from "gen-utils"
-
-export function msgWithoutPayload(): Record<string, never> {
-  return Object.create(null)
-}
-
-export const RANDOM_SEPARATOR_OPTS = [
-  "~",
-  "-",
-  "_",
-  "!",
-  "@",
-  "$",
-  "^",
-  "&",
-  "*",
-  ".",
-  ",",
-  "\u00a0"
-]
+import { make_wl_keys, shuffle, RANDOM_SEPARATOR_OPTS } from "gen-utils"
 
 export function retryDelay(ctx: { attemptCount: number }) {
   // From: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/

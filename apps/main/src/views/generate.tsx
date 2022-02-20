@@ -1,10 +1,18 @@
 import { createMemo, Show, lazy, Suspense } from "solid-js"
-import { parse_count_val } from "gen-utils"
+import {
+  parse_count_val,
+  VAL_SPACE,
+  VAL_DASH,
+  VAL_PERIOD,
+  VAL_DOLLAR,
+  VAL_RANDOM,
+  PHRASE_COUNT_KEY,
+  SEPARATOR_KEY
+} from "gen-utils"
 
 import { RadioGroup } from "../components/radio-group"
 import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
-import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "../features/generate/constants"
 
 import * as styles from "./generate.css"
 
@@ -14,11 +22,11 @@ const countId = "word-count-gr"
 const separatorId = "separator-gr"
 
 const SEPARATOR_OPTS = [
-  { name: "space", value: "\u00a0", label: "Space", id: "sep-space" },
-  { name: "dash", value: "-", label: "-", id: "sep-dash" },
-  { name: "period", value: ".", label: ".", id: "sep-period" },
-  { name: "dollar", value: "$", label: "$", id: "sep-$" },
-  { name: "random", value: "random", label: "Random", id: "sep-rand" }
+  { name: "space", value: VAL_SPACE, label: "Space", id: "sep-space" },
+  { name: "dash", value: VAL_DASH, label: "-", id: "sep-dash" },
+  { name: "period", value: VAL_PERIOD, label: ".", id: "sep-period" },
+  { name: "dollar", value: VAL_DOLLAR, label: "$", id: "sep-$" },
+  { name: "random", value: VAL_RANDOM, label: "Random", id: "sep-rand" }
 ]
 
 const WORD_COUNT_OPTS = [

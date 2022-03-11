@@ -16,33 +16,39 @@ import {
   retryDelay
 } from "./shared"
 
+type Ctx = {
+  ab?: AbortController
+  attemptCount: number
+  count: number
+  phrases?: string[]
+  separatorKind: string
+  separators?: string[]
+  wlRecord?: Record<string, string>
+}
+
+type Msg =
+  | { type: "BLUR_OUTPUT" }
+  | { type: "COPY_PHRASE" }
+  | { type: "FOCUS_OUTPUT" }
+  | { type: "GENERATE" }
+  | { type: "SET_COUNT"; value: number }
+  | { type: "SET_SEP"; value: string }
+
+type Svc = {
+  fetchWordList: {
+    data: Record<string, string>
+  }
+}
+
 let generateMachine = createMachine(
   {
     id: "dice-gen",
     initial: "syncing_from_url",
     tsTypes: {} as import("./generate.machine.typegen").Typegen0,
     schema: {
-      events: {} as
-        | { type: "GENERATE" }
-        | { type: "SET_COUNT"; value: number }
-        | { type: "SET_SEP"; value: string }
-        | { type: "COPY_PHRASE" }
-        | { type: "FOCUS_OUTPUT" }
-        | { type: "BLUR_OUTPUT" },
-      services: {} as {
-        fetchWordList: {
-          data: Record<string, string>
-        }
-      },
-      context: {} as {
-        ab?: AbortController
-        attemptCount: number
-        count: number
-        phrases?: string[]
-        separatorKind: string
-        separators?: string[]
-        wlRecord?: Record<string, string>
-      }
+      context: {} as Ctx,
+      events: {} as Msg,
+      services: {} as Svc
     },
     context: {
       attemptCount: 0,
@@ -51,49 +57,30 @@ let generateMachine = createMachine(
     },
     states: {
       syncing_from_url: {
-        always: {
-          actions: "assignParamsFromQueryString",
-          target: "empty"
-        }
+        always: { target: "empty", actions: "assignParamsFromQueryString" }
       },
       empty: {
         on: {
           GENERATE: "generating",
-          SET_COUNT: {
-            target: "generating",
-            actions: ["assignCount"]
-          },
-          SET_SEP: {
-            target: "generating",
-            actions: ["assignSep"]
-          }
+          SET_COUNT: { target: "generating", actions: "assignCount" },
+          SET_SEP: { target: "generating", actions: "assignSep" }
         }
       },
       idle: {
         on: {
           GENERATE: "generating",
-          SET_COUNT: {
-            target: "generating",
-            actions: ["assignCount"]
-          },
-          SET_SEP: {
-            target: "generating",
-            actions: ["assignSep"]
-          }
+          SET_COUNT: { target: "generating", actions: "assignCount" },
+          SET_SEP: { target: "generating", actions: "assignSep" }
         },
         initial: "unfocused",
         states: {
-          unfocused: {
-            on: {
-              FOCUS_OUTPUT: "focused"
-            }
-          },
+          unfocused: { on: { FOCUS_OUTPUT: "focused" } },
           focused: {
             initial: "idle",
+            entry: "announceCopy",
             on: {
               BLUR_OUTPUT: "unfocused"
             },
-            entry: ["announceCopy"],
             states: {
               idle: {
                 on: { COPY_PHRASE: "copying" }
@@ -107,7 +94,7 @@ let generateMachine = createMachine(
                 }
               },
               copied: {
-                entry: ["announceCopied"],
+                entry: "announceCopied",
                 after: { 4000: "hidden" }
               },
               hidden: {
@@ -123,21 +110,16 @@ let generateMachine = createMachine(
         onDone: "idle",
         // Handles exit+re-entry when new messages come in that interrupt the work
         // and reset the progress
-        exit: ["cancelPending"],
+        exit: "cancelPending",
         on: {
-          GENERATE: {
-            target: "generating",
-            internal: false
-          },
+          GENERATE: "generating",
           SET_COUNT: {
             target: "generating",
-            internal: false,
-            actions: ["assignCount"]
+            actions: "assignCount"
           },
           SET_SEP: {
             target: "generating",
-            internal: false,
-            actions: ["assignSep"]
+            actions: "assignSep"
           }
         },
         states: {
@@ -156,7 +138,7 @@ let generateMachine = createMachine(
               src: "fetchWordList",
               onDone: {
                 target: "combining",
-                actions: ["assignWordList"]
+                actions: "assignWordList"
               },
               onError: [
                 { cond: "shouldRetry", target: "retrying" },
@@ -168,13 +150,11 @@ let generateMachine = createMachine(
             after: {
               REQUEST_BACK_OFF_DELAY: {
                 target: "fetching_wl",
-                actions: ["incrementRetry"]
+                actions: "incrementRetry"
               }
             }
           },
-          error: {
-            entry: ["resetRetries"]
-          },
+          error: { entry: "resetRetries" },
           combining: {
             type: "final",
             exit: ["assignGeneratedPhrases", "syncToUrl", "resetRetries"]
@@ -238,7 +218,7 @@ let generateMachine = createMachine(
       copyToClipboard: async (ctx) => {
         let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return m(ctx.phrases!, ctx.separators!)
+        await m(ctx.phrases!, ctx.separators!)
       }
     },
     delays: {

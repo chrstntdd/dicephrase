@@ -20,7 +20,7 @@ function App(props: { url: string }) {
 
       <header class={styles.header}>
         <h1 class={styles.pageTile}>
-          <a href="/generate">Dicephrase</a>
+          <a href="/">Dicephrase</a>
         </h1>
 
         <nav>
@@ -33,7 +33,7 @@ function App(props: { url: string }) {
       <main>
         <Suspense>
           <Switch fallback={<Generate />}>
-            <Match when={props.url === "/generate"}>
+            <Match when={props.url === "/"}>
               <Generate />
             </Match>
 

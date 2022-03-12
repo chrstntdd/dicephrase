@@ -67,10 +67,6 @@ async function main() {
           ? "index.html"
           : path === "/about"
           ? "about.html"
-          : path === "/generate"
-          ? "generate.html"
-          : path === "/generated"
-          ? "generated.html"
           : "FALLBACK.html"
 
       writeFileSync(resolve("dist", destinationPath), doc)

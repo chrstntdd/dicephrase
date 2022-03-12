@@ -15,6 +15,7 @@ import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
 
 import * as styles from "./generate.css"
+import type { ActorRefFrom } from "xstate"
 
 const PhraseOutput = lazy(() => import("./phrase-output"))
 
@@ -101,7 +102,8 @@ function Generate() {
       <Suspense>
         <Show when={hasOutput()}>
           <PhraseOutput
-            service={service}
+            // Oh boy
+            service={service as any as ActorRefFrom<typeof generateMachine>}
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             separators={separators()!}
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

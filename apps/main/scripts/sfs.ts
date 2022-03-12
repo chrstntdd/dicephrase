@@ -34,12 +34,8 @@ server.get("/about", (_, reply) => {
   reply.sendFile("about.html")
 })
 
-server.get("/generate", (_, reply) => {
-  reply.sendFile("generate.html")
-})
-
-server.get("/generated", (_, reply) => {
-  reply.sendFile("generated.html")
+server.get("/", (_, reply) => {
+  reply.sendFile("index.html")
 })
 
 await server.listen(PORT, ADDR)

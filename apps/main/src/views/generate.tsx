@@ -59,7 +59,7 @@ function Generate() {
   }
 
   return (
-    <form action="/generated" class={styles.formEl} onSubmit={handleSubmit}>
+    <form class={styles.formEl} onSubmit={handleSubmit}>
       <fieldset
         onChange={(e) => {
           let value = parse_count_val((e.target as HTMLInputElement).value)

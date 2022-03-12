@@ -12,7 +12,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
 
   switch (true) {
     case request.method === "GET" &&
-      (reqUrl.pathname === "/" || reqUrl.pathname === "/generate") &&
+      reqUrl.pathname === "/" &&
       request.headers.get("accept")?.includes("text/html"): {
       return (
         /**
@@ -25,7 +25,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
             "[onfetch] Failed. Serving cached offline fallback " + error
           )
 
-          return caches.match("/generate") as Promise<Response>
+          return caches.match("/") as Promise<Response>
         })
       )
     }
@@ -37,7 +37,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
         .then((response) => response || fetch(event.request))
         .catch(async () => {
           let cache = await caches.open(__SW_CACHE_KEY__)
-          let cachedResponse = await cache.match("/generate")
+          let cachedResponse = await cache.match("/")
 
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           return cachedResponse!

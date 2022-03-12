@@ -7,11 +7,11 @@
     "apps/*"
   ],
   "devDependencies": {
-    "@types/node": "^16.11.24",
+    "@types/node": "^16.11.26",
     "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   },
   "dependencies": {
-    "esbuild": "^0.14.21"
+    "esbuild": "^0.14.25"
   }
 }

@@ -6,6 +6,7 @@ import {
   RANDOM_SEPARATOR_OPTS,
   shuffle
 } from "./deps.ts"
+import { CLI_VERSION } from "./cfg.ts"
 
 import wl from "../../main/public/wl-2016.json" assert { type: "json" }
 
@@ -17,7 +18,7 @@ let cli = cac("dicephrase")
     default: 8
   })
   .help()
-  .version("0.0.1")
+  .version(CLI_VERSION)
 
 let params = cli.parse().options
 

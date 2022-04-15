@@ -24,9 +24,10 @@
     "fmt": "prettier src --write"
   },
   "devDependencies": {
+    "c8": "^7.11.0",
     "gentype": "^4.3.0",
     "rescript": "^9.1.4",
-    "vitest": "^0.4.2"
+    "vitest": "^0.9.3"
   },
   "prettier": {
     "semi": false,

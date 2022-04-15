@@ -28,7 +28,7 @@ export function makePhrases(
   count: number,
   wlRecord: Record<string, string>
 ): string[] {
-  let keys = make_wl_keys(count, (b) => crypto.getRandomValues(b))
+  let keys = make_wl_keys(count)
   let phrases = new Array<string>(keys.length)
 
   for (let index = 0; index < keys.length; index++) {

@@ -157,17 +157,14 @@ describe("make_phrases", () => {
 })
 
 describe("make_separators", () => {
-  // This test is probably flaky, but sorta gets the idea across
-  test.concurrent(
-    "should return random separators when separator_kind is 'random'",
-    () => {
-      let count = 8
-      let out = make_separators("random", count)
-      let uniqueSeparators = [...new Set(out)]
+  // This test is flaky, but sorta gets the idea across
+  test.skip("should return random separators when separator_kind is 'random'", () => {
+    let count = 8
+    let out = make_separators("random", count)
+    let uniqueSeparators = [...new Set(out)]
 
-      expect(uniqueSeparators).not.toEqual(out)
-    }
-  )
+    expect(uniqueSeparators).not.toEqual(out)
+  })
 
   test.concurrent(
     "should return an array of length 1 less than the count to splice between the words",

@@ -179,22 +179,12 @@ function make_separators(separator_kind, count) {
 }
 
 export {
-  make_key,
   make_wl_keys,
   shuffle,
   combine_zip,
-  str_to_int,
-  count_key,
-  sep_key,
-  count_min,
-  count_max,
-  count_fallback,
-  sep_fallback,
-  nullable_to_option,
   parse_qs_to_phrase_config,
   parse_count_val,
   make_phrases,
-  random_sep_chars,
   make_separators
 }
 /* count_key Not a pure module */

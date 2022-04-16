@@ -6,20 +6,22 @@ external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValue
  */
 @new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
 
-let rec make_key = (~acc, ~idx, ~data, ~len, ~min, ~max) => {
-  if len == idx {
-    acc
-  } else {
-    // Clamps the random bytes to a valid 6 sided die value (1-6)
-    let rand_bytes = Js.TypedArray2.Uint32Array.unsafe_get(data, idx)
-    let remainder = mod(rand_bytes, max)
-    let roll = remainder + min
-    let curr = acc ++ string_of_int(roll)
-    let next_idx = idx + 1
+%%private(
+  let rec make_key = (~acc, ~idx, ~data, ~len, ~min, ~max) => {
+    if len == idx {
+      acc
+    } else {
+      // Clamps the random bytes to a valid 6 sided die value (1-6)
+      let rand_bytes = Js.TypedArray2.Uint32Array.unsafe_get(data, idx)
+      let remainder = mod(rand_bytes, max)
+      let roll = remainder + min
+      let curr = acc ++ string_of_int(roll)
+      let next_idx = idx + 1
 
-    make_key(~acc=curr, ~idx=next_idx, ~data, ~len, ~min, ~max)
+      make_key(~acc=curr, ~idx=next_idx, ~data, ~len, ~min, ~max)
+    }
   }
-}
+)
 
 /**
  * Generates a set of random keys for lookup in the wordlist.
@@ -117,23 +119,25 @@ let combine_zip = (. a1, a2) => {
 
 @val external isNaN: int => bool = "isNaN"
 
-let str_to_int = s => {
-  let nt = parseInt(s, 10)
-  switch nt->isNaN {
-  | false => Some(nt)
-  | _ => None
+%%private(
+  let str_to_int = s => {
+    let nt = parseInt(s, 10)
+    switch nt->isNaN {
+    | false => Some(nt)
+    | _ => None
+    }
   }
-}
+)
 
 type t_url_search = {get: (. string) => Js.null<string>}
 @new external make_url_search: string => t_url_search = "URLSearchParams"
 
-@module("./constants") external count_key: string = "PHRASE_COUNT_KEY"
-@module("./constants") external sep_key: string = "SEPARATOR_KEY"
-@module("./constants") external count_min: int = "PHRASE_COUNT_MIN"
-@module("./constants") external count_max: int = "PHRASE_COUNT_MAX"
-@module("./constants") external count_fallback: int = "PHRASE_COUNT_FALLBACK"
-@module("./constants") external sep_fallback: string = "SEPARATOR_FALLBACK"
+%%private(@module("./constants") external count_key: string = "PHRASE_COUNT_KEY")
+%%private(@module("./constants") external sep_key: string = "SEPARATOR_KEY")
+%%private(@module("./constants") external count_min: int = "PHRASE_COUNT_MIN")
+%%private(@module("./constants") external count_max: int = "PHRASE_COUNT_MAX")
+%%private(@module("./constants") external count_fallback: int = "PHRASE_COUNT_FALLBACK")
+%%private(@module("./constants") external sep_fallback: string = "SEPARATOR_FALLBACK")
 
 type separator = [#"\u00a0" | #"-" | #"." | #"$" | #random]
 
@@ -144,13 +148,15 @@ type phase_cfg = {
 }
 
 // Lighter Caml_option.nullable_to_opt
-let nullable_to_option = n => {
-  if Js.Null.empty != n {
-    Js.Option.some(Js.Null.getUnsafe(n))
-  } else {
-    None
+%%private(
+  let nullable_to_option = n => {
+    if Js.Null.empty != n {
+      Js.Option.some(Js.Null.getUnsafe(n))
+    } else {
+      None
+    }
   }
-}
+)
 
 @genType
 let parse_qs_to_phrase_config = qs => {
@@ -213,7 +219,9 @@ let make_phrases = (. count, wlRecord) => {
   inner(phrases, 0)
 }
 
-@module("./constants") external random_sep_chars: Js.Array2.t<string> = "RANDOM_SEPARATOR_OPTS"
+%%private(
+  @module("./constants") external random_sep_chars: Js.Array2.t<string> = "RANDOM_SEPARATOR_OPTS"
+)
 
 // Define `Array.fill`
 @send external fill: (Js.Array2.t<'a>, 'a) => Js.Array2.t<'a> = "fill"

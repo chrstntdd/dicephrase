@@ -2,7 +2,26 @@
 
 import * as Js_math from "rescript/lib/es6/js_math.js"
 import * as Js_option from "rescript/lib/es6/js_option.js"
+import * as Caml_int32 from "rescript/lib/es6/caml_int32.js"
 import * as Constants from "./constants"
+
+function make_key(_acc, _idx, data, len, min, max) {
+  while (true) {
+    var idx = _idx
+    var acc = _acc
+    if (len === idx) {
+      return acc
+    }
+    var rand_bytes = data[idx]
+    var remainder = Caml_int32.mod_(rand_bytes, max)
+    var roll = (remainder + min) | 0
+    var curr = acc + String(roll)
+    var next_idx = (idx + 1) | 0
+    _idx = next_idx
+    _acc = curr
+    continue
+  }
+}
 
 function make_wl_keys(count) {
   var key_count = Math.imul(count, 5)
@@ -15,12 +34,8 @@ function make_wl_keys(count) {
     var out_idx = _out_idx
     var idx = _idx
     var chunk_of_random_bytes = raw_bits.subarray(idx, (idx + 5) | 0)
-    var wl_key = chunk_of_random_bytes
-      .map(function (rand_bytes) {
-        var remainder = rand_bytes % 6
-        return (remainder + 1) | 0
-      })
-      .join("")
+    var collection_length = chunk_of_random_bytes.length
+    var wl_key = make_key("", 0, chunk_of_random_bytes, collection_length, 1, 6)
     acc[out_idx] = wl_key
     var next = (idx + 5) | 0
     if (next === key_count) {
@@ -164,6 +179,7 @@ function make_separators(separator_kind, count) {
 }
 
 export {
+  make_key,
   make_wl_keys,
   shuffle,
   combine_zip,

@@ -6,6 +6,21 @@ external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValue
  */
 @new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
 
+let rec make_key = (~acc, ~idx, ~data, ~len, ~min, ~max) => {
+  if len == idx {
+    acc
+  } else {
+    // Clamps the random bytes to a valid 6 sided die value (1-6)
+    let rand_bytes = Js.TypedArray2.Uint32Array.unsafe_get(data, idx)
+    let remainder = mod(rand_bytes, max)
+    let roll = remainder + min
+    let curr = acc ++ string_of_int(roll)
+    let next_idx = idx + 1
+
+    make_key(~acc=curr, ~idx=next_idx, ~data, ~len, ~min, ~max)
+  }
+}
+
 /**
  * Generates a set of random keys for lookup in the wordlist.
  *
@@ -27,18 +42,15 @@ let make_wl_keys = count => {
   let rec bits_to_keys = (acc, idx, out_idx) => {
     // Consume the next chunk
     let chunk_of_random_bytes = raw_bits->Uint32Array.subarray(~start=idx, ~end_=idx + chunk_size)
-
-    // TODO: Use recursion here too instead of map and join?
-    let wl_key =
-      chunk_of_random_bytes
-      // Clamps the random bytes to a valid 6 sided die value (1-6)
-      ->Uint32Array.map((. rand_bytes) => {
-        let remainder = mod(rand_bytes, max)
-        let roll = remainder + min
-
-        roll
-      })
-      ->Uint32Array.joinWith("")
+    let collection_length = Uint32Array.length(chunk_of_random_bytes)
+    let wl_key = make_key(
+      ~acc="",
+      ~idx=0,
+      ~data=chunk_of_random_bytes,
+      ~len=collection_length,
+      ~min,
+      ~max,
+    )
 
     Js.Array2.unsafe_set(acc, out_idx, wl_key)
 

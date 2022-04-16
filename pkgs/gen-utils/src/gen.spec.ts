@@ -1,6 +1,8 @@
 import * as crypto from "crypto"
+import { readFileSync } from "fs"
+import { resolve } from "path"
 
-import { test, describe, expect, vi } from "vitest"
+import { test, describe, expect, vi, beforeAll } from "vitest"
 import { PHRASE_COUNT_FALLBACK } from "./constants"
 
 import {
@@ -11,11 +13,16 @@ import {
   make_separators,
   make_phrases
 } from "./Gen.gen"
-import { wl } from "./wl-copy"
 
 vi.stubGlobal("crypto", {
   // @ts-expect-error
   getRandomValues: (x) => crypto.webcrypto.getRandomValues(x)
+})
+
+let wl
+
+beforeAll(() => {
+  wl = JSON.parse(readFileSync(resolve("src", "wl.json"), "utf-8"))
 })
 
 describe("combine_zip", () => {

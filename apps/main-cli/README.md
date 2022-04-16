@@ -6,7 +6,7 @@ $ deno --unstable compile --allow-env=NODE_ENV -o dist/dicephrase src/main.ts
 
 ## Installation
 
-1. [Download the artifact from the GitHub actions artifacts section of the latest build](https://github.com/chrstntdd/dicephrase-final/actions/workflows/cli-bin.yml)
+1. [Download the artifact from the GitHub actions artifacts section of the latest build](https://github.com/chrstntdd/dicephrase/actions/workflows/cli-bin.yml)
 2. Allow the executable to run
 
    - Alternatively, clone the repo and build the executable on your machine using the script in `make.sh`

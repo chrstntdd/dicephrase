@@ -20,7 +20,7 @@ jobs:
           deno-version: v1.19.1
 
       - name: Build
-        run: deno --unstable compile --allow-env=NODE_ENV -o dist/dicephrase apps/main-cli/src/main.ts
+        run: deno --unstable compile --no-check --allow-env=NODE_ENV -o dist/dicephrase apps/main-cli/src/main.ts
 
       - name: Publish binary
         uses: actions/upload-artifact@v2

@@ -19,7 +19,7 @@ jobs:
           version: 6.32.8
           run_install: |
             - recursive: false
-              args: [--frozen-lockfile, --filter ./pkgs/gen-utils, --prefer-offline]
+              args: [--filter ./pkgs/gen-utils, --frozen-lockfile, --prefer-offline]
 
 
       - name: Use Node.js ${{ matrix.node-version }}

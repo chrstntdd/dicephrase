@@ -1,6 +1,10 @@
 name: CLI
 
-on: [push]
+# Only build when pushing to main
+on:
+  push:
+      branches:
+        - main
 
 jobs:
   build:

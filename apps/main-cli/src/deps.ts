@@ -1,7 +1,9 @@
 export * from "https://esm.sh/cac"
 export {
-  make_wl_keys,
   combine_zip,
+  make_phrases,
+  make_separators,
+  make_wl_keys,
   shuffle,
   RANDOM_SEPARATOR_OPTS
 } from "../../../pkgs/gen-utils/dist/gen-utils.mod.js"

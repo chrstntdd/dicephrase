@@ -174,11 +174,10 @@ let parse_count_val = v => {
 /**
  * Create fixed sized array with holes
  */
-type t<'a> = Js.Array2.t<'a>
-@new external make_array_of_size: int => t<'a> = "Array"
+@new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
 
 @genType
-let make_phrases = (count, wlRecord) => {
+let make_phrases = (. count, wlRecord) => {
   open Js.Array2
   let keys = count->make_wl_keys
   let key_length = keys->length
@@ -200,10 +199,10 @@ let make_phrases = (count, wlRecord) => {
 @module("./constants") external random_sep_chars: Js.Array2.t<string> = "RANDOM_SEPARATOR_OPTS"
 
 // Define `Array.fill`
-@send external fill: (t<'a>, 'a) => Js.Array2.t<'a> = "fill"
+@send external fill: (Js.Array2.t<'a>, 'a) => Js.Array2.t<'a> = "fill"
 
 @genType
-let make_separators = (separator_kind, count) => {
+let make_separators = (. separator_kind, count) => {
   open Js.Array2
   let sep_count = count - 1
 

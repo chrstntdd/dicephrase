@@ -147,11 +147,9 @@ describe("parse_qs_to_phrase_config", () => {
 describe("make_phrases", () => {
   test.concurrent("should return an array of words", () => {
     let count = 4
-    let out = make_phrases(count, wl)
+    let out = make_phrases<string>(count, wl)
 
     expect(out.length).toEqual(count)
-    // GenType is clunky here with the generic
-    // @ts-expect-error
     expect(out.every((word) => /\w{1}/.test(word)))
   })
 })

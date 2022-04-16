@@ -59,7 +59,7 @@ describe("make_wl_keys", () => {
   )
 
   test.concurrent(
-    "should return a list where each entry is a 6 digit number",
+    "should return a list where each entry is a 5 digit number",
     () => {
       let count = 10
       let out = make_wl_keys(count)
@@ -67,7 +67,7 @@ describe("make_wl_keys", () => {
       let firstEntry = out[0]
 
       expect(typeof firstEntry).toBe("string")
-      expect(out.every((k) => k.length === 6))
+      expect(out.every((k) => k.length === 5)).toBeTruthy()
     }
   )
 })

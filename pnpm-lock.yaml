@@ -35,7 +35,7 @@ importers:
       fastify: ^3.27.4
       fastify-compress: ^4.0.1
       fastify-static: ^4.5.0
-      gen-utils: 0.0.0
+      gen-utils: 0.0.1
       html-minifier-terser: ^7.0.0-alpha.2
       polished: ^4.1.4
       solid-js: 1.3.12
@@ -86,7 +86,7 @@ importers:
   apps/main-worker:
     specifiers:
       '@cloudflare/workers-types': ^3.3.0
-      gen-utils: 0.0.0
+      gen-utils: 0.0.1
       miniflare: ^2.1.0
     dependencies:
       gen-utils: link:../../pkgs/gen-utils

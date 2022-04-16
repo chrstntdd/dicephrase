@@ -2,6 +2,8 @@ import { createMachine, assign } from "xstate"
 
 import {
   parse_qs_to_phrase_config,
+  make_phrases,
+  make_separators,
   PHRASE_COUNT_KEY,
   SEPARATOR_KEY
 } from "gen-utils"
@@ -9,12 +11,7 @@ import {
 import { assert } from "../../lib/assert"
 import { setStatus } from "../../lib/a11y/aria-live-msg"
 
-import {
-  fetchWordList,
-  makePhrases,
-  makeSeparators,
-  retryDelay
-} from "./shared"
+import { fetchWordList, retryDelay } from "./shared"
 
 type Ctx = {
   ab?: AbortController
@@ -179,8 +176,8 @@ let generateMachine = createMachine(
         assert(ctx.wlRecord)
         return {
           ...ctx,
-          separators: makeSeparators(ctx),
-          phrases: makePhrases(ctx.count, ctx.wlRecord)
+          separators: make_separators(ctx.separatorKind, ctx.count),
+          phrases: make_phrases(ctx.count, ctx.wlRecord)
         }
       }),
       cancelPending: assign({

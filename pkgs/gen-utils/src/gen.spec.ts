@@ -150,7 +150,7 @@ describe("make_phrases", () => {
     let out = make_phrases<string>(count, wl)
 
     expect(out.length).toEqual(count)
-    expect(out.every((word) => /\w{1}/.test(word)))
+    expect(out.every((word) => /\w{1}/.test(word))).toBeTruthy()
   })
 })
 

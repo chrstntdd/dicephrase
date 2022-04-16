@@ -184,7 +184,7 @@ let make_phrases = (. count, wlRecord) => {
   let phrases = key_length->make_array_of_size
 
   let rec inner = (acc, i) => {
-    if i == key_length - 1 {
+    if i == key_length {
       acc
     } else {
       let key = keys->unsafe_get(i)

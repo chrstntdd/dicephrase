@@ -137,7 +137,7 @@ function make_phrases(count, wlRecord) {
   var _i = 0
   while (true) {
     var i = _i
-    if (i === ((key_length - 1) | 0)) {
+    if (i === key_length) {
       return phrases
     }
     var key = keys[i]

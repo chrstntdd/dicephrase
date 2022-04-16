@@ -1,4 +1,4 @@
-import type { Dict_t as Js_Dict_t } from "./Js.gen";
+import type { Dict_t as Js_Dict_t } from './Js.gen';
 export declare type phase_cfg = {
     readonly count: number;
     readonly sep: string;

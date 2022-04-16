@@ -1,0 +1,7 @@
+@module("./constants") external count_key: string = "PHRASE_COUNT_KEY"
+@module("./constants") external sep_key: string = "SEPARATOR_KEY"
+@module("./constants") external count_min: int = "PHRASE_COUNT_MIN"
+@module("./constants") external count_max: int = "PHRASE_COUNT_MAX"
+@module("./constants") external count_fallback: int = "PHRASE_COUNT_FALLBACK"
+@module("./constants") external sep_fallback: string = "SEPARATOR_FALLBACK"
+@module("./constants") external random_sep_chars: Js.Array2.t<string> = "RANDOM_SEPARATOR_OPTS"

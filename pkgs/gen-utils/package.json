@@ -1,9 +1,10 @@
 {
   "name": "gen-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "UNLICENSED",
   "description": "Shared utilities for generating a passphrase",
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/gen-utils.mod.js",

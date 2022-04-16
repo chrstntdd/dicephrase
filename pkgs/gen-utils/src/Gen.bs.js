@@ -4,10 +4,10 @@ import * as Js_math from "rescript/lib/es6/js_math.js"
 import * as Js_option from "rescript/lib/es6/js_option.js"
 import * as Constants from "./constants"
 
-function make_wl_keys(count, getRandomValues) {
+function make_wl_keys(count) {
   var key_count = Math.imul(count, 5)
   var raw_bits = new Uint32Array(key_count)
-  getRandomValues(raw_bits)
+  crypto.getRandomValues(raw_bits)
   var acc = []
   var _idx = 0
   while (true) {
@@ -130,6 +130,37 @@ function parse_count_val(v) {
   }
 }
 
+function make_phrases(count, wlRecord) {
+  var keys = make_wl_keys(count)
+  var key_length = keys.length
+  var phrases = new Array(key_length)
+  var _i = 0
+  while (true) {
+    var i = _i
+    if (i === key_length) {
+      return phrases
+    }
+    var key = keys[i]
+    phrases[i] = wlRecord[key]
+    _i = (i + 1) | 0
+    continue
+  }
+}
+
+var random_sep_chars = Constants.RANDOM_SEPARATOR_OPTS
+
+function make_separators(separator_kind, count) {
+  var sep_count = (count - 1) | 0
+  if (separator_kind !== "random") {
+    return new Array(sep_count).fill(separator_kind)
+  }
+  var separators = []
+  while (separators.length < sep_count) {
+    separators.push(shuffle(random_sep_chars.slice())[0])
+  }
+  return separators
+}
+
 export {
   make_wl_keys,
   shuffle,
@@ -143,6 +174,9 @@ export {
   sep_fallback,
   nullable_to_option,
   parse_qs_to_phrase_config,
-  parse_count_val
+  parse_count_val,
+  make_phrases,
+  random_sep_chars,
+  make_separators
 }
 /* count_key Not a pure module */

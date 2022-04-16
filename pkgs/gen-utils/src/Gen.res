@@ -1,7 +1,5 @@
-// Binding to global crypto.getRandomValues
-// Breaks in node testing...
-// @scope("crypto") @val
-// external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValues"
+@scope("crypto") @val
+external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValues"
 
 /**
  * Generates a set of random keys for lookup in the wordlist.
@@ -9,14 +7,14 @@
  * ex: fn(5) => ["11132", "41663", "34324", "43135", "41126"]
  */
 @genType
-let make_wl_keys = (. count, getRandomValues) => {
+let make_wl_keys = count => {
   open Js.TypedArray2
   let chunk_size = 5
   let key_count = count * chunk_size
   let raw_bits = Uint32Array.fromLength(key_count)
 
   // Fill (mutates the raw_bits in place)
-  getRandomValues(. raw_bits)
+  getRandomValues(raw_bits)
 
   let min = 1
   let max = 6
@@ -68,12 +66,6 @@ let shuffle = arr => {
 
   items.contents
 }
-
-/**
- * Create fixed sized array with holes
- */
-type t<'a> = Js.Array2.t<'a>
-@new external make_array_of_size: int => t<'a> = "Array"
 
 @genType
 let combine_zip = (. a1, a2) => {
@@ -176,5 +168,51 @@ let parse_count_val = v => {
   switch str_to_int(v) {
   | Some(vi) => vi
   | _ => count_fallback
+  }
+}
+
+/**
+ * Create fixed sized array with holes
+ */
+@new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
+
+@genType
+let make_phrases = (. count, wlRecord) => {
+  open Js.Array2
+  let keys = count->make_wl_keys
+  let key_length = keys->length
+  let phrases = key_length->make_array_of_size
+
+  let rec inner = (acc, i) => {
+    if i == key_length {
+      acc
+    } else {
+      let key = keys->unsafe_get(i)
+      acc->unsafe_set(i, Js.Dict.unsafeGet(wlRecord, key))
+      inner(acc, i + 1)
+    }
+  }
+
+  inner(phrases, 0)
+}
+
+@module("./constants") external random_sep_chars: Js.Array2.t<string> = "RANDOM_SEPARATOR_OPTS"
+
+// Define `Array.fill`
+@send external fill: (Js.Array2.t<'a>, 'a) => Js.Array2.t<'a> = "fill"
+
+@genType
+let make_separators = (. separator_kind, count) => {
+  open Js.Array2
+  let sep_count = count - 1
+
+  if separator_kind == "random" {
+    let separators = []
+    while separators->length < sep_count {
+      push(separators, shuffle(copy(random_sep_chars))->unsafe_get(0))->ignore
+    }
+    separators
+  } else {
+    fill(make_array_of_size(sep_count), separator_kind)
   }
 }

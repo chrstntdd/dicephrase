@@ -17,6 +17,10 @@ jobs:
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.32.8
+          run_install: |
+            - recursive: false
+              args: [--frozen-lockfile, --filter ./pkgs/gen-utils, --prefer-offline]
+
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
@@ -32,8 +36,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
-      - name: Install dependencies
-        run: pnpm --filter ./pkgs/gen-utils install --frozen-lockfile --prefer-offline
+      # - name: Install dependencies
+      #   run: pnpm --filter ./pkgs/gen-utils install --frozen-lockfile --prefer-offline
 
       - name: Test
         run: pnpm --filter ./pkgs/gen-utils test

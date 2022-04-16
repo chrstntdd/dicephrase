@@ -2,6 +2,11 @@
 external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValues"
 
 /**
+ * Create fixed sized array with holes
+ */
+@new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
+
+/**
  * Generates a set of random keys for lookup in the wordlist.
  *
  * ex: fn(5) => ["11132", "41663", "34324", "43135", "41126"]
@@ -19,29 +24,35 @@ let make_wl_keys = count => {
   let min = 1
   let max = 6
 
-  let rec bits_to_keys = (bits, acc, idx) => {
-    if mod(idx, chunk_size) == 0 {
-      acc
-      ->Js.Array2.push(
-        bits
-        ->Uint32Array.subarray(~start=idx, ~end_=idx + chunk_size)
-        ->Uint32Array.map((. x) => {
-          let roll = mod(x, max) + min
-          roll
-        })
-        ->Uint32Array.joinWith(""),
-      )
-      ->ignore
-    }
+  let rec bits_to_keys = (acc, idx, out_idx) => {
+    // Consume the next chunk
+    let chunk_of_random_bytes = raw_bits->Uint32Array.subarray(~start=idx, ~end_=idx + chunk_size)
 
-    if idx + 1 === key_count {
+    // TODO: Use recursion here too instead of map and join?
+    let wl_key =
+      chunk_of_random_bytes
+      // Clamps the random bytes to a valid 6 sided die value (1-6)
+      ->Uint32Array.map((. rand_bytes) => {
+        let remainder = mod(rand_bytes, max)
+        let roll = remainder + min
+
+        roll
+      })
+      ->Uint32Array.joinWith("")
+
+    Js.Array2.unsafe_set(acc, out_idx, wl_key)
+
+    // Skip intermediate steps (such as incrementing idx) and hop to next chunk
+    let next = idx + chunk_size
+
+    if next === key_count {
       acc
     } else {
-      bits_to_keys(bits, acc, idx + 1)
+      bits_to_keys(acc, next, out_idx + 1)
     }
   }
 
-  bits_to_keys(raw_bits, [], 0)
+  bits_to_keys(make_array_of_size(count), 0, 0)
 }
 
 @genType
@@ -72,9 +83,8 @@ let combine_zip = (. a1, a2) => {
   open Js.Array2
 
   let a_size = length(a1)
-  let out = []
 
-  let rec combine_inner = (idx, acc) => {
+  let rec combine_inner = (acc, idx) => {
     if idx == a_size {
       acc
     } else {
@@ -84,11 +94,11 @@ let combine_zip = (. a1, a2) => {
       let b_item = unsafe_get(a2, idx)
       push(acc, b_item)->ignore
 
-      combine_inner(idx + 1, acc)
+      combine_inner(acc, idx + 1)
     }
   }
 
-  combine_inner(0, out)
+  combine_inner([], 0)
 }
 
 @val external parseInt: (string, int) => int = "parseInt"
@@ -171,11 +181,6 @@ let parse_count_val = v => {
   }
 }
 
-/**
- * Create fixed sized array with holes
- */
-@new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
-
 @genType
 let make_phrases = (. count, wlRecord) => {
   open Js.Array2
@@ -183,13 +188,13 @@ let make_phrases = (. count, wlRecord) => {
   let key_length = keys->length
   let phrases = key_length->make_array_of_size
 
-  let rec inner = (acc, i) => {
-    if i == key_length {
+  let rec inner = (acc, idx) => {
+    if idx == key_length {
       acc
     } else {
-      let key = keys->unsafe_get(i)
-      acc->unsafe_set(i, Js.Dict.unsafeGet(wlRecord, key))
-      inner(acc, i + 1)
+      let key = keys->unsafe_get(idx)
+      acc->unsafe_set(idx, Js.Dict.unsafeGet(wlRecord, key))
+      inner(acc, idx + 1)
     }
   }
 

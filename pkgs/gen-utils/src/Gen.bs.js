@@ -8,24 +8,26 @@ function make_wl_keys(count) {
   var key_count = Math.imul(count, 5)
   var raw_bits = new Uint32Array(key_count)
   crypto.getRandomValues(raw_bits)
-  var acc = []
+  var acc = new Array(count)
   var _idx = 0
+  var _out_idx = 0
   while (true) {
+    var out_idx = _out_idx
     var idx = _idx
-    if (idx % 5 === 0) {
-      acc.push(
-        raw_bits
-          .subarray(idx, (idx + 5) | 0)
-          .map(function (x) {
-            return ((x % 6) + 1) | 0
-          })
-          .join("")
-      )
-    }
-    if (((idx + 1) | 0) === key_count) {
+    var chunk_of_random_bytes = raw_bits.subarray(idx, (idx + 5) | 0)
+    var wl_key = chunk_of_random_bytes
+      .map(function (rand_bytes) {
+        var remainder = rand_bytes % 6
+        return (remainder + 1) | 0
+      })
+      .join("")
+    acc[out_idx] = wl_key
+    var next = (idx + 5) | 0
+    if (next === key_count) {
       return acc
     }
-    _idx = (idx + 1) | 0
+    _out_idx = (out_idx + 1) | 0
+    _idx = next
     continue
   }
 }
@@ -47,17 +49,17 @@ function shuffle(arr) {
 
 function combine_zip(a1, a2) {
   var a_size = a1.length
-  var out = []
+  var acc = []
   var _idx = 0
   while (true) {
     var idx = _idx
     if (idx === a_size) {
-      return out
+      return acc
     }
     var a_item = a1[idx]
-    out.push(a_item)
+    acc.push(a_item)
     var b_item = a2[idx]
-    out.push(b_item)
+    acc.push(b_item)
     _idx = (idx + 1) | 0
     continue
   }
@@ -134,15 +136,15 @@ function make_phrases(count, wlRecord) {
   var keys = make_wl_keys(count)
   var key_length = keys.length
   var phrases = new Array(key_length)
-  var _i = 0
+  var _idx = 0
   while (true) {
-    var i = _i
-    if (i === key_length) {
+    var idx = _idx
+    if (idx === key_length) {
       return phrases
     }
-    var key = keys[i]
-    phrases[i] = wlRecord[key]
-    _i = (i + 1) | 0
+    var key = keys[idx]
+    phrases[idx] = wlRecord[key]
+    _idx = (idx + 1) | 0
     continue
   }
 }

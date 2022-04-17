@@ -14,7 +14,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Install gen-utils dependencies
+        uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.32.8
           run_install: |
@@ -91,7 +92,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Install type checking dependencies
+        uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.32.8
           run_install: |

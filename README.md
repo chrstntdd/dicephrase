@@ -43,12 +43,12 @@ $ pnpm -F ./apps/main build
 
 This script performs a few key steps:
 
-1. Builds the app in [vite's ssg mode](https://vitejs.dev/guide/ssr.html#pre-rendering-ssg) to a single plain JS file.
+1. Builds the app in [vite's ssg mode](https://vitejs.dev/guide/ssr.html#pre-rendering-ssg) to a single plain JS file
 2. Builds the app using vite for browser based environments
 3. Builds a ServiceWorker using esbuild
 4. Pre-renders the app to plain HTML using the ssg assets
 5. Copies the `_headers` file to `dist`
-6. Optimizes the HTML using [critical](https://github.com/addyosmani/critical) to inline styles into the document head (to prevent FOUC) and finally minifies the whole file.
+6. Optimizes the HTML using [critical](https://github.com/addyosmani/critical) to inline styles into the document head (to prevent FOUC) and finally minifies the whole file
 
 ## Running Tests
 

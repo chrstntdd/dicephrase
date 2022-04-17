@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+        pnpm-version: [6.32.8]
 
     steps:
       - name: Checkout
@@ -37,7 +38,7 @@ jobs:
       - name: Install gen-utils dependencies
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.32.8
+          version: ${{matrix.pnpm-version}}
           run_install: |
             - recursive: false
               args: [--filter, './pkgs/gen-utils', --frozen-lockfile, --prefer-offline]

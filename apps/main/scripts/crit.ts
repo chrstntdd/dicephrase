@@ -5,16 +5,12 @@ import { readdirSync } from "fs"
 import crit from "critical"
 import { minify } from "html-minifier-terser"
 
-function resolveToDist(n: string) {
-  return resolve("dist", n)
-}
-
 let srcHtml = readdirSync("dist").flatMap((f) =>
-  f.endsWith(".html") ? [resolveToDist(f)] : []
+  f.endsWith(".html") ? [resolve("dist", f)] : []
 )
 
-let css = readdirSync("dist").flatMap((f) =>
-  f.endsWith(".css") ? [resolveToDist(f)] : []
+let css = readdirSync("dist/assets").flatMap((f) =>
+  f.endsWith(".css") ? [resolve("dist", "assets", f)] : []
 )
 
 await Promise.all(

@@ -72,7 +72,7 @@ jobs:
           version: 6.32.8
           run_install: |
             - recursive: false
-              args: [--filter, ./apps/main, --frozen-lockfile, --prefer-offline]
+              args: [--filter, ./apps/main, --dev, --frozen-lockfile, --prefer-offline]
 
       - uses: actions/setup-node@v3
         with:

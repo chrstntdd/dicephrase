@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@2.2.1
+      - uses: pnpm/action-setup@2.1.0
         with:
           version: ${{matrix.pnpm-version}}
 
@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
 
       - name: Install gen-utils dependencies
-        uses: pnpm/action-setup@2.2.1
+        uses: pnpm/action-setup@2.1.0
         with:
           version: 6.32.8
           run_install: |
@@ -60,7 +60,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@2.2.1
+      - uses: pnpm/action-setup@2.1.0
         with:
           version: ${{matrix.pnpm-version}}
 
@@ -81,7 +81,7 @@ jobs:
             ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
 
       - name: Install linting dependencies
-        uses: pnpm/action-setup@2.2.1
+        uses: pnpm/action-setup@2.1.0
         with:
           version: ${{matrix.pnpm-version}}
           run_install: |
@@ -103,7 +103,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@2.2.1
+      - uses: pnpm/action-setup@2.1.0
         with:
           version: ${{matrix.pnpm-version}}
 
@@ -124,7 +124,7 @@ jobs:
             ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-
 
       - name: Install TypeScript type checker dependencies
-        uses: pnpm/action-setup@2.2.1
+        uses: pnpm/action-setup@2.1.0
         with:
           version: 6.32.8
           run_install: |

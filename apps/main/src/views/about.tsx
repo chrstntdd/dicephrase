@@ -26,28 +26,28 @@ function About() {
       <p>
         Coming up with strong passwords is tough. Strong passwords fulfill at
         least these 3 criteria.
-        <ul>
-          <li>
-            Random — Avoid any personal association (
-            <a href="http://www.loper-os.org/bad-at-entropy/manmach.html">
-              People are terrible at being random
-            </a>
-            )
-          </li>
-          <li>
-            Unique — If/when your password is compromised, no other accounts are
-            affected
-          </li>
-          <li>Long — To increase the complexity</li>
-        </ul>
-        <p>
-          Sure, maybe your password manager will generate passwords for you too,
-          but this app does{" "}
-          <a href="https://en.wikipedia.org/wiki/Unix_philosophy">
-            Just One Thing
+      </p>
+      <ul>
+        <li>
+          Random — Avoid any personal association (
+          <a href="http://www.loper-os.org/bad-at-entropy/manmach.html">
+            People are terrible at being random
           </a>
-          .
-        </p>
+          )
+        </li>
+        <li>
+          Unique — If/when your password is compromised, no other accounts are
+          affected
+        </li>
+        <li>Long — To increase the complexity</li>
+      </ul>
+      <p>
+        Sure, maybe your password manager will generate passwords for you too,
+        but this app does{" "}
+        <a href="https://en.wikipedia.org/wiki/Unix_philosophy">
+          Just One Thing
+        </a>
+        .
       </p>
 
       <h2>How</h2>

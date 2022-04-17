@@ -9,6 +9,7 @@ async function main() {
   let MOUNT_POINT = "<!--ssr-outlet-->"
   let DOCUMENT_TITLE = "<!--doc-title-->"
   let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
+  let SOLID_META = "<!-- SOLID_META -->"
   try {
     await viteBuild({
       mode: "ssg",
@@ -52,18 +53,19 @@ async function main() {
 
     let render = (await import(ssgEntryPath)).render
 
-    let pages = [
-      { path: "/", title: "dicephrase | generate" },
-      { path: "/about", title: "dicephrase | about" }
-    ]
+    let pages = [{ path: "/" }, { path: "/about" }]
 
-    for (let { path, title } of pages) {
-      let { html: appAsHTML, hydrationScript } = await render(path)
+    for (let { path } of pages) {
+      let {
+        html: appAsHTML,
+        hydrationScript,
+        renderedHeadTags
+      } = await render(path)
 
       let doc = template
         .replace(MOUNT_POINT, appAsHTML)
-        .replace(DOCUMENT_TITLE, title)
         .replace(HYDRATION_SCRIPT, hydrationScript)
+        .replace(SOLID_META, renderedHeadTags)
 
       let destinationPath =
         path === "/"

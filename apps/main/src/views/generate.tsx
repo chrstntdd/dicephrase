@@ -1,4 +1,5 @@
 import { createMemo, Show, lazy, Suspense } from "solid-js"
+import { Meta, Title } from "solid-meta"
 import {
   parse_count_val,
   VAL_SPACE,
@@ -61,6 +62,14 @@ function Generate() {
 
   return (
     <form class={styles.formEl} onSubmit={handleSubmit}>
+      <Title>Dicephrase | Generate</Title>
+      <Meta property="og:image" content="/img/dicephrase-og.jpg" />
+      <Meta property="og:title" content="Dicephrase | Generate" />
+      <Meta
+        property="og:description"
+        content="Simple, random, and secure in-browser password generator"
+      />
+      <Meta property="og:type" content="website" />
       <fieldset
         onChange={(e) => {
           let value = parse_count_val((e.target as HTMLInputElement).value)
@@ -80,7 +89,10 @@ function Generate() {
 
       <fieldset
         onChange={(e) => {
-          send({ type: "SET_SEP", value: (e.target as HTMLInputElement).value })
+          send({
+            type: "SET_SEP",
+            value: (e.target as HTMLInputElement).value
+          })
         }}
       >
         <legend id={separatorId}>Word separator</legend>

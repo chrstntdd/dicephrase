@@ -1,4 +1,5 @@
 import { lazy, Suspense, Switch, Match } from "solid-js"
+import { MetaProvider } from "solid-meta"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import OfflineToast from "./lib/offline-toast"
@@ -10,42 +11,44 @@ import * as styles from "./app.css"
 
 const SKIP_NAV_ID = "app-skip-nav"
 
-function App(props: { url: string }) {
+function App(props: { url: string; tags: any[] }) {
   return (
-    <div class={styles.appGutter}>
-      <SkipToContentLink
-        contentId={SKIP_NAV_ID}
-        aria-label="Skip to main content"
-      />
+    <MetaProvider tags={props.tags}>
+      <div class={styles.appGutter}>
+        <SkipToContentLink
+          contentId={SKIP_NAV_ID}
+          aria-label="Skip to main content"
+        />
 
-      <header class={styles.header}>
-        <h1 class={styles.pageTile}>
-          <a href="/">Dicephrase</a>
-        </h1>
+        <header class={styles.header}>
+          <h1 class={styles.pageTile}>
+            <a href="/">Dicephrase</a>
+          </h1>
 
-        <nav>
-          <a href="/about">About</a>
-        </nav>
-      </header>
+          <nav>
+            <a href="/about">About</a>
+          </nav>
+        </header>
 
-      <SkipNavContent id={SKIP_NAV_ID} />
+        <SkipNavContent id={SKIP_NAV_ID} />
 
-      <main>
-        <Suspense>
-          <Switch fallback={<Generate />}>
-            <Match when={props.url === "/"}>
-              <Generate />
-            </Match>
+        <main>
+          <Suspense>
+            <Switch fallback={<Generate />}>
+              <Match when={props.url === "/"}>
+                <Generate />
+              </Match>
 
-            <Match when={props.url === "/about"}>
-              <About />
-            </Match>
-          </Switch>
-        </Suspense>
-      </main>
+              <Match when={props.url === "/about"}>
+                <About />
+              </Match>
+            </Switch>
+          </Suspense>
+        </main>
 
-      <OfflineToast />
-    </div>
+        <OfflineToast />
+      </div>
+    </MetaProvider>
   )
 }
 

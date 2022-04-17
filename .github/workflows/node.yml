@@ -55,13 +55,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.32.8
-          run_install: |
-            - recursive: false
-              args: [--filter ./apps/main, --frozen-lockfile, --prefer-offline]
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -75,6 +68,14 @@ jobs:
           key: ${{ runner.os }}-lint-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-
+            
+      - name: Install linting dependencies
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.8
+          run_install: |
+            - recursive: false
+              args: [--filter ./apps/main, --frozen-lockfile, --prefer-offline]
     
       - name: Lint
         run: pnpm --filter ./apps/main lint

@@ -39,6 +39,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          # pnpm cache files are stored in `~/.pnpm-store` on Linux/macOS
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
+
       - name: Install linting dependencies
         uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
@@ -47,10 +64,7 @@ jobs:
             - recursive: false
               args: [--filter, ./apps/main, --frozen-lockfile, --prefer-offline, --ignore-scripts]
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+
             
       - name: Lint
         run: pnpm --filter ./apps/main lint

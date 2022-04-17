@@ -12,7 +12,7 @@ Instead of repeating myself — [read about the project here](https://dicephrase
   - Manage your node installation with [fnm](https://github.com/Schniz/fnm), or [`pnpm env`](https://pnpm.io/6.x/cli/env)
 - [Local self signed HTTPS certs](https://web.dev/how-to-use-local-https/#setup)
   - ```shell
-      $  cd apps/main && mkcert localhost
+    $ cd apps/main && mkcert localhost
     ```
 
 ## First steps

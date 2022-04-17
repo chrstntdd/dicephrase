@@ -55,6 +55,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install linting dependencies
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.8
+          run_install: |
+            - recursive: false
+              args: [--filter ./apps/main, --frozen-lockfile, --prefer-offline]
+    
       - name: Cache pnpm modules
         uses: actions/cache@v2
         with:
@@ -69,14 +77,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
             
-      - name: Install linting dependencies
-        uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.32.8
-          run_install: |
-            - recursive: false
-              args: [--filter ./apps/main, --frozen-lockfile, --prefer-offline]
-    
       - name: Lint
         run: pnpm --filter ./apps/main lint
 

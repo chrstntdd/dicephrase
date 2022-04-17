@@ -14,13 +14,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
+
       - name: Install gen-utils dependencies
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        uses: pnpm/action-setup@2.2.1
         with:
           version: 6.32.8
           run_install: |
             - recursive: false
-              args: [--filter, ./pkgs/gen-utils, --frozen-lockfile, --prefer-offline]
+              args: [--filter, './pkgs/gen-utils', --frozen-lockfile, --prefer-offline]
 
       - name: Test
         run: pnpm --filter ./pkgs/gen-utils test
@@ -40,7 +60,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+      - uses: pnpm/action-setup@2.2.1
         with:
           version: ${{matrix.pnpm-version}}
 
@@ -55,19 +75,18 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          # pnpm cache files are stored in `~/.pnpm-store` on Linux/macOS
           path: ~/.pnpm-store
           key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
 
       - name: Install linting dependencies
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        uses: pnpm/action-setup@2.2.1
         with:
           version: ${{matrix.pnpm-version}}
           run_install: |
             - recursive: false
-              args: [--filter, ./apps/main, --frozen-lockfile, --prefer-offline, --ignore-scripts]
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
             
       - name: Lint
         run: pnpm --filter ./apps/main lint
@@ -78,18 +97,39 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+        pnpm-version: [6.32.8]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - uses: pnpm/action-setup@2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-
+
       - name: Install TypeScript type checker dependencies
-        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        uses: pnpm/action-setup@2.2.1
         with:
           version: 6.32.8
           run_install: |
             - recursive: false
-              args: [--filter, ./apps/main, --frozen-lockfile, --prefer-offline, --ignore-scripts]
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
 
       - uses: actions/setup-node@v3
         with:

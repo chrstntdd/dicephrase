@@ -1,52 +1,142 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Main CI
 
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x, 17.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [16.x]
+        pnpm-version: [6.32.8]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.32.8
+          version: ${{matrix.pnpm-version}}
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-
-      - name: Lint
-        run: pnpm --filter "dicephrase" lint
-
-      - name: Type check
-        run: pnpm --filter "dicephrase" tc
+      - name: Install gen-utils dependencies
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+          run_install: |
+            - recursive: false
+              args: [--filter, './pkgs/gen-utils', --frozen-lockfile, --prefer-offline]
 
       - name: Test
-        run: pnpm --filter "gen-utils" test
+        run: pnpm --filter ./pkgs/gen-utils test
         env:
           IS_NET: true
           NODE_ENV: test
+
+  lint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        pnpm-version: [6.32.8]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - name: Install linting dependencies
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+          run_install: |
+            - recursive: false
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+            
+      - name: Lint
+        run: pnpm --filter ./apps/main lint
+
+  type-check:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        pnpm-version: [6.32.8]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{matrix.pnpm-version}}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - name: Install TypeScript type checker dependencies
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.8
+          run_install: |
+            - recursive: false
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Type check
+        run: pnpm --filter ./apps/main tc
+

@@ -1,32 +1,28 @@
 import { writeFile } from "fs/promises"
 import { resolve } from "path"
+import { readdirSync } from "fs"
 
 import crit from "critical"
 import { minify } from "html-minifier-terser"
 
-import { walkSync } from "./walk"
+function resolveToDist(n: string) {
+  return resolve("dist", n)
+}
 
-let srcHtml = Array.from(
-  walkSync("./dist", {
-    includeDirs: false,
-    includeFiles: true,
-    filter: (n) => n.endsWith(".html")
-  })
+let srcHtml = readdirSync("dist").flatMap((f) =>
+  f.endsWith(".html") ? [resolveToDist(f)] : []
 )
-let css = Array.from(
-  walkSync("./dist", {
-    includeDirs: false,
-    includeFiles: true,
-    filter: (n) => n.endsWith(".css")
-  })
+
+let css = readdirSync("dist").flatMap((f) =>
+  f.endsWith(".css") ? [resolveToDist(f)] : []
 )
 
 await Promise.all(
-  srcHtml.map(async ({ name, data }) => {
+  srcHtml.map(async (name) => {
     let htmlWithInlinedCSS: string = (
       await crit.generate({
         base: "/dist",
-        css: css.map(({ name }) => name),
+        css: css,
         inline: true,
         src: name
       })

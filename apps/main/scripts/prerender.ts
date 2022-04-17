@@ -1,6 +1,7 @@
 import { writeFileSync } from "fs"
 import { resolve } from "path"
 import { build as viteBuild } from "vite"
+import type { RollupOutput, OutputAsset } from "rollup"
 
 main()
 
@@ -41,9 +42,11 @@ async function main() {
 
     await import("./make-sw.js")
 
-    let template = clientOutput.output.find(
-      (m) => m.fileName === "index.html"
-    ).source
+    let template = (
+      (clientOutput as RollupOutput).output.find(
+        (m) => m.fileName === "index.html"
+      ) as OutputAsset
+    ).source as string
 
     let ssgEntryPath = resolve("dist-ssg", "main-ssg.js")
 

@@ -29,6 +29,7 @@ importers:
       html-minifier-terser: ^7.0.0-alpha.2
       polished: ^4.2.2
       prettier: ^2.6.2
+      rollup: ^2.70.2
       solid-js: 1.3.12
       tsm: ^2.2.1
       typescript: ^4.6.3
@@ -62,6 +63,7 @@ importers:
       html-minifier-terser: 7.0.0-alpha.2
       polished: 4.2.2
       prettier: 2.6.2
+      rollup: 2.70.2
       tsm: 2.2.1
       typescript: 4.6.3
       vite: 2.9.5
@@ -5160,8 +5162,8 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /rollup/2.67.2:
-    resolution: {integrity: sha512-hoEiBWwZtf1QdK3jZIq59L0FJj4Fiv4RplCO4pvCRC86qsoFurWB4hKQIjoRf3WvJmk5UZ9b0y5ton+62fC7Tw==}
+  /rollup/2.70.2:
+    resolution: {integrity: sha512-EitogNZnfku65I1DD5Mxe8JYRUCy0hkK5X84IlDtUs+O6JRMpRciXTzyCUuX11b5L5pvjH+OmFXiQ3XjabcXgg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -5852,7 +5854,7 @@ packages:
       esbuild: 0.14.36
       postcss: 8.4.12
       resolve: 1.22.0
-      rollup: 2.67.2
+      rollup: 2.70.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

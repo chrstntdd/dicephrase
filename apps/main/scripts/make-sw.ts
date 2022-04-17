@@ -1,9 +1,10 @@
-import { resolve, relative } from "path"
+import { resolve } from "path"
 import { execSync } from "child_process"
 
 import ESB from "esbuild"
 
-import { walkSync } from "./walk"
+import { readFileSync } from "fs"
+import type { Manifest } from "vite"
 
 let commitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
@@ -32,23 +33,23 @@ ESB.buildSync({
 
 console.info("Built the service worker!")
 
-function buildPrecacheList() {
-  let filesToPrecache = new Set(['"/about"', '"/"'])
+function makeFilePath(s) {
+  return `"${s}"`
+}
 
-  for (const { name } of walkSync(resolve("dist"), {
-    filter: (n) =>
-      (n.includes("/fonts/") ||
-        n.includes("/favicons/") ||
-        n.endsWith(".js") ||
-        n.endsWith(".css") ||
-        n.endsWith(".json")) &&
-      !n.includes("sw.js") &&
-      !n.includes(".DS_Store"),
-    includeDirs: false,
-    includeFiles: true
-  })) {
-    let rel = relative(resolve("dist"), name)
-    filesToPrecache.add(`"${rel}"`)
+function buildPrecacheList() {
+  let filesToPrecache = new Set(['"/about"', '"/", "/wl-2016.json"'])
+
+  let manifest: Manifest = JSON.parse(
+    readFileSync(resolve("dist", "manifest.json"), "utf-8")
+  )
+
+  for (const entry in manifest) {
+    let manifestChunk = manifest[entry]
+    filesToPrecache.add(makeFilePath(manifestChunk.file))
+    if (manifestChunk.css) {
+      manifestChunk.css.forEach((c) => filesToPrecache.add(makeFilePath(c)))
+    }
   }
 
   return [...filesToPrecache]

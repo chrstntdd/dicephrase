@@ -34,10 +34,15 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+        pnpm-version: [6.32.8]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: ${{matrix.pnpm-version}}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -59,12 +64,10 @@ jobs:
       - name: Install linting dependencies
         uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
         with:
-          version: 6.32.8
+          version: ${{matrix.pnpm-version}}
           run_install: |
             - recursive: false
               args: [--filter, ./apps/main, --frozen-lockfile, --prefer-offline, --ignore-scripts]
-
-
             
       - name: Lint
         run: pnpm --filter ./apps/main lint

@@ -58,14 +58,15 @@ function PhraseOutput(props: {
         <div class={styles.phrases}>
           <For each={props.phrases}>
             {(phrase, index) => {
-              let isLast = index() === props.phrases.length - 1
-              let sep = props.separators[index()]
+              let idx = index()
+              let isLast = idx === props.phrases.length - 1
+              let sep = props.separators[idx]
 
               return (
                 <>
                   <Word content={phrase} />
                   <Show when={!isLast}>
-                    <Word content={sep} sep />
+                    <Word content={sep || ""} sep />
                   </Show>
                 </>
               )
@@ -104,6 +105,8 @@ function Help(props: { status: "idle" | "copy" | "copied" }) {
 }
 
 function Word(props: { content: string; sep?: boolean }) {
+  console.log(props)
+
   return (
     <div class={styles.word}>
       <For each={props.content.split("")}>

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
@@ -16,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
     "target": "ESNEXT",
     "useDefineForClassFields": true
   },

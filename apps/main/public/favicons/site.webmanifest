@@ -2,18 +2,29 @@
   "name": "Dicephrase",
   "short_name": "Dicephrase",
   "description": "Simple, random, unique secure passphrase generator based on the diceware method",
-  "theme_color": "#21272f",
-  "background_color": "#21272f",
   "display": "standalone",
   "start_url": "/",
   "icons": [
     {
-      "src": "android-chrome-192x192.png",
+      "src": "/img/splash/manifest-icon-192.maskable.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "android-chrome-512x512.png",
+      "src": "/img/splash/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/splash/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/splash/manifest-icon-512.maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

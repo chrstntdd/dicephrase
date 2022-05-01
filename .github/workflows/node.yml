@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        pnpm-version: [6.32.8]
+        pnpm-version: [7.0.0]
 
     steps:
       - name: Checkout

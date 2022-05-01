@@ -3,6 +3,8 @@ import { vars, HEADER_HEIGHT } from "../styles/vars.css"
 
 import { supportsHover } from "../styles/util"
 
+const CONTENT_MAX_WIDTH = 768
+
 export const generateBtn = style({
   fontSize: vars.fontSize["1x"],
   borderColor: vars.color["primary-800"],
@@ -29,8 +31,7 @@ export const generateBtn = style({
 export const formEl = style({
   display: "flex",
   flexDirection: "column",
-  maxWidth: "768px",
-  margin: "0 auto",
+
   gap: vars.space["2x"],
   color: vars.color["primary-200"]
 })
@@ -119,6 +120,8 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 
 export const generatePage = style({
   // Attempt to enough space for phrase output to show up
+  margin: "0 auto",
+  maxWidth: CONTENT_MAX_WIDTH,
   minHeight: `calc(100vh - ${HEADER_HEIGHT})`
 })
 

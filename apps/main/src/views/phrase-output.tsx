@@ -16,7 +16,7 @@ function PhraseOutput(props: {
   let [state, send] = useActor(props.service)
 
   return (
-    <div>
+    <>
       <Help
         status={
           state().matches("idle.focused.idle")
@@ -74,7 +74,7 @@ function PhraseOutput(props: {
           </For>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -105,8 +105,6 @@ function Help(props: { status: "idle" | "copy" | "copied" }) {
 }
 
 function Word(props: { content: string; sep?: boolean }) {
-  console.log(props)
-
   return (
     <div class={styles.word}>
       <For each={props.content.split("")}>

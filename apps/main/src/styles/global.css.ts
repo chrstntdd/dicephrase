@@ -26,8 +26,7 @@ globalStyle("*", {
   WebkitTouchCallout: "none",
   backgroundColor: "transparent",
   fontSmooth: "antialiased",
-  position: "relative",
-  background: vars.color["primary-1000"]
+  position: "relative"
 })
 
 globalStyle("*, *:after, *:before", {
@@ -46,7 +45,8 @@ globalStyle("html:focus-within", {
 globalStyle("html, body", {
   margin: 0,
   padding: 0,
-  WebkitTextSizeAdjust: "100%"
+  WebkitTextSizeAdjust: "100%",
+  background: vars.color["primary-1000"]
 })
 
 globalStyle("body", {

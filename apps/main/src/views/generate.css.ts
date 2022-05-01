@@ -1,6 +1,5 @@
 import { style, globalStyle } from "@vanilla-extract/css"
-import { vars } from "../styles/vars.css"
-import { between, remToPx } from "polished"
+import { vars, HEADER_HEIGHT } from "../styles/vars.css"
 
 import { supportsHover } from "../styles/util"
 
@@ -32,21 +31,17 @@ export const formEl = style({
   flexDirection: "column",
   maxWidth: "768px",
   margin: "0 auto",
+  gap: vars.space["2x"],
   color: vars.color["primary-200"]
 })
 
 globalStyle(`${formEl} fieldset`, {
-  marginBottom: between(remToPx("0.2rem"), remToPx("0.4rem"), "320px", "768px"),
   marginLeft: 0,
   marginRight: 0,
   border: "none",
   fontSize: vars.fontSize["0x"],
   fontWeight: 600,
   padding: vars.space["1x"]
-})
-
-globalStyle(`${formEl} > div:last-child`, {
-  marginTop: between(remToPx("0.4rem"), remToPx("0.6rem"), "320px", "768px")
 })
 
 export const baseRadioGroupContainer = style({
@@ -73,7 +68,6 @@ globalStyle(`${baseRadioGroupContainer} > div`, {
 globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   margin: "0",
   appearance: "none",
-  // TODO: autoprefixer?
   WebkitAppearance: "none",
   position: "absolute",
   display: "block",
@@ -98,6 +92,7 @@ globalStyle(`${baseRadioGroupContainer} label`, {
   padding: vars.space["3x"]
 })
 
+/* Cant use supports hover here since using globals :/ */
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:hover`, {
   "@media": {
     "not all and (hover: none)": {
@@ -120,4 +115,13 @@ globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
   background: vars.color["primary-800"],
   color: vars.color["primary-200"]
+})
+
+export const generatePage = style({
+  // Attempt to enough space for phrase output to show up
+  minHeight: `calc(100vh - ${HEADER_HEIGHT})`
+})
+
+export const outputContainer = style({
+  marginBlock: vars.space["4x"]
 })

@@ -61,72 +61,76 @@ function Generate() {
   }
 
   return (
-    <form class={styles.formEl} onSubmit={handleSubmit}>
-      <Title>Dicephrase | Generate</Title>
-      <Meta property="og:image" content="/img/dicephrase-og.jpg" />
-      <Meta property="og:title" content="Dicephrase | Generate" />
-      <Meta
-        property="og:description"
-        content="Simple, random, and secure in-browser password generator"
-      />
-      <Meta property="og:type" content="website" />
-      <fieldset
-        onChange={(e) => {
-          let value = parse_count_val((e.target as HTMLInputElement).value)
-          send({ type: "SET_COUNT", value })
-        }}
-      >
-        <legend id={countId}>Word count</legend>
-        <RadioGroup
-          class={styles.baseRadioGroupContainer}
-          value={phraseCount()}
-          name={PHRASE_COUNT_KEY}
-          labelledBy={countId}
+    <div class={styles.generatePage}>
+      <form class={styles.formEl} onSubmit={handleSubmit}>
+        <Title>Dicephrase | Generate</Title>
+        <Meta property="og:image" content="/img/dicephrase-og.jpg" />
+        <Meta property="og:title" content="Dicephrase | Generate" />
+        <Meta
+          property="og:description"
+          content="Simple, random, and secure in-browser password generator"
+        />
+        <Meta property="og:type" content="website" />
+        <fieldset
+          onChange={(e) => {
+            let value = parse_count_val((e.target as HTMLInputElement).value)
+            send({ type: "SET_COUNT", value })
+          }}
         >
-          {WORD_COUNT_OPTS}
-        </RadioGroup>
-      </fieldset>
+          <legend id={countId}>Word count</legend>
+          <RadioGroup
+            class={styles.baseRadioGroupContainer}
+            value={phraseCount()}
+            name={PHRASE_COUNT_KEY}
+            labelledBy={countId}
+          >
+            {WORD_COUNT_OPTS}
+          </RadioGroup>
+        </fieldset>
 
-      <fieldset
-        onChange={(e) => {
-          send({
-            type: "SET_SEP",
-            value: (e.target as HTMLInputElement).value
-          })
-        }}
-      >
-        <legend id={separatorId}>Word separator</legend>
-        <RadioGroup
-          class={styles.baseRadioGroupContainer}
-          value={separator()}
-          name={SEPARATOR_KEY}
-          labelledBy={separatorId}
+        <fieldset
+          onChange={(e) => {
+            send({
+              type: "SET_SEP",
+              value: (e.target as HTMLInputElement).value
+            })
+          }}
         >
-          {SEPARATOR_OPTS}
-        </RadioGroup>
-      </fieldset>
+          <legend id={separatorId}>Word separator</legend>
+          <RadioGroup
+            class={styles.baseRadioGroupContainer}
+            value={separator()}
+            name={SEPARATOR_KEY}
+            labelledBy={separatorId}
+          >
+            {SEPARATOR_OPTS}
+          </RadioGroup>
+        </fieldset>
 
-      <button class={styles.generateBtn} type="submit">
-        Generate
-      </button>
+        <button class={styles.generateBtn} type="submit">
+          Generate
+        </button>
+      </form>
 
-      {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
-      <Suspense>
-        <Show when={hasOutput()}>
-          <PhraseOutput
-            // Oh boy
-            service={service as any as ActorRefFrom<typeof generateMachine>}
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            separators={separators()!}
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            phrases={phrases()!}
-            handleCopyPress={() => {
-              send("COPY_PHRASE")
-            }}
-          />
-        </Show>
-      </Suspense>
-    </form>
+      <div class={styles.outputContainer}>
+        {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
+        <Suspense>
+          <Show when={hasOutput()}>
+            <PhraseOutput
+              // Oh boy
+              service={service as any as ActorRefFrom<typeof generateMachine>}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              separators={separators()!}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              phrases={phrases()!}
+              handleCopyPress={() => {
+                send("COPY_PHRASE")
+              }}
+            />
+          </Show>
+        </Suspense>
+      </div>
+    </div>
   )
 }
 

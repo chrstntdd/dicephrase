@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css"
-import { vars } from "./styles/vars.css"
+import { HEADER_HEIGHT, vars } from "./styles/vars.css"
 
 export const pageTile = style({
   color: vars.color["primary-200"],
@@ -13,6 +13,7 @@ export const appGutter = style({
 })
 
 export const header = style({
+  height: HEADER_HEIGHT,
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between"

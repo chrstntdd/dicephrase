@@ -19,7 +19,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -40,7 +40,7 @@ jobs:
       - name: Install gen-utils dependencies
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
               args: [--filter, './pkgs/gen-utils', --frozen-lockfile, --prefer-offline]
@@ -64,7 +64,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -85,7 +85,7 @@ jobs:
       - name: Install linting dependencies
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
               args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
@@ -106,7 +106,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -127,7 +127,7 @@ jobs:
       - name: Install TypeScript type checker dependencies
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: $PNPM_VERSION
+          version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
               args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]

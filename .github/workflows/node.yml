@@ -3,7 +3,7 @@ name: Main CI
 on: [push]
 
 env:
-  PNPM_VERSION: 7.0.0
+  PNPM_VERSION: 6.32.11
 
 jobs:
   test:
@@ -32,7 +32,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.local/share/pnpm/store
+          path: ~/.pnpm-store
           key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
@@ -48,7 +48,6 @@ jobs:
       - name: Test
         run: pnpm --filter ./pkgs/gen-utils test
         env:
-          IS_NET: true
           NODE_ENV: test
 
   lint:
@@ -77,7 +76,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.local/share/pnpm/store
+          path: ~/.pnpm-store
           key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
@@ -119,7 +118,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.local/share/pnpm/store
+          path: ~/.pnpm-store
           key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-

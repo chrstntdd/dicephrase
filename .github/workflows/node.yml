@@ -4,14 +4,11 @@ on: [push]
 
 env:
   PNPM_VERSION: 7.0.0
+  NODE_VERSION: '16.x'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
 
     steps:
       - name: Checkout
@@ -21,10 +18,10 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: Cache pnpm modules
@@ -33,9 +30,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.nodeNODE_VERSION${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.NODE_VERSION}}-
 
       - name: Install gen-utils dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -54,10 +51,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -66,10 +59,10 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: Cache pnpm modules
@@ -78,9 +71,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ env.nodeNODE_VERSION${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ env.NODE_VERSION}}-
 
       - name: Install linting dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -96,10 +89,6 @@ jobs:
   type-check:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -108,10 +97,10 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: Cache pnpm modules
@@ -120,9 +109,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ env.nodeNODE_VERSION${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ env.NODE_VERSION}}-
 
       - name: Install TypeScript type checker dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -134,7 +123,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: Type check

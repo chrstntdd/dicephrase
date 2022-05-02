@@ -4,7 +4,7 @@ on: [push]
 
 env:
   PNPM_VERSION: 7.0.0
-  NODE_VERSION: '16.x'
+  NODE_VERSION: 16.15.0
 
 jobs:
   test:

@@ -5,5 +5,9 @@
   "workspaces": [
     "pkgs/*",
     "apps/*"
-  ]
+  ],
+  "engines": {
+    "node": ">=16",
+    "pnpm": "=6"
+  }
 }

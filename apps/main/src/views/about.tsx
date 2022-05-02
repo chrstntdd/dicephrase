@@ -15,7 +15,7 @@ function About() {
       <Meta property="og:type" content="website" />
       <h1>About</h1>
       <p class={styles.tagline}>
-        Simple, accessible, and secure in-browser password generation{" "}
+        Simple, random, and secure in-browser password generator{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps">
           <abbr title="Progressive Web App">PWA</abbr>
         </a>

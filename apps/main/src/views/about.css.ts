@@ -6,7 +6,7 @@ export const aboutPage = style({
   maxWidth: "80ch",
   marginInlineStart: "auto",
   marginInlineEnd: "auto",
-  paddingBlockEnd: vars.space["8x"]
+  paddingBlockEnd: vars.space["6x"]
 })
 
 export const tagline = style({

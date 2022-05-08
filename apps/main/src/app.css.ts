@@ -18,3 +18,23 @@ export const header = style({
   alignItems: "center",
   justifyContent: "space-between"
 })
+
+export const appFooter = style({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  paddingBlock: vars.space["2x"],
+  color: vars.color["primary-200"]
+})
+
+export const sourceLink = style({
+  whiteSpace: "nowrap",
+  display: "flex",
+  gap: vars.space["1x"],
+  alignItems: "center"
+})
+
+export const ghLogo = style({
+  height: "24px",
+  width: "24px"
+})

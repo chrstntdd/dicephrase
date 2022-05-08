@@ -1,7 +1,23 @@
-## Compiling to binary executable
+# Dicephrase CLI
+
+> [dicephrase](https://dicephrase.xyz/) for the CLI — powered by deno
+
+## Concept
+
+A thin wrapper around the core functionality of the dicephrase PWA. Built with the same utilities.
+
+## Build and run
+
+For development, run the `make.sh` script with "run"
 
 ```shell
-$ deno --unstable compile --allow-env=NODE_ENV -o dist/dicephrase src/main.ts
+$ ./make.sh run
+```
+
+To build for production, run the `make.sh` script directly
+
+```shell
+$ ./make.sh
 ```
 
 ## Installation

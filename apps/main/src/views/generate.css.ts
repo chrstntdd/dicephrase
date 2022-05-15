@@ -1,5 +1,5 @@
 import { style, globalStyle } from "@vanilla-extract/css"
-import { vars, HEADER_HEIGHT } from "../styles/vars.css"
+import { vars } from "../styles/vars.css"
 
 import { supportsHover } from "../styles/util"
 
@@ -78,7 +78,8 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   borderWidth: vars.space["0x"],
   borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius.full,
-  padding: vars.space["3x"]
+  padding: vars.space["3x"],
+  transition: "background 200ms ease-in-out"
 })
 
 globalStyle(`${baseRadioGroupContainer} label`, {
@@ -121,8 +122,7 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 export const generatePage = style({
   // Attempt to enough space for phrase output to show up
   margin: "0 auto",
-  maxWidth: CONTENT_MAX_WIDTH,
-  minHeight: `calc(100vh - ${HEADER_HEIGHT})`
+  maxWidth: CONTENT_MAX_WIDTH
 })
 
 export const outputContainer = style({

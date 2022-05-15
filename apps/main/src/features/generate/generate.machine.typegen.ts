@@ -8,8 +8,6 @@ export interface Typegen0 {
     assignSep: "SET_SEP"
     assignWordList: "done.invoke.fetchWordList"
     incrementRetry: "xstate.after(REQUEST_BACK_OFF_DELAY)#dice-gen.generating.retrying"
-    announceCopy: "FOCUS_OUTPUT"
-    announceCopied: "done.invoke.copyToClipboard"
     cancelPending: "xstate.init"
     assignAb:
       | "xstate.after(100)#dice-gen.generating.debouncing"
@@ -73,12 +71,10 @@ export interface Typegen0 {
     | "syncing_from_url"
     | "empty"
     | "idle"
-    | "idle.unfocused"
-    | "idle.focused"
-    | "idle.focused.idle"
-    | "idle.focused.copying"
-    | "idle.focused.copied"
-    | "idle.focused.hidden"
+    | "idle.idle"
+    | "idle.copying"
+    | "idle.copied"
+    | "idle.hidden"
     | "generating"
     | "generating.debouncing"
     | "generating.fetching_wl"
@@ -86,10 +82,7 @@ export interface Typegen0 {
     | "generating.error"
     | "generating.combining"
     | {
-        idle?:
-          | "unfocused"
-          | "focused"
-          | { focused?: "idle" | "copying" | "copied" | "hidden" }
+        idle?: "idle" | "copying" | "copied" | "hidden"
         generating?:
           | "debouncing"
           | "fetching_wl"

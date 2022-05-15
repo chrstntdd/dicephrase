@@ -1,4 +1,5 @@
 import { style } from "@vanilla-extract/css"
+
 import { HEADER_HEIGHT, vars } from "./styles/vars.css"
 
 export const pageTile = style({
@@ -8,15 +9,21 @@ export const pageTile = style({
   fontSize: vars.fontSize["3x"]
 })
 
-export const appGutter = style({
-  padding: `env(safe-area-inset-top) calc(env(safe-area-inset-right) + ${vars.space["2x"]}) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + ${vars.space["2x"]})`
+export const main = style({
+  minHeight: `calc(100vh - ${HEADER_HEIGHT})`,
+  paddingBlockStart: HEADER_HEIGHT
 })
 
 export const header = style({
   height: HEADER_HEIGHT,
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between"
+  justifyContent: "space-between",
+  position: "fixed",
+  width: "100%",
+  padding: "inherit",
+  top: 0,
+  left: 0
 })
 
 export const appFooter = style({

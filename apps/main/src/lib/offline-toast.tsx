@@ -3,7 +3,7 @@ import { onMount, createSignal, onCleanup, Show } from "solid-js"
 import { Toast } from "./toast"
 
 function OfflineToast() {
-  let [show, setShow] = createSignal(true)
+  let [show, setShow] = createSignal(false)
 
   onMount(() => {
     let msgHandler = (swEvent: MessageEvent) => {

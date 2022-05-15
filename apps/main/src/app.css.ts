@@ -32,7 +32,7 @@ export const appFooter = style({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  paddingBlock: vars.space["2x"],
+  paddingBlockEnd: vars.space["2x"],
   color: vars.color["primary-200"]
 })
 
@@ -44,6 +44,6 @@ export const sourceLink = style({
 })
 
 export const ghLogo = style({
-  height: "24px",
-  width: "24px"
+  height: vars.space["7x"],
+  width: vars.space["7x"]
 })

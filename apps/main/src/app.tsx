@@ -53,6 +53,7 @@ function App(props: {
       <footer class={styles.appFooter}>
         <a
           class={styles.sourceLink}
+          aria-label="View source on GitHub"
           href="https://github.com/chrstntdd/dicephrase"
         >
           <svg

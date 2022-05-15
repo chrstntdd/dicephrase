@@ -24,7 +24,8 @@ export const header = style({
   width: "100%",
   padding: "inherit",
   top: 0,
-  left: 0
+  left: 0,
+  zIndex: 1
 })
 
 export const appFooter = style({

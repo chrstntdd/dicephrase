@@ -19,6 +19,7 @@ export const header = style({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  background: vars.color["primary-1000"],
   position: "fixed",
   width: "100%",
   padding: "inherit",

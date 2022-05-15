@@ -2,7 +2,7 @@ import { onMount, createSignal, onCleanup, Show } from "solid-js"
 
 import { Toast } from "./toast"
 
-function OfflineToast() {
+export function OfflineToast() {
   let [show, setShow] = createSignal(false)
 
   onMount(() => {
@@ -29,5 +29,3 @@ function OfflineToast() {
     </Show>
   )
 }
-
-export default OfflineToast

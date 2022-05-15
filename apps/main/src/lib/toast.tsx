@@ -51,7 +51,9 @@ export function Toast(props: {
 }) {
   // Defined in the index.html
   onMount(async () => {
-    let toastContainer = document.getElementById("app-toast-group")!
+    let toastContainer = document.getElementById(
+      "app-toast-group"
+    ) as HTMLElement
 
     let toast = makeToast(props.msg, props.showTime || 3000)
 

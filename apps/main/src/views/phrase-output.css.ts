@@ -1,41 +1,30 @@
 import type { CSSProperties } from "@vanilla-extract/css"
-import { keyframes, style, globalStyle } from "@vanilla-extract/css"
+import { keyframes, style } from "@vanilla-extract/css"
 
-import { supportsHover } from "../styles/util"
 import { vars } from "../styles/vars.css"
 
-export const pressable = style({
-  borderRadius: vars.borderRadius["3x"],
-  borderStyle: "solid",
-  borderWidth: vars.space["0x"],
-  borderColor: vars.color["primary-800"],
-  color: vars.color["primary-300"],
-  fontWeight: 900,
-  fontSize: vars.fontSize["3x"],
+export const outputEl = style({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: "1px",
   overflow: "hidden",
-  padding: vars.space["1x"],
-  width: "100%",
-  "@media": {
-    ...supportsHover({
-      background: vars.color["primary-900"]
-    })
-  },
-  selectors: {
-    "&:focus-visible": {
-      background: vars.color["primary-900"],
-      borderColor: vars.color["primary-900"]
-    }
-  }
-})
-
-globalStyle(`${pressable} *`, {
-  background: "transparent"
+  position: "absolute",
+  whiteSpace: "nowrap",
+  width: "1px"
 })
 
 export const phrases = style({
   display: "flex",
   flexWrap: "wrap",
-  overflow: "hidden"
+  overflow: "hidden",
+  borderRadius: vars.borderRadius["3x"],
+  color: vars.color["primary-300"],
+  fontWeight: 900,
+  fontSize: vars.fontSize["3x"],
+  padding: vars.space["1x"],
+  width: "100%",
+  transition: "background 200ms ease-in-out",
+  background: vars.color["primary-1100"]
 })
 
 /**
@@ -88,20 +77,4 @@ export const phraseChar = style({
 export const word = style({
   overflow: "hidden",
   whiteSpace: "nowrap"
-})
-
-export const helpText = style({
-  fontSize: vars.fontSize["1x"],
-  position: "absolute",
-  left: "50%",
-  bottom: `calc(-1.2 * ${vars.fontSize["2x"]})`,
-  whiteSpace: "nowrap",
-  willChange: "transform",
-  transition: "transform 200ms ease-in-out",
-  transform: `translate(-50%, -0.6rem)`,
-  selectors: {
-    '&[data-hide="false"]': {
-      transform: `translate(-50%, ${vars.space["2x"]})`
-    }
-  }
 })

@@ -73,8 +73,9 @@ globalStyle("img, picture, video, canvas, svg", {
 
 globalStyle("#root", {
   isolation: "isolate",
-  height: "100vh",
-  width: "100vw"
+  minHeight: "100vh",
+  width: "100vw",
+  padding: `env(safe-area-inset-top) calc(env(safe-area-inset-right) + ${vars.space["2x"]}) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + ${vars.space["2x"]})`
 })
 
 globalStyle("a, a:active", {
@@ -82,9 +83,11 @@ globalStyle("a, a:active", {
   background: "inherit"
 })
 
-// For nice smooth animations
 globalStyle("input,button,a", {
-  transition: "box-shadow 200ms ease-in-out"
+  // For smooth focus ring animations
+  transition: "box-shadow 200ms ease-in-out",
+  // Faster interactions? https://webplatform.news/issues/2017-10-17
+  touchAction: "manipulation"
 })
 
 globalStyle("*:focus,*:focus-visible", {

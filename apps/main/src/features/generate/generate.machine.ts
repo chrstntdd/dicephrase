@@ -9,7 +9,6 @@ import {
 } from "gen-utils"
 
 import { assert } from "../../lib/assert"
-import { setStatus } from "../../lib/a11y/aria-live-msg"
 
 import { fetchWordList, retryDelay } from "./shared"
 
@@ -24,9 +23,7 @@ type Ctx = {
 }
 
 type Msg =
-  | { type: "BLUR_OUTPUT" }
   | { type: "COPY_PHRASE" }
-  | { type: "FOCUS_OUTPUT" }
   | { type: "GENERATE" }
   | { type: "SET_COUNT"; value: number }
   | { type: "SET_SEP"; value: string }
@@ -69,34 +66,17 @@ let generateMachine = createMachine(
           SET_COUNT: { target: "generating", actions: "assignCount" },
           SET_SEP: { target: "generating", actions: "assignSep" }
         },
-        initial: "unfocused",
+        initial: "idle",
         states: {
-          unfocused: { on: { FOCUS_OUTPUT: "focused" } },
-          focused: {
-            initial: "idle",
-            entry: "announceCopy",
-            on: {
-              BLUR_OUTPUT: "unfocused"
-            },
-            states: {
-              idle: {
-                on: { COPY_PHRASE: "copying" }
-              },
-              copying: {
-                invoke: {
-                  id: "copyToClipboard",
-                  src: "copyToClipboard",
-                  onDone: "copied",
-                  onError: "idle"
-                }
-              },
-              copied: {
-                entry: "announceCopied",
-                after: { 4000: "hidden" }
-              },
-              hidden: {
-                on: { COPY_PHRASE: "copying" }
-              }
+          idle: {
+            on: { COPY_PHRASE: "copying" }
+          },
+          copying: {
+            invoke: {
+              id: "copyToClipboard",
+              src: "copyToClipboard",
+              onDone: "idle",
+              onError: "idle"
             }
           }
         }
@@ -198,12 +178,6 @@ let generateMachine = createMachine(
         url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
 
         history.pushState({}, "", url)
-      },
-      announceCopy: () => {
-        setStatus("Copy to clipboard")
-      },
-      announceCopied: () => {
-        setStatus("Copied to clipboard")
       }
     },
     guards: {

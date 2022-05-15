@@ -1,8 +1,9 @@
-import { lazy, Suspense, Switch, Match } from "solid-js"
+import { lazy, Suspense, Switch, Match, ComponentProps } from "solid-js"
 import { MetaProvider } from "solid-meta"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
-import OfflineToast from "./lib/offline-toast"
+import { OfflineToast } from "./lib/offline-toast"
+import { SVGWrapper } from "./lib/svg-wrapper"
 
 const Generate = lazy(() => import("./views/generate"))
 const About = lazy(() => import("./views/about"))
@@ -11,50 +12,54 @@ import * as styles from "./app.css"
 
 const SKIP_NAV_ID = "app-skip-nav"
 
-function App(props: { url: string; tags: any[] }) {
+function App(props: {
+  url: string
+  tags: ComponentProps<typeof MetaProvider>["tags"]
+}) {
   return (
     <MetaProvider tags={props.tags}>
-      <div class={styles.appGutter}>
-        <SkipToContentLink
-          contentId={SKIP_NAV_ID}
-          aria-label="Skip to main content"
-        />
+      <SkipToContentLink
+        contentId={SKIP_NAV_ID}
+        aria-label="Skip to main content"
+      />
 
-        <header class={styles.header}>
-          <h1 class={styles.pageTile}>
-            <a href="/">Dicephrase</a>
-          </h1>
+      <header class={styles.header}>
+        <h1 class={styles.pageTile}>
+          <a href="/">Dicephrase</a>
+        </h1>
 
-          <nav>
-            <a href="/about">About</a>
-          </nav>
-        </header>
+        <nav>
+          <a href="/about">About</a>
+        </nav>
+      </header>
 
-        <SkipNavContent id={SKIP_NAV_ID} />
+      <SkipNavContent id={SKIP_NAV_ID} />
 
-        <main>
-          <Suspense>
-            <Switch fallback={<Generate />}>
-              <Match when={props.url === "/"}>
-                <Generate />
-              </Match>
+      <main class={styles.main}>
+        <Suspense>
+          <Switch fallback={<Generate />}>
+            <Match when={props.url === "/"}>
+              <Generate />
+            </Match>
 
-              <Match when={props.url === "/about"}>
-                <About />
-              </Match>
-            </Switch>
-          </Suspense>
-        </main>
+            <Match when={props.url === "/about"}>
+              <About />
+            </Match>
+          </Switch>
+        </Suspense>
+      </main>
 
-        <OfflineToast />
-        <footer class={styles.appFooter}>
-          <a
-            class={styles.sourceLink}
-            href="https://github.com/chrstntdd/dicephrase"
-          >
+      <OfflineToast />
+
+      <footer class={styles.appFooter}>
+        <a
+          class={styles.sourceLink}
+          aria-label="View source on GitHub"
+          href="https://github.com/chrstntdd/dicephrase"
+        >
+          <SVGWrapper>
             <svg
               class={styles.ghLogo}
-              aria-hidden="hidden"
               clip-rule="evenodd"
               fill-rule="evenodd"
               stroke-linejoin="round"
@@ -67,10 +72,9 @@ function App(props: { url: string; tags: any[] }) {
                 fill="currentColor"
               />
             </svg>
-            View source
-          </a>
-        </footer>
-      </div>
+          </SVGWrapper>
+        </a>
+      </footer>
     </MetaProvider>
   )
 }

@@ -1,48 +1,31 @@
-import * as styles from "./offline-toast.css"
-import { onMount, createSignal, onCleanup } from "solid-js"
+import { onMount, createSignal, onCleanup, Show } from "solid-js"
 
-import { setStatus } from "../lib/a11y/aria-live-msg.js"
+import { Toast } from "./toast"
 
-function OfflineToast() {
-  let [visualText, setVisualText] = createSignal("")
-  let [vertTranslate, setVertTranslate] = createSignal(2.4)
+export function OfflineToast() {
+  let [show, setShow] = createSignal(false)
 
   onMount(() => {
-    let handle: ReturnType<typeof setTimeout> | undefined
-
-    navigator.serviceWorker.addEventListener("message", (swEvent) => {
+    let msgHandler = (swEvent: MessageEvent) => {
       let msg = swEvent?.data?.type
 
       switch (msg) {
         case "PRECACHE_SUCCESS": {
-          setVertTranslate(0)
-          let msg = "Ready to work offline"
-          setVisualText(msg)
-          setStatus(msg)
-
-          handle = setTimeout(() => {
-            setVisualText("")
-            setVertTranslate(2.4)
-          }, 5000)
+          setShow(true)
         }
       }
-    })
+    }
+
+    navigator.serviceWorker.addEventListener("message", msgHandler)
 
     onCleanup(() => {
-      if (handle) {
-        clearTimeout(handle)
-      }
+      navigator.serviceWorker.removeEventListener("message", msgHandler)
     })
   })
 
   return (
-    <div
-      class={styles.backdrop}
-      style={{ transform: `translate(-50%, ${vertTranslate()}rem)` }}
-    >
-      <div>{visualText()}</div>
-    </div>
+    <Show when={show()}>
+      <Toast msg="Ready to work offline" showTime={5000} />
+    </Show>
   )
 }
-
-export default OfflineToast

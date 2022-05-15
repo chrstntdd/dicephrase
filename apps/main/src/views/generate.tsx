@@ -19,6 +19,7 @@ import * as styles from "./generate.css"
 import type { ActorRefFrom } from "xstate"
 
 const PhraseOutput = lazy(() => import("./phrase-output"))
+const CopyBtn = lazy(() => import("../lib/copy-btn"))
 
 const countId = "word-count-gr"
 const separatorId = "separator-gr"
@@ -39,8 +40,10 @@ const WORD_COUNT_OPTS = [
   { value: 10, label: "10", id: "count-10" }
 ]
 
+const FORM_ID = "gen-form"
+
 function Generate() {
-  let [state, send, service] = useMachine(
+  let [state, send, svc] = useMachine(
     // @ts-expect-error Typing kinda sux with the handrolled useMachine
     // Once it's merged, we should use the official solid useMachine
     // https://github.com/statelyai/xstate/pull/2932
@@ -62,7 +65,7 @@ function Generate() {
 
   return (
     <div class={styles.generatePage}>
-      <form class={styles.formEl} onSubmit={handleSubmit}>
+      <form id={FORM_ID} class={styles.formEl} onSubmit={handleSubmit}>
         <Title>Dicephrase | Generate</Title>
         <Meta property="og:image" content="/img/dicephrase-og.jpg" />
         <Meta property="og:title" content="Dicephrase | Generate" />
@@ -72,6 +75,7 @@ function Generate() {
         />
         <Meta property="og:type" content="website" />
         <fieldset
+          class={styles.fieldset}
           onChange={(e) => {
             let value = parse_count_val((e.target as HTMLInputElement).value)
             send({ type: "SET_COUNT", value })
@@ -82,13 +86,13 @@ function Generate() {
             class={styles.baseRadioGroupContainer}
             value={phraseCount()}
             name={PHRASE_COUNT_KEY}
-            labelledBy={countId}
           >
             {WORD_COUNT_OPTS}
           </RadioGroup>
         </fieldset>
 
         <fieldset
+          class={styles.fieldset}
           onChange={(e) => {
             send({
               type: "SET_SEP",
@@ -101,7 +105,6 @@ function Generate() {
             class={styles.baseRadioGroupContainer}
             value={separator()}
             name={SEPARATOR_KEY}
-            labelledBy={separatorId}
           >
             {SEPARATOR_OPTS}
           </RadioGroup>
@@ -116,17 +119,21 @@ function Generate() {
         {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
         <Suspense>
           <Show when={hasOutput()}>
-            <PhraseOutput
-              // Oh boy
-              service={service as any as ActorRefFrom<typeof generateMachine>}
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              separators={separators()!}
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              phrases={phrases()!}
-              handleCopyPress={() => {
-                send("COPY_PHRASE")
-              }}
-            />
+            <>
+              <CopyBtn
+                svc={svc as unknown as ActorRefFrom<typeof generateMachine>}
+              />
+              <PhraseOutput
+                formId={FORM_ID}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                separators={separators()!}
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                phrases={phrases()!}
+                handleCopyPress={() => {
+                  send("COPY_PHRASE")
+                }}
+              />
+            </>
           </Show>
         </Suspense>
       </div>

@@ -3,7 +3,6 @@ import { For } from "solid-js"
 function RadioGroup<V>(props: {
   class: string
   name: string
-  labelledBy: string
   children: {
     value: V
     label: string
@@ -12,11 +11,7 @@ function RadioGroup<V>(props: {
   value: V
 }) {
   return (
-    <div
-      aria-labelledby={props.labelledBy}
-      class={props.class}
-      role="radiogroup"
-    >
+    <div class={props.class}>
       <For each={props.children}>
         {(kid, i) => (
           <Radio

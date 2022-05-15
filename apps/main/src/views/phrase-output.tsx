@@ -1,8 +1,5 @@
-import { For, Match, Switch, Show } from "solid-js"
-import type { ActorRefFrom } from "xstate"
-
-import type { generateMachine } from "../features/generate/generate.machine"
-import { useActor } from "../lib/solid-xstate/use-actor"
+import { For, Show } from "solid-js"
+import { combine_zip } from "gen-utils"
 
 import * as styles from "./phrase-output.css"
 
@@ -10,97 +7,41 @@ function PhraseOutput(props: {
   phrases: readonly string[]
   separators: readonly string[]
   handleCopyPress: () => void
-  service: ActorRefFrom<typeof generateMachine>
+  formId: string
 }) {
-  let phrasesExist = !!props.phrases.length
-  let [state, send] = useActor(props.service)
-
   return (
     <>
-      <Help
-        status={
-          state().matches("idle.focused.idle")
-            ? "copy"
-            : state().matches("idle.focused.copied")
-            ? "copied"
-            : "idle"
-        }
-      />
-      {/* Unable to use a native button due to children & safari  */}
-      {/* being safari https://stackoverflow.com/questions/42758815/safari-focus-event-doesnt-work-on-button-element */}
-      <div
-        role="button"
-        tabIndex={phrasesExist ? 0 : -1}
-        aria-label="Copy passphrase to clipboard"
-        class={styles.pressable}
-        hidden={!phrasesExist}
-        onFocus={() => {
-          send("FOCUS_OUTPUT")
-        }}
-        onBlur={() => {
-          send("BLUR_OUTPUT")
-        }}
-        onKeyPress={(e) => {
-          // Handle both https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role#keyboard_interactions
-          if (e.key === "Enter" || e.key === " ") {
-            send("COPY_PHRASE")
-          }
-        }}
-        onClick={
-          phrasesExist
-            ? (e) => {
-                ;(e.target as HTMLDivElement).focus()
-                send("COPY_PHRASE")
-              }
-            : undefined
-        }
+      {/* Announce generated phrase to screen readers */}
+      <output
+        role="status"
+        aria-live="polite"
+        form={props.formId}
+        class={styles.outputEl}
       >
-        <div class={styles.phrases}>
-          <For each={props.phrases}>
-            {(phrase, index) => {
-              let idx = index()
-              let isLast = idx === props.phrases.length - 1
-              let sep = props.separators[idx]
+        {combine_zip(
+          props.phrases as string[],
+          props.separators as string[]
+        ).join(" ")}
+      </output>
+      <div class={styles.phrases}>
+        <For each={props.phrases}>
+          {(phrase, index) => {
+            let idx = index()
+            let isLast = idx === props.phrases.length - 1
+            let sep = props.separators[idx]
 
-              return (
-                <>
-                  <Word content={phrase} />
-                  <Show when={!isLast}>
-                    <Word content={sep || ""} sep />
-                  </Show>
-                </>
-              )
-            }}
-          </For>
-        </div>
+            return (
+              <>
+                <Word content={phrase} />
+                <Show when={!isLast}>
+                  <Word content={sep || ""} sep />
+                </Show>
+              </>
+            )
+          }}
+        </For>
       </div>
     </>
-  )
-}
-
-function Help(props: { status: "idle" | "copy" | "copied" }) {
-  return (
-    <div data-hide={props.status === "idle"} class={styles.helpText}>
-      <Switch>
-        <Match when={props.status === "copy"}>
-          <>
-            Copy to clipboard
-            <span role="img" aria-label="clipboard">
-              📋
-            </span>
-          </>
-        </Match>
-
-        <Match when={props.status === "copied"}>
-          <>
-            Copied to clipboard
-            <span role="img" aria-label="memo">
-              📝
-            </span>
-          </>
-        </Match>
-      </Switch>
-    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import { style, globalStyle } from "@vanilla-extract/css"
-import { vars, HEADER_HEIGHT } from "../styles/vars.css"
+import { vars } from "../styles/vars.css"
 
 import { supportsHover } from "../styles/util"
 
@@ -36,15 +36,6 @@ export const formEl = style({
   color: vars.color["primary-200"]
 })
 
-globalStyle(`${formEl} fieldset`, {
-  marginLeft: 0,
-  marginRight: 0,
-  border: "none",
-  fontSize: vars.fontSize["0x"],
-  fontWeight: 600,
-  padding: vars.space["1x"]
-})
-
 export const baseRadioGroupContainer = style({
   display: "flex",
   justifyContent: "space-between",
@@ -78,7 +69,8 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   borderWidth: vars.space["0x"],
   borderColor: vars.color["primary-800"],
   borderRadius: vars.borderRadius.full,
-  padding: vars.space["3x"]
+  padding: vars.space["3x"],
+  transition: "background 200ms ease-in-out"
 })
 
 globalStyle(`${baseRadioGroupContainer} label`, {
@@ -121,10 +113,18 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 export const generatePage = style({
   // Attempt to enough space for phrase output to show up
   margin: "0 auto",
-  maxWidth: CONTENT_MAX_WIDTH,
-  minHeight: `calc(100vh - ${HEADER_HEIGHT})`
+  maxWidth: CONTENT_MAX_WIDTH
 })
 
 export const outputContainer = style({
   marginBlock: vars.space["4x"]
+})
+
+export const fieldset = style({
+  padding: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  border: "none",
+  fontSize: vars.fontSize["0x"],
+  fontWeight: 600
 })

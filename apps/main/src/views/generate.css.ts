@@ -36,15 +36,6 @@ export const formEl = style({
   color: vars.color["primary-200"]
 })
 
-globalStyle(`${formEl} fieldset`, {
-  marginLeft: 0,
-  marginRight: 0,
-  border: "none",
-  fontSize: vars.fontSize["0x"],
-  fontWeight: 600,
-  padding: vars.space["1x"]
-})
-
 export const baseRadioGroupContainer = style({
   display: "flex",
   justifyContent: "space-between",
@@ -127,4 +118,13 @@ export const generatePage = style({
 
 export const outputContainer = style({
   marginBlock: vars.space["4x"]
+})
+
+export const fieldset = style({
+  padding: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  border: "none",
+  fontSize: vars.fontSize["0x"],
+  fontWeight: 600
 })

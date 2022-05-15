@@ -75,6 +75,7 @@ function Generate() {
         />
         <Meta property="og:type" content="website" />
         <fieldset
+          class={styles.fieldset}
           onChange={(e) => {
             let value = parse_count_val((e.target as HTMLInputElement).value)
             send({ type: "SET_COUNT", value })
@@ -91,6 +92,7 @@ function Generate() {
         </fieldset>
 
         <fieldset
+          class={styles.fieldset}
           onChange={(e) => {
             send({
               type: "SET_SEP",

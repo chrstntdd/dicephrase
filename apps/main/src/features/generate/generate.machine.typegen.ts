@@ -26,19 +26,19 @@ export interface Typegen0 {
     "xstate.after(REQUEST_BACK_OFF_DELAY)#dice-gen.generating.retrying": {
       type: "xstate.after(REQUEST_BACK_OFF_DELAY)#dice-gen.generating.retrying"
     }
-    "done.invoke.copyToClipboard": {
-      type: "done.invoke.copyToClipboard"
-      data: unknown
-      __tip: "See the XState TS docs to learn how to strongly type this."
+    "xstate.after(100)#dice-gen.generating.debouncing": {
+      type: "xstate.after(100)#dice-gen.generating.debouncing"
     }
     "error.platform.fetchWordList": {
       type: "error.platform.fetchWordList"
       data: unknown
     }
-    "xstate.after(100)#dice-gen.generating.debouncing": {
-      type: "xstate.after(100)#dice-gen.generating.debouncing"
-    }
     "xstate.init": { type: "xstate.init" }
+    "done.invoke.copyToClipboard": {
+      type: "done.invoke.copyToClipboard"
+      data: unknown
+      __tip: "See the XState TS docs to learn how to strongly type this."
+    }
     "error.platform.copyToClipboard": {
       type: "error.platform.copyToClipboard"
       data: unknown
@@ -73,8 +73,6 @@ export interface Typegen0 {
     | "idle"
     | "idle.idle"
     | "idle.copying"
-    | "idle.copied"
-    | "idle.hidden"
     | "generating"
     | "generating.debouncing"
     | "generating.fetching_wl"
@@ -82,7 +80,7 @@ export interface Typegen0 {
     | "generating.error"
     | "generating.combining"
     | {
-        idle?: "idle" | "copying" | "copied" | "hidden"
+        idle?: "idle" | "copying"
         generating?:
           | "debouncing"
           | "fetching_wl"

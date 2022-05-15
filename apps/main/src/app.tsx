@@ -49,6 +49,7 @@ function App(props: {
       </main>
 
       <OfflineToast />
+
       <footer class={styles.appFooter}>
         <a
           class={styles.sourceLink}
@@ -69,7 +70,6 @@ function App(props: {
               fill="currentColor"
             />
           </svg>
-          View source
         </a>
       </footer>
     </MetaProvider>

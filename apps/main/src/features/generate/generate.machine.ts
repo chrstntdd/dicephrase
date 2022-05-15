@@ -75,15 +75,9 @@ let generateMachine = createMachine(
             invoke: {
               id: "copyToClipboard",
               src: "copyToClipboard",
-              onDone: "copied",
+              onDone: "idle",
               onError: "idle"
             }
-          },
-          copied: {
-            after: { 4000: "hidden" }
-          },
-          hidden: {
-            on: { COPY_PHRASE: "copying" }
           }
         }
       },

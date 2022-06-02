@@ -40,7 +40,7 @@ test.describe("App e2e", () => {
 
     await genBtn.click()
 
-    await page.waitForSelector("*[role='button']")
+    await page.waitForSelector("button")
 
     await page.waitForTimeout(400)
 
@@ -65,18 +65,20 @@ test.describe("App e2e", () => {
     })
     page = await ctx.newPage()
     await setupPage(page, baseURL!)
+
     await page.click("button[type='submit']")
 
-    let outputBtn = await page.waitForSelector("*[role='button']")
+    let outputEl = await page.waitForSelector(
+      "output[role='status'][form='gen-form']"
+    )
 
-    // Wait for animation to play
-    await page.waitForTimeout(400)
+    let visualPassword = await outputEl.innerText()
 
-    let visualPassword = (
-      await page.locator("*[role='button'] > *").innerText()
-    ).replace(/\n/g, "")
+    let copyBtn = await page.waitForSelector(
+      'button[aria-label="Copy to clipboard"]'
+    )
 
-    await outputBtn.click()
+    await copyBtn.click()
 
     let passwordInClipboard = await (
       await page.evaluateHandle(() => navigator.clipboard.readText())
@@ -107,12 +109,11 @@ test.describe("App e2e", () => {
 
     await page.click("[for='separator-0']")
 
-    // Wait for animation to play
-    await page.waitForTimeout(400)
+    let outputEl = await page.waitForSelector(
+      "output[role='status'][form='gen-form']"
+    )
 
-    let visualPassword = (
-      await page.locator("*[role='button'] > *").innerText()
-    ).replace(/\n/g, "")
+    let visualPassword = await outputEl.innerText()
 
     expect(visualPassword).toMatch(/\w*\ */g)
   })

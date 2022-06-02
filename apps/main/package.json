@@ -12,7 +12,8 @@
     "preview": "pnpm dlx serve dist -p 3001 --ssl-key=localhost-key.pem --ssl-cert=localhost.pem",
     "re:build": "rescript",
     "re:start": "rescript build -w",
-    "tc": "tsc --noEmit"
+    "tc": "tsc --noEmit",
+    "pub": "pnpx wrangler@2 pages publish './apps/main/dist' --project-name='dicephrase'"
   },
   "dependencies": {
     "gen-utils": "0.0.2",

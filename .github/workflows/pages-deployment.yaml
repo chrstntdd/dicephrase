@@ -4,6 +4,7 @@ on: [push]
 
 env:
   PNPM_VERSION: 6.32.12
+  NODE_VERSION: 16.15.1
 
 jobs:
   build-and-deploy:
@@ -13,10 +14,6 @@ jobs:
       contents: read
       deployments: write
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,10 +22,10 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: Cache pnpm modules
@@ -37,9 +34,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
 
       - name: Install build dependencies
         uses: pnpm/action-setup@v2.2.1

@@ -187,7 +187,7 @@ jobs:
         uses: cloudflare/pages-action@1
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CFE_ACCOUNT_ID }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           projectName: dicephrase
           directory: apps/main/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

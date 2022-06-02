@@ -17,7 +17,7 @@ async function main() {
     resolve: {
       conditions: ["solid", "node"]
     },
-    publicDir: undefined,
+    publicDir: false,
     build: {
       ssr: true,
       outDir: resolve("dist-ssg"),

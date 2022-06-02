@@ -57,5 +57,5 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           projectName: dicephrase
-          directory: /apps/main/dist
+          directory: ./apps/main/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

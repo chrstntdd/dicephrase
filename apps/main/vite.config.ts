@@ -42,9 +42,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vanillaExtractPlugin(),
       solid(
-        mode === "ssg"
+        isSSG
           ? { ssr: true, solid: { hydratable: true, generate: "ssr" } }
-          : {}
+          : undefined
       ),
       parcelCSSPlugin()
     ],

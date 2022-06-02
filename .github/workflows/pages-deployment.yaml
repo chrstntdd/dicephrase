@@ -7,7 +7,11 @@ env:
 
 jobs:
   build-and-deploy:
+    name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
 
     strategy:
       matrix:

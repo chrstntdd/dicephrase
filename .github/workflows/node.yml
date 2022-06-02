@@ -176,7 +176,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
-              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline]
 
       - name: Build and pre-render
         env:

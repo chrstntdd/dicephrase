@@ -179,6 +179,8 @@ jobs:
               args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
 
       - name: Build and pre-render
+        env:
+          IS_NET: true
         run: pnpm --filter ./apps/main build
 
       - name: Publish

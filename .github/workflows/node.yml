@@ -138,3 +138,54 @@ jobs:
 
       - name: Type check
         run: pnpm --filter ./apps/main tc
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-and-deploy-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - name: Install build dependencies
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: |
+            - recursive: false
+              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+
+      - name: Build and pre-render
+        run: pnpm --filter ./apps/main build
+
+      - name: Publish
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CFE_ACCOUNT_ID }}
+          projectName: dicephrase
+          directory: apps/main/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

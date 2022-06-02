@@ -21,7 +21,7 @@ function PhraseOutput(props: {
         {combine_zip(
           props.phrases as string[],
           props.separators as string[]
-        ).join(" ")}
+        ).join("")}
       </output>
       <div class={styles.phrases}>
         <For each={props.phrases}>

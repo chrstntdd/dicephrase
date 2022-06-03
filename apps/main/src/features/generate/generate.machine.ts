@@ -19,7 +19,6 @@ type Ctx = {
   phrases?: string[]
   separatorKind: string
   separators?: string[]
-  wlRecord?: Record<string, string>
 }
 
 type Msg =
@@ -33,6 +32,8 @@ type Svc = {
     data: Record<string, string>
   }
 }
+
+let wlRecord: Record<string, string> | undefined
 
 let generateMachine = createMachine(
   {
@@ -142,7 +143,12 @@ let generateMachine = createMachine(
   },
   {
     actions: {
-      assignWordList: assign({ wlRecord: (_, event) => event.data }),
+      // Run assign to module variable with assign function form xstate but don't use ctx
+      // Timing doesn't align when using a plain function with downstream asserts
+      assignWordList: assign((ctx, event) => {
+        wlRecord = event.data
+        return ctx
+      }),
       resetRetries: assign({ attemptCount: (_) => 0 }),
       assignParamsFromQueryString: assign((ctx) => {
         let x = parse_qs_to_phrase_config(globalThis.location?.search)
@@ -153,11 +159,11 @@ let generateMachine = createMachine(
         }
       }),
       assignGeneratedPhrases: assign((ctx) => {
-        assert(ctx.wlRecord)
+        assert(wlRecord)
         return {
           ...ctx,
           separators: make_separators(ctx.separatorKind, ctx.count),
-          phrases: make_phrases(ctx.count, ctx.wlRecord)
+          phrases: make_phrases(ctx.count, wlRecord)
         }
       }),
       cancelPending: assign({
@@ -174,14 +180,14 @@ let generateMachine = createMachine(
 
       syncToUrl: (ctx) => {
         const url = new URL(globalThis.location as unknown as string)
-        url.searchParams.set(PHRASE_COUNT_KEY, "" + ctx.count)
+        url.searchParams.set(PHRASE_COUNT_KEY, `${ctx.count}`)
         url.searchParams.set(SEPARATOR_KEY, ctx.separatorKind)
 
         history.pushState({}, "", url)
       }
     },
     guards: {
-      needsToFetchWl: (ctx) => !ctx.wlRecord,
+      needsToFetchWl: () => !wlRecord,
       shouldRetry: (ctx) => ctx.attemptCount < 7
     },
     services: {

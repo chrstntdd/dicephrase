@@ -55,7 +55,7 @@ function Generate() {
   let separator = createMemo(() => state.context.separatorKind)
   let separators = createMemo(() => state.context.separators)
   let phrases = createMemo(() => state.context.phrases)
-  let hasOutput = createMemo(() => state.context.wlRecord)
+  let hasOutput = createMemo(() => separators()?.length && phrases()?.length)
 
   function handleSubmit(e: Event) {
     send("GENERATE")

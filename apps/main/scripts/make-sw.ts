@@ -10,25 +10,16 @@ let commitHash = execSync("git rev-parse --short HEAD").toString().trim()
 
 const filesToPrecache = buildPrecacheList()
 
-const SHARED_CFG: ESB.BuildOptions = {
+ESB.buildSync({
   bundle: true,
-  entryPoints: ["src/sw/sw.ts"],
-  platform: "browser",
-  minify: true,
   define: {
     __SW_CACHE_KEY__: `"${commitHash}-${Date.now()}"`,
     __PRECACHE_BUILD_ASSETS__: `'[${filesToPrecache.join(",")}]'`
-  }
-}
-
-ESB.buildSync({
-  ...SHARED_CFG,
-  outfile: "public/sw.js"
-})
-
-ESB.buildSync({
-  ...SHARED_CFG,
-  outfile: "dist/sw.js"
+  },
+  entryPoints: ["src/sw/sw.ts"],
+  minify: true,
+  outfile: "dist/sw.js",
+  platform: "browser"
 })
 
 console.info("Built the service worker!")

@@ -19,6 +19,13 @@ export const tagline = style({
   borderRadius: vars.borderRadius["2x"]
 })
 
+export const inlineCode = style({
+  paddingBlock: vars.space["0x"],
+  paddingInline: vars.space["1x"],
+  background: vars.color["primary-900"],
+  borderRadius: vars.borderRadius["1x"]
+})
+
 globalStyle(`${aboutPage} ul`, {
   paddingInlineStart: vars.space["5x"]
 })
@@ -30,6 +37,10 @@ globalStyle(`${aboutPage} h2`, {
 globalStyle(`${aboutPage} a abbr`, {
   background: "inherit",
   textDecoration: "none"
+})
+
+globalStyle(`${aboutPage} p`, {
+  fontSize: vars.fontSize["0x"]
 })
 
 globalStyle(`${aboutPage} *`, {

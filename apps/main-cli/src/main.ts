@@ -1,4 +1,4 @@
-import { cac, combine_zip, make_phrases, make_separators } from "./deps.ts"
+import { cac, combine_zip, make_phrases, make_separators } from "./deps/deps.ts"
 import { CLI_VERSION } from "./cfg.ts"
 
 import wl from "../../main/public/wl-2016.json" assert { type: "json" }

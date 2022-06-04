@@ -12,31 +12,33 @@ async function main() {
   let HYDRATION_SCRIPT = "<!-- HYDRATION_SCRIPT -->"
   let SOLID_META = "<!-- SOLID_META -->"
 
-  await viteBuild({
-    mode: "ssg",
-    resolve: {
-      conditions: ["solid", "node"]
-    },
-    publicDir: false,
-    build: {
-      ssr: true,
-      outDir: resolve("dist-ssg"),
-      rollupOptions: {
-        output: {
-          format: "esm"
-        },
-        external: ["solid-js", "solid-js/web"],
-        input: resolve("src", "main-ssg.tsx")
+  let [_, clientOutput] = await Promise.all([
+    viteBuild({
+      mode: "ssg",
+      resolve: {
+        conditions: ["solid", "node"]
+      },
+      publicDir: false,
+      build: {
+        ssr: true,
+        outDir: resolve("dist-ssg"),
+        rollupOptions: {
+          output: {
+            format: "esm"
+          },
+          external: ["solid-js", "solid-js/web"],
+          input: resolve("src", "main-ssg.tsx")
+        }
       }
-    }
-  })
+    }),
+    viteBuild({ resolve: { conditions: ["solid"] } })
+  ])
+
   /* Ensure we can run as a module with plain js extensions */
   writeFileSync(
     resolve("dist-ssg", "package.json"),
     JSON.stringify({ type: "module" })
   )
-
-  let clientOutput = await viteBuild({ resolve: { conditions: ["solid"] } })
 
   await import("./make-sw.js")
 

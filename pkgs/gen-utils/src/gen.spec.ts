@@ -22,7 +22,9 @@ vi.stubGlobal("crypto", {
 let wl
 
 beforeAll(() => {
-  wl = JSON.parse(readFileSync(resolve("src", "wl.json"), "utf-8"))
+  wl = JSON.parse(
+    readFileSync(resolve("../../apps/main/public/wl-2016.json"), "utf-8")
+  )
 })
 
 describe("combine_zip", () => {

@@ -25,8 +25,9 @@ jobs:
 
       - name: Build
         run: |
-          chmod 700 apps/main-cli/make.sh
-          apps/main-cli/make.sh
+          cd apps/main-cli
+          chmod 700 ./make.sh
+          ./make.sh
 
       - name: Publish binary
         uses: actions/upload-artifact@v2

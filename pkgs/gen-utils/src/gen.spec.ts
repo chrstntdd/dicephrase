@@ -23,7 +23,7 @@ let wl
 
 beforeAll(() => {
   wl = JSON.parse(
-    readFileSync(resolve("../../apps/main/public/wl-2016.json"), "utf-8")
+    readFileSync(resolve("../../apps/www/public/wl-2016.json"), "utf-8")
   )
 })
 

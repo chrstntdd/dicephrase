@@ -1,7 +1,7 @@
 import { cac, combine_zip, make_phrases, make_separators } from "./deps/deps.ts"
 import { CLI_VERSION } from "./cfg.ts"
 
-import wl from "../../main/public/wl-2016.json" assert { type: "json" }
+import wl from "../../www/public/wl-2016.json" assert { type: "json" }
 
 let cli = cac("dicephrase").help().version(CLI_VERSION)
 

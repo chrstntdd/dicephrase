@@ -87,10 +87,10 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
-              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+              args: [--filter, './apps/www', --frozen-lockfile, --prefer-offline, --ignore-scripts]
             
       - name: Lint
-        run: pnpm --filter ./apps/main lint
+        run: pnpm --filter ./apps/www lint
 
   type-check:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: |
             - recursive: false
-              args: [--filter, './apps/main', --frozen-lockfile, --prefer-offline, --ignore-scripts]
+              args: [--filter, './apps/www', --frozen-lockfile, --prefer-offline, --ignore-scripts]
 
       - uses: actions/setup-node@v3
         with:
@@ -137,5 +137,5 @@ jobs:
           cache: 'pnpm'
 
       - name: Type check
-        run: pnpm --filter ./apps/main tc
+        run: pnpm --filter ./apps/www tc
 

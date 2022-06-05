@@ -10,7 +10,8 @@ export const pageTile = style({
 })
 
 export const main = style({
-  minHeight: `calc(100vh - ${HEADER_HEIGHT})`,
+  // Remove the block end padding of the footer
+  minHeight: `calc(100vh - ${HEADER_HEIGHT} - ${vars.space["2x"]})`,
   paddingBlockStart: HEADER_HEIGHT
 })
 

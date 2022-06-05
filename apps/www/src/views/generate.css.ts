@@ -45,7 +45,7 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   position: "absolute",
   height: "100%",
   width: "100%",
-  transition: "background 200ms ease-in-out",
+  transition: PRESSABLE.transition,
   borderRadius: "initial", // iOS fix
   borderBlock: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
 })
@@ -81,7 +81,9 @@ globalStyle(
 globalStyle(`${baseRadioGroupContainer} label`, {
   zIndex: FOCUS_RING_Z_INDEX + 1,
   background: "transparent",
-  paddingBlock: vars.space["3x"]
+  paddingBlock: vars.space["3x"],
+  textAlign: "center",
+  width: "100%"
 })
 
 /* Cant use supports hover here since using globals :/ */

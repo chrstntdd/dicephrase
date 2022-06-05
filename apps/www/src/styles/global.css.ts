@@ -85,8 +85,6 @@ globalStyle("a, a:active", {
 })
 
 globalStyle("input,button,a", {
-  // For smooth focus ring animations
-  transition: "box-shadow 200ms ease-in-out",
   // Faster interactions? https://webplatform.news/issues/2017-10-17
   touchAction: "manipulation"
 })

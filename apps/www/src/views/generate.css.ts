@@ -46,7 +46,7 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   height: "100%",
   width: "100%",
   transition: "background 200ms ease-in-out",
-
+  borderRadius: "initial", // iOS fix
   borderBlock: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
 })
 

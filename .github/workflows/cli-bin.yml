@@ -25,7 +25,7 @@ jobs:
 
       - name: Build
         run: |
-          chmod +x apps/main-cli/make.sh
+          chmod 700 apps/main-cli/make.sh
           apps/main-cli/make.sh
 
       - name: Publish binary

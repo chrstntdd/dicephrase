@@ -3,7 +3,7 @@ name: Main CI
 on: [push]
 
 env:
-  PNPM_VERSION: 6.32.12
+  PNPM_VERSION: 6.32.19
 
 jobs:
   test:

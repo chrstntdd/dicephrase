@@ -23,11 +23,11 @@ jobs:
 
       - name: Build
         run: |
-          cd ./apps/main-cli 
+          cd ./apps/cli
           deno run --no-check --allow-all ./make.ts
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
         with:
           name: dicephrase-bin-${{ runner.os }}
-          path: ./apps/main-cli/dist/dicephrase
+          path: ./apps/cli/dist/dicephrase

@@ -14,6 +14,8 @@ Instead of repeating myself — [read about the project here](https://dicephrase
   - ```shell
     $ cd apps/main && mkcert localhost
     ```
+- [`deno`](https://deno.land/)
+  - Build the CLI version to a portable executable
 
 ## First steps
 
@@ -30,7 +32,7 @@ $ pnpm i
 From the root of the repo, you can run the dev script by filtering to start the vite dev server.
 
 ```shell
-$ pnpm -F ./apps/main dev
+$ pnpm -F ./apps/www dev
 ```
 
 ## Building
@@ -38,7 +40,7 @@ $ pnpm -F ./apps/main dev
 Build the main web app
 
 ```shell
-$ pnpm -F ./apps/main build
+$ pnpm -F ./apps/www build
 ```
 
 This script performs a few key steps:
@@ -57,19 +59,19 @@ This script performs a few key steps:
 1. Build the main web app
 
 ```shell
-$ pnpm -F ./apps/main build
+$ pnpm -F ./apps/www build
 ```
 
 2. Run a local web server to serve the static content
 
 ```shell
-$ pnpm -F ./apps/main preview-t
+$ pnpm -F ./apps/www preview
 ```
 
 3. Run Playwright
 
 ```shell
-$ pnpm -F ./apps/main-e2e test
+$ pnpm -F ./apps/e2e test
 ```
 
 ### Unit

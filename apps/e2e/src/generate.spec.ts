@@ -36,6 +36,9 @@ test.describe("App e2e", () => {
     baseURL
   }) => {
     await setupPage(page, baseURL!)
+    await page.screenshot({
+      path: resolve(E2E_SCREENSHOT_DIR, "empty.png")
+    })
     let genBtn = page.locator("button[type='submit']")
 
     await genBtn.click()

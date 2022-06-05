@@ -1,4 +1,5 @@
 import { style } from "@vanilla-extract/css"
+import { FOCUS_RING_Z_INDEX } from "./styles/constants"
 
 import { HEADER_HEIGHT, vars } from "./styles/vars.css"
 
@@ -26,7 +27,7 @@ export const header = style({
   padding: "inherit",
   top: 0,
   left: 0,
-  zIndex: 2
+  zIndex: FOCUS_RING_Z_INDEX + 2
 })
 
 export const appFooter = style({

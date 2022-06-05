@@ -1,11 +1,15 @@
 import { createGlobalTheme } from "@vanilla-extract/css"
-import { modularScale } from "polished"
+import { modularScale, rem } from "polished"
 
-const createScale = (ratio: number, base: number) => (steps: number) =>
-  `${modularScale(steps, base, ratio)}px`
+const createScale =
+  (ratio: number, base: number, remUnits?: boolean) => (steps: number) => {
+    let valInPx = `${modularScale(steps, base, ratio)}px`
+
+    return remUnits ? rem(valInPx) : valInPx
+  }
 
 const spaceScale = createScale(1.4, 4)
-const fontSizeScale = createScale(1.3, 16)
+const fontSizeScale = createScale(1.3, 16, true)
 const borderRadiusScale = createScale(1.5, 4)
 
 export const vars = createGlobalTheme(":root", {

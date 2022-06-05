@@ -6,7 +6,9 @@ await esbuild.build({
   format: "esm",
   minify: true,
   outfile: "./src/deps/gen-utils.js",
-  target: "esnext"
+  target: "esnext",
+  platform: "neutral",
+  external: ["rescript"]
 })
 
 // ESBuild hangs for some reasons, so we need to exit manually

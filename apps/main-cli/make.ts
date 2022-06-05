@@ -1,19 +1,31 @@
 let [firstArg, ...restArgs] = Deno.args
 
+let sharedOpts = [
+  "--allow-net=deno.land,unpkg.com",
+  "--import-map=./import-map.json"
+]
+
 if (firstArg == "run") {
   await Deno.run({
     cmd: [
       "deno",
       "run",
       "--no-check",
-      "--allow-net=deno.land,unpkg.com",
-      "src/main.ts",
-      ...restArgs
+      ...sharedOpts,
+      ...restArgs,
+      "src/main.ts"
     ]
   }).status()
 } else {
   await Deno.run({
-    cmd: ["deno", "run", "--no-check", "--allow-all", "./build-deps.ts"]
+    cmd: [
+      "deno",
+      "run",
+      "--no-check",
+      "--allow-all",
+      ...sharedOpts,
+      "./build-deps.ts"
+    ]
   }).status()
 
   console.info("⚙️ Compiled ReScript dependencies")
@@ -23,7 +35,7 @@ if (firstArg == "run") {
       "deno",
       "--unstable",
       "compile",
-      "--allow-net=deno.land,unpkg.com",
+      ...sharedOpts,
       "-o",
       "dist/dicephrase",
       "src/main.ts"

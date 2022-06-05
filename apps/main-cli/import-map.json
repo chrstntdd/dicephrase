@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "rescript/": "https://unpkg.com/rescript@9.1.4/"
+  }
+}

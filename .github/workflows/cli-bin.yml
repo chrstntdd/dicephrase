@@ -28,7 +28,6 @@ jobs:
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
-        run: cd ./apps/main-cli
         with:
           name: dicephrase-bin-${{ runner.os }}
-          path: ./dist/dicephrase
+          path: ./apps/main-cli/dist/dicephrase

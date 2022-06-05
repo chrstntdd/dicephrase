@@ -8,16 +8,16 @@ A thin wrapper around the core functionality of the dicephrase PWA. Built with t
 
 ## Build and run
 
-For development, run the `make.sh` script with "run"
+For development, run the `make.ts` script with "run"
 
 ```shell
-$ ./make.sh run
+$ deno run --no-check --allow-all make.ts run
 ```
 
-To build for production, run the `make.sh` script directly
+To build for production, run the `make.ts` script directly
 
 ```shell
-$ ./make.sh
+$ deno run --no-check --allow-all make.ts
 ```
 
 ## Installation

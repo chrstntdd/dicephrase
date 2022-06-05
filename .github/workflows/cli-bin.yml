@@ -1,14 +1,12 @@
-name: CLI
+name: Deno CLI
 
-# Only build when pushing to main
-on:
-  push:
-      branches:
-        - main
+on: [push]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
 
     strategy:
       fail-fast: false
@@ -25,12 +23,11 @@ jobs:
 
       - name: Build
         run: |
-          cd apps/main-cli
-          chmod 700 ./make.sh
-          ./make.sh
+          cd ./apps/main-cli 
+          deno run --no-check --allow-all ./make.ts
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
         with:
           name: dicephrase-bin-${{ runner.os }}
-          path: ./dist/dicephrase
+          path: ./apps/main-cli/dist/dicephrase

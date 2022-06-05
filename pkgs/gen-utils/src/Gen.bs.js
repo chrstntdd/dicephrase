@@ -139,7 +139,7 @@ function make_phrases(count, wlRecord) {
 
 function make_separators(separator_kind, count) {
   var sep_count = (count - 1) | 0
-  if (separator_kind !== "random") {
+  if (separator_kind !== Const.sep_fallback) {
     return new Array(sep_count).fill(separator_kind)
   }
   var separators = []

@@ -85,7 +85,7 @@ importers:
   pkgs/gen-utils:
     specifiers:
       c8: ^7.11.3
-      gentype: ^4.3.0
+      gentype: ^4.4.0
       prettier: ^2.6.2
       rescript: ^9.1.4
       typescript: ^4.7.3

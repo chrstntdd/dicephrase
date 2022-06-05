@@ -179,7 +179,7 @@ let make_separators = (. separator_kind, count) => {
   open Js.Array2
   let sep_count = count - 1
 
-  if separator_kind == "random" {
+  if separator_kind == Const.sep_fallback {
     let separators = []
     while separators->length < sep_count {
       push(separators, shuffle(copy(Const.random_sep_chars))->unsafe_get(0))->ignore

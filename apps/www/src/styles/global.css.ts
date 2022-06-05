@@ -89,12 +89,6 @@ globalStyle("input,button,a", {
   touchAction: "manipulation"
 })
 
-globalStyle("ul", {
-  padding: 0,
-  margin: 0,
-  listStyle: "none"
-})
-
 globalStyle("*:focus,*:focus-visible", {
   outline: 0,
   zIndex: FOCUS_RING_Z_INDEX,

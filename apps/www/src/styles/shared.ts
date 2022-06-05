@@ -20,3 +20,9 @@ export const PRESSABLE: StyleRule = {
     }
   }
 }
+
+export const LIST_RESET: StyleRule = {
+  padding: 0,
+  margin: 0,
+  listStyle: "none"
+}

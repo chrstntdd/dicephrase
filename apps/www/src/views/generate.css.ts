@@ -2,7 +2,7 @@ import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
 import { FOCUS_RING_Z_INDEX } from "../styles/constants"
-import { PRESSABLE } from "../styles/shared"
+import { LIST_RESET, PRESSABLE } from "../styles/shared"
 
 const CONTENT_MAX_WIDTH = 768
 
@@ -22,6 +22,7 @@ export const formEl = style({
 })
 
 export const baseRadioGroupContainer = style({
+  ...LIST_RESET,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

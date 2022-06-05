@@ -8,3 +8,6 @@ await esbuild.build({
   outfile: "./src/deps/gen-utils.js",
   target: "esnext"
 })
+
+// ESBuild hangs for some reasons, so we need to exit manually
+Deno.exit(0)

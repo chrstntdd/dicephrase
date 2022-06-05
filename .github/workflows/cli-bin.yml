@@ -22,10 +22,7 @@ jobs:
           deno-version: v1.22.0
 
       - name: Build
-        run: |
-          cd apps/main-cli
-          chmod 700 ./make.sh
-          ./make.sh
+        run: deno run --no-check --allow-all make.ts
 
       - name: Publish binary
         uses: actions/upload-artifact@v2

@@ -39,7 +39,7 @@ function About() {
           Unique — If/when your password is compromised, no other accounts are
           affected
         </li>
-        <li>Long — To increase the complexity</li>
+        <li>Long — For increased complexity</li>
       </ul>
       <p>
         Sure, maybe your password manager will generate passwords for you too,
@@ -56,19 +56,19 @@ function About() {
         <a href="https://theworld.com/~reinhold/diceware.html">
           diceware method
         </a>{" "}
-        to generate passwords.
+        to create passwords.
       </p>
       <p>
-        Under the hood, this means we <em>simulate</em> the rolling of dice as
-        the source of entropy with the{" "}
+        Under the hood, this means the rolling of dice is <em>simulated</em> as
+        the source of entropy with JavaScript's{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues">
-          JavaScript web crypto API
-        </a>
-        .
+          <code class={styles.inlineCode}>crypto.getRandomValues</code>
+        </a>{" "}
+        on your device.
       </p>
       <p>
         The result of each roll is joined to form a 5 digit numeric key such as{" "}
-        <code>63522</code>, which is used to find the corresponding word on{" "}
+        <samp>63522</samp>, which is used to find the corresponding word on{" "}
         <a href="https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt">
           the 2016 <abbr title="Electronic Frontier Foundation">EFF</abbr>{" "}
           wordlist
@@ -81,7 +81,7 @@ function About() {
       </p>
 
       <h2>Privacy</h2>
-      <p>Everything happens within your browser</p>
+      <p>Everything happens within your browser entirely on your device</p>
       <ul>
         <li>No cookies or browser storage</li>
         <li>No analytics</li>

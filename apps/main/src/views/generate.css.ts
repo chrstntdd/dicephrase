@@ -1,38 +1,23 @@
 import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
-import { supportsHover } from "../styles/util"
+import { FOCUS_RING_Z_INDEX } from "../styles/constants"
+import { PRESSABLE } from "../styles/shared"
 
 const CONTENT_MAX_WIDTH = 768
 
 export const generateBtn = style({
+  ...PRESSABLE,
   fontSize: vars.fontSize["1x"],
-  borderColor: vars.color["primary-800"],
-  borderRadius: vars.borderRadius["full"],
-  borderStyle: "solid",
-  borderWidth: vars.space["0x"],
-  color: vars.color["primary-300"],
+  borderRadius: vars.borderRadius["2x"],
   fontWeight: 600,
-  padding: vars.space["4x"],
-  transition: "background 200ms ease-in-out",
-  "@media": {
-    ...supportsHover({
-      background: vars.color["primary-900"]
-    })
-  },
-  selectors: {
-    "&:focus-visible": {
-      background: vars.color["primary-900"],
-      borderColor: vars.color["primary-900"]
-    }
-  }
+  padding: vars.space["3x"]
 })
 
 export const formEl = style({
   display: "flex",
   flexDirection: "column",
-
-  gap: vars.space["2x"],
+  gap: vars.space["3x"],
   color: vars.color["primary-200"]
 })
 
@@ -40,15 +25,11 @@ export const baseRadioGroupContainer = style({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  borderStyle: "solid",
-  borderWidth: vars.space["0x"],
-  borderColor: vars.color["primary-800"],
-  borderRadius: vars.borderRadius.full,
-  padding: vars.space["0x"],
+  paddingBlock: vars.space["0x"],
   color: vars.color["primary-300"]
 })
 
-globalStyle(`${baseRadioGroupContainer} > div`, {
+globalStyle(`${baseRadioGroupContainer} > li`, {
   display: "flex",
   flex: 1,
   alignItems: "center",
@@ -62,27 +43,45 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   appearance: "none",
   WebkitAppearance: "none",
   position: "absolute",
-  display: "block",
   height: "100%",
   width: "100%",
-  borderStyle: "solid",
-  borderWidth: vars.space["0x"],
-  borderColor: vars.color["primary-800"],
-  borderRadius: vars.borderRadius.full,
-  padding: vars.space["3x"],
-  transition: "background 200ms ease-in-out"
+  transition: "background 200ms ease-in-out",
+
+  borderBlock: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
 })
 
+globalStyle(
+  `${baseRadioGroupContainer} > li:first-child > input[type='radio']`,
+  {
+    borderInline: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
+  }
+)
+globalStyle(
+  `${baseRadioGroupContainer} > li:not(:first-child) > input[type='radio']`,
+  {
+    borderInlineEnd: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
+  }
+)
+
+globalStyle(
+  `${baseRadioGroupContainer} > li:last-child > input[type='radio']`,
+  {
+    borderEndEndRadius: vars.borderRadius["2x"],
+    borderStartEndRadius: vars.borderRadius["2x"]
+  }
+)
+globalStyle(
+  `${baseRadioGroupContainer} > li:first-child > input[type='radio']`,
+  {
+    borderEndStartRadius: vars.borderRadius["2x"],
+    borderStartStartRadius: vars.borderRadius["2x"]
+  }
+)
+
 globalStyle(`${baseRadioGroupContainer} label`, {
-  width: "100%",
-  textAlign: "center",
+  zIndex: FOCUS_RING_Z_INDEX + 1,
   background: "transparent",
-  borderColor: vars.color["primary-800"],
-  borderRadius: vars.borderRadius["full"],
-  borderStyle: "solid",
-  borderWidth: vars.space["0x"],
-  zIndex: 1,
-  padding: vars.space["3x"]
+  paddingBlock: vars.space["3x"]
 })
 
 /* Cant use supports hover here since using globals :/ */
@@ -94,17 +93,6 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:hover`, {
   }
 })
 
-globalStyle(`${baseRadioGroupContainer} > *`, {
-  borderRadius: vars.borderRadius["full"],
-  borderStyle: "solid",
-  borderColor: "transparent",
-  borderWidth: "0"
-})
-
-globalStyle(`${baseRadioGroupContainer} > *:not(:last-child)`, {
-  marginRight: vars.space["1x"]
-})
-
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
   background: vars.color["primary-800"],
   color: vars.color["primary-200"]
@@ -113,17 +101,15 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 export const generatePage = style({
   // Attempt to enough space for phrase output to show up
   margin: "0 auto",
-  maxWidth: CONTENT_MAX_WIDTH
-})
-
-export const outputContainer = style({
-  marginBlock: vars.space["4x"]
+  maxWidth: CONTENT_MAX_WIDTH,
+  display: "flex",
+  flexDirection: "column",
+  gap: vars.space["4x"]
 })
 
 export const fieldset = style({
   padding: 0,
-  marginLeft: 0,
-  marginRight: 0,
+  margin: 0,
   border: "none",
   fontSize: vars.fontSize["0x"],
   fontWeight: 600

@@ -41,6 +41,5 @@ export const toastItem = style({
   paddingInline: vars.space["3x"],
   paddingBlock: vars.space["2x"],
   willChange: "transform",
-
   animation: `${fadeIn} 200ms ease,${slideIn} 200ms ease,${fadeOut} 200ms ease var(${TOAST_DURATION_VAR})`
 })

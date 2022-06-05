@@ -23,7 +23,7 @@ function PhraseOutput(props: {
           props.separators as string[]
         ).join("")}
       </output>
-      <div class={styles.phrases}>
+      <ul class={styles.phrases}>
         <For each={props.phrases}>
           {(phrase, index) => {
             let idx = index()
@@ -40,20 +40,20 @@ function PhraseOutput(props: {
             )
           }}
         </For>
-      </div>
+      </ul>
     </>
   )
 }
 
 function Word(props: { content: string; sep?: boolean }) {
   return (
-    <div class={styles.word}>
+    <li class={styles.word}>
       <For each={props.content.split("")}>
         {(char, index) => (
           <Char offset={index() * 22} content={char} sep={props.sep} />
         )}
       </For>
-    </div>
+    </li>
   )
 }
 

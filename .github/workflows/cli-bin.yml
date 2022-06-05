@@ -21,10 +21,12 @@ jobs:
 
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.21.2
+          deno-version: v1.22.0
 
       - name: Build
-        run: deno --unstable compile --no-check --allow-env=NODE_ENV -o dist/dicephrase apps/main-cli/src/main.ts
+        run: |
+          chmod 700 apps/main-cli/make.sh
+          apps/main-cli/make.sh
 
       - name: Publish binary
         uses: actions/upload-artifact@v2

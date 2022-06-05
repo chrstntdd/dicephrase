@@ -1,4 +1,5 @@
 import { globalStyle, globalFontFace } from "@vanilla-extract/css"
+import { FOCUS_RING_Z_INDEX } from "./constants"
 import { vars } from "./vars.css"
 
 globalFontFace("manrope", {
@@ -90,7 +91,14 @@ globalStyle("input,button,a", {
   touchAction: "manipulation"
 })
 
+globalStyle("ul", {
+  padding: 0,
+  margin: 0,
+  listStyle: "none"
+})
+
 globalStyle("*:focus,*:focus-visible", {
   outline: 0,
+  zIndex: FOCUS_RING_Z_INDEX,
   boxShadow: `0 0 0 2px ${vars.color["primary-400"]}`
 })

@@ -64,7 +64,7 @@ function Generate() {
   }
 
   return (
-    <div class={styles.generatePage}>
+    <section class={styles.generatePage}>
       <form id={FORM_ID} class={styles.formEl} onSubmit={handleSubmit}>
         <Title>Dicephrase | Generate</Title>
         <Meta property="og:image" content="/img/dicephrase-og.jpg" />
@@ -115,29 +115,27 @@ function Generate() {
         </button>
       </form>
 
-      <div class={styles.outputContainer}>
-        {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
-        <Suspense>
-          <Show when={hasOutput()}>
-            <>
-              <CopyBtn
-                svc={svc as unknown as ActorRefFrom<typeof generateMachine>}
-              />
-              <PhraseOutput
-                formId={FORM_ID}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                separators={separators()!}
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                phrases={phrases()!}
-                handleCopyPress={() => {
-                  send("COPY_PHRASE")
-                }}
-              />
-            </>
-          </Show>
-        </Suspense>
-      </div>
-    </div>
+      {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
+      <Suspense>
+        <Show when={hasOutput()}>
+          <>
+            <CopyBtn
+              svc={svc as unknown as ActorRefFrom<typeof generateMachine>}
+            />
+            <PhraseOutput
+              formId={FORM_ID}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              separators={separators()!}
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              phrases={phrases()!}
+              handleCopyPress={() => {
+                send("COPY_PHRASE")
+              }}
+            />
+          </>
+        </Show>
+      </Suspense>
+    </section>
   )
 }
 

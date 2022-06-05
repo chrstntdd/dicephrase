@@ -45,6 +45,9 @@ export const vars = createGlobalTheme(":root", {
     "3x": borderRadiusScale(3),
     full: "99999px"
   },
+  borderWidth: {
+    "1x": "2px"
+  },
   fontFamily: {
     body: 'manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     serif: "DMSeric"

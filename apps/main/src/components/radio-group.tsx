@@ -11,7 +11,7 @@ function RadioGroup<V>(props: {
   value: V
 }) {
   return (
-    <div class={props.class}>
+    <ul class={props.class}>
       <For each={props.children}>
         {(kid, i) => (
           <Radio
@@ -23,7 +23,7 @@ function RadioGroup<V>(props: {
           />
         )}
       </For>
-    </div>
+    </ul>
   )
 }
 
@@ -35,7 +35,7 @@ function Radio<V>(props: {
   checked: boolean
 }) {
   return (
-    <div>
+    <li>
       <label for={props.id}>{props.label}</label>
       <input
         type="radio"
@@ -44,7 +44,7 @@ function Radio<V>(props: {
         name={props.name}
         value={props.value as unknown as string}
       />
-    </div>
+    </li>
   )
 }
 

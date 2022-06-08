@@ -116,7 +116,7 @@ function Generate() {
       </form>
 
       {/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
-      <Suspense>
+      <Suspense fallback="">
         <Show when={hasOutput()}>
           <>
             <CopyBtn

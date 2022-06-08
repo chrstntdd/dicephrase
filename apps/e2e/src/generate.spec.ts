@@ -33,11 +33,12 @@ test.describe("App e2e", () => {
 
   test("should show the results after pressing the generate button", async ({
     page,
-    baseURL
+    baseURL,
+    browserName
   }) => {
     await setupPage(page, baseURL!)
     await page.screenshot({
-      path: resolve(E2E_SCREENSHOT_DIR, "empty.png")
+      path: resolve(E2E_SCREENSHOT_DIR, `${browserName}-empty.png`)
     })
     let genBtn = page.locator("button[type='submit']")
 
@@ -48,7 +49,7 @@ test.describe("App e2e", () => {
     await page.waitForTimeout(400)
 
     await page.screenshot({
-      path: resolve(E2E_SCREENSHOT_DIR, "generated.png")
+      path: resolve(E2E_SCREENSHOT_DIR, `${browserName}-generated.png`)
     })
   })
 

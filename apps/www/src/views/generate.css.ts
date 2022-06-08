@@ -2,7 +2,7 @@ import { style, globalStyle } from "@vanilla-extract/css"
 import { vars } from "../styles/vars.css"
 
 import { FOCUS_RING_Z_INDEX } from "../styles/constants"
-import { PRESSABLE } from "../styles/shared"
+import { LIST_RESET, PRESSABLE } from "../styles/shared"
 
 const CONTENT_MAX_WIDTH = 768
 
@@ -22,6 +22,7 @@ export const formEl = style({
 })
 
 export const baseRadioGroupContainer = style({
+  ...LIST_RESET,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
@@ -45,8 +46,8 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']`, {
   position: "absolute",
   height: "100%",
   width: "100%",
-  transition: "background 200ms ease-in-out",
-
+  transition: PRESSABLE.transition,
+  borderRadius: "initial", // iOS fix
   borderBlock: `${vars.borderWidth["1x"]} solid ${vars.color["primary-800"]}`
 })
 
@@ -81,7 +82,9 @@ globalStyle(
 globalStyle(`${baseRadioGroupContainer} label`, {
   zIndex: FOCUS_RING_Z_INDEX + 1,
   background: "transparent",
-  paddingBlock: vars.space["3x"]
+  paddingBlock: vars.space["3x"],
+  textAlign: "center",
+  width: "100%"
 })
 
 /* Cant use supports hover here since using globals :/ */
@@ -99,7 +102,6 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 })
 
 export const generatePage = style({
-  // Attempt to enough space for phrase output to show up
   margin: "0 auto",
   maxWidth: CONTENT_MAX_WIDTH,
   display: "flex",

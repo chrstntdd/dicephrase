@@ -1,50 +1,37 @@
 import { style } from "@vanilla-extract/css"
+import { FOCUS_RING_Z_INDEX } from "./styles/constants"
 
-import { HEADER_HEIGHT, vars } from "./styles/vars.css"
+import { vars } from "./styles/vars.css"
 
 export const pageTile = style({
   color: vars.color["primary-200"],
   fontFamily: vars.fontFamily.serif,
-  margin: `0 0 ${vars.space["2x"]} 0`,
+  margin: 0,
   fontSize: vars.fontSize["3x"]
 })
 
 export const main = style({
-  // Remove the block end padding of the footer
-  minHeight: `calc(100vh - ${HEADER_HEIGHT} - ${vars.space["2x"]})`,
-  paddingBlockStart: HEADER_HEIGHT
+  // Pad the main area down the page from under the fixed header
+  "@media": {
+    "all and (display-mode: browser)": {
+      paddingBlockStart: `calc(env(safe-area-inset-top) + ${vars.space["7x"]})`
+    },
+    "all and (display-mode: standalone)": {
+      paddingBlockStart: `calc(env(safe-area-inset-top))`
+    }
+  }
 })
 
 export const header = style({
-  height: HEADER_HEIGHT,
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
   background: vars.color["primary-1000"],
   position: "fixed",
   width: "100%",
-  padding: "inherit",
+  paddingInline: "inherit",
+  paddingBlockStart: `env(safe-area-inset-top)`,
   top: 0,
   left: 0,
-  zIndex: 2
-})
-
-export const appFooter = style({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  paddingBlockEnd: vars.space["2x"],
-  color: vars.color["primary-200"]
-})
-
-export const sourceLink = style({
-  whiteSpace: "nowrap",
-  display: "flex",
-  gap: vars.space["1x"],
-  alignItems: "center"
-})
-
-export const ghLogo = style({
-  height: vars.space["7x"],
-  width: vars.space["7x"]
+  zIndex: FOCUS_RING_Z_INDEX + 2
 })

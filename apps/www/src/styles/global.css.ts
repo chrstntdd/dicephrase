@@ -76,7 +76,12 @@ globalStyle("#root", {
   isolation: "isolate",
   minHeight: "100vh",
   width: "100vw",
-  padding: `env(safe-area-inset-top) calc(env(safe-area-inset-right) + ${vars.space["2x"]}) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + ${vars.space["2x"]})`
+  padding: [
+    `calc(env(safe-area-inset-top) + ${vars.space["2x"]})`,
+    `calc(env(safe-area-inset-right) + ${vars.space["2x"]})`,
+    "env(safe-area-inset-bottom)",
+    `calc(env(safe-area-inset-left) + ${vars.space["2x"]})`
+  ].join(" ")
 })
 
 globalStyle("a, a:active", {
@@ -85,16 +90,8 @@ globalStyle("a, a:active", {
 })
 
 globalStyle("input,button,a", {
-  // For smooth focus ring animations
-  transition: "box-shadow 200ms ease-in-out",
   // Faster interactions? https://webplatform.news/issues/2017-10-17
   touchAction: "manipulation"
-})
-
-globalStyle("ul", {
-  padding: 0,
-  margin: 0,
-  listStyle: "none"
 })
 
 globalStyle("*:focus,*:focus-visible", {

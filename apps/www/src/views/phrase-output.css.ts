@@ -1,5 +1,6 @@
 import type { CSSProperties } from "@vanilla-extract/css"
 import { keyframes, style } from "@vanilla-extract/css"
+import { LIST_RESET } from "../styles/shared"
 
 import { vars } from "../styles/vars.css"
 
@@ -14,6 +15,7 @@ export const outputEl = style({
 })
 
 export const phrases = style({
+  ...LIST_RESET,
   display: "flex",
   flexWrap: "wrap",
   overflow: "hidden",

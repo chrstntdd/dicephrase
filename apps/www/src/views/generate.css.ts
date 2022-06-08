@@ -102,7 +102,6 @@ globalStyle(`${baseRadioGroupContainer} input[type='radio']:checked`, {
 })
 
 export const generatePage = style({
-  // Attempt to enough space for phrase output to show up
   margin: "0 auto",
   maxWidth: CONTENT_MAX_WIDTH,
   display: "flex",

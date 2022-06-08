@@ -59,5 +59,3 @@ export const vars = createGlobalTheme(":root", {
     "3x": fontSizeScale(3)
   }
 })
-
-export const HEADER_HEIGHT = "48px"

@@ -14,7 +14,13 @@ export const copyBtn = style({
   right: vars.space["3x"],
   padding: vars.space["3x"],
   display: "grid",
-  placeItems: "center"
+  placeItems: "center",
+  "@media": {
+    "all and (display-mode: standalone)": {
+      bottom: `env(safe-area-inset-bottom)`,
+      right: `env(safe-area-inset-bottom)`
+    }
+  }
 })
 
 export const copyIcon = style({

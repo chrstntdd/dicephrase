@@ -26,6 +26,25 @@ export const inlineCode = style({
   borderRadius: vars.borderRadius["1x"]
 })
 
+export const appFooter = style({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  color: vars.color["primary-200"]
+})
+
+export const sourceLink = style({
+  whiteSpace: "nowrap",
+  display: "flex",
+  gap: vars.space["1x"],
+  alignItems: "center"
+})
+
+export const ghLogo = style({
+  height: vars.space["7x"],
+  width: vars.space["7x"]
+})
+
 globalStyle(`${aboutPage} ul`, {
   paddingInlineStart: vars.space["5x"]
 })

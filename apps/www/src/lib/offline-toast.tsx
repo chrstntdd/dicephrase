@@ -6,21 +6,23 @@ export function OfflineToast() {
   let [show, setShow] = createSignal(false)
 
   onMount(() => {
-    let msgHandler = (swEvent: MessageEvent) => {
-      let msg = swEvent?.data?.type
+    if ("serviceWorker" in navigator) {
+      let msgHandler = (swEvent: MessageEvent) => {
+        let msg = swEvent?.data?.type
 
-      switch (msg) {
-        case "PRECACHE_SUCCESS": {
-          setShow(true)
+        switch (msg) {
+          case "PRECACHE_SUCCESS": {
+            setShow(true)
+          }
         }
       }
+
+      navigator.serviceWorker.addEventListener("message", msgHandler)
+
+      onCleanup(() => {
+        navigator.serviceWorker.removeEventListener("message", msgHandler)
+      })
     }
-
-    navigator.serviceWorker.addEventListener("message", msgHandler)
-
-    onCleanup(() => {
-      navigator.serviceWorker.removeEventListener("message", msgHandler)
-    })
   })
 
   return (

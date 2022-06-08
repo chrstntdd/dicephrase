@@ -12,9 +12,16 @@ export interface Typegen0 {
     assignAb:
       | "xstate.after(100)#dice-gen.generating.debouncing"
       | "xstate.after(REQUEST_BACK_OFF_DELAY)#dice-gen.generating.retrying"
-    resetRetries: "error.platform.fetchWordList"
-    assignGeneratedPhrases: "xstate.init"
-    syncToUrl: "xstate.init"
+    resetRetries:
+      | "error.platform.fetchWordList"
+      | "xstate.after(100)#dice-gen.generating.debouncing"
+      | "done.invoke.fetchWordList"
+    assignGeneratedPhrases:
+      | "xstate.after(100)#dice-gen.generating.debouncing"
+      | "done.invoke.fetchWordList"
+    syncToUrl:
+      | "xstate.after(100)#dice-gen.generating.debouncing"
+      | "done.invoke.fetchWordList"
   }
   internalEvents: {
     "": { type: "" }

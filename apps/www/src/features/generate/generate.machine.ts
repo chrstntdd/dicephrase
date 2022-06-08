@@ -10,8 +10,6 @@ import {
 
 import { assert } from "../../lib/assert"
 
-import { fetchWordList, retryDelay } from "./shared"
-
 type Ctx = {
   ab?: AbortController
   attemptCount: number
@@ -28,9 +26,8 @@ type Msg =
   | { type: "SET_SEP"; value: string }
 
 type Svc = {
-  fetchWordList: {
-    data: Record<string, string>
-  }
+  fetchWordList: { data: Record<string, string> }
+  copyToClipboard: { data: void }
 }
 
 let wlRecord: Record<string, string> | undefined
@@ -132,10 +129,13 @@ let generateMachine = createMachine(
               }
             }
           },
-          error: { entry: "resetRetries" },
+          error: {
+            entry: "resetRetries",
+            always: { target: "#dice-gen.idle" }
+          },
           combining: {
             type: "final",
-            exit: ["assignGeneratedPhrases", "syncToUrl", "resetRetries"]
+            entry: ["assignGeneratedPhrases", "syncToUrl", "resetRetries"]
           }
         }
       }
@@ -191,17 +191,33 @@ let generateMachine = createMachine(
       shouldRetry: (ctx) => ctx.attemptCount < 7
     },
     services: {
-      fetchWordList,
-      copyToClipboard: async (ctx) => {
+      async fetchWordList(ctx) {
+        let res = await fetch("/wl-2016.json", {
+          signal: (ctx.ab as NonNullable<typeof ctx.ab>).signal
+        })
+        assert(res.ok)
+        return await res.json()
+      },
+      async copyToClipboard(ctx) {
         let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         await m(ctx.phrases!, ctx.separators!)
       }
     },
     delays: {
-      REQUEST_BACK_OFF_DELAY: retryDelay
+      REQUEST_BACK_OFF_DELAY: (ctx) => {
+        // From: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+        const CAP = 2000
+        const BASE = 10
+
+        return randomBetween(0, Math.min(CAP, BASE * 2 ** ctx.attemptCount))
+      }
     }
   }
 )
+
+function randomBetween(min: number, max: number) {
+  return Math.random() * (max - min) + min
+}
 
 export { generateMachine }

@@ -4,9 +4,9 @@ import { vars } from "./vars.css"
 
 globalFontFace("manrope", {
   src: [
-    'url(/fonts/manrope/fonts/otf/Manrope-Medium.otf) format("otf")',
-    'url(/fonts/manrope/fonts/webfonts/Manrope-Regular.woff2) format("woff2")',
-    'url(/fonts/manrope/fonts/ttf/Manrope-Regular.ttf) format("truetype")'
+    'url(/fonts/manrope/Manrope-Regular.otf) format("otf")',
+    'url(/fonts/manrope/Manrope-Regular.woff2) format("woff2")',
+    'url(/fonts/manrope/Manrope-Regular.ttf) format("truetype")'
   ],
   fontWeight: 400,
   fontDisplay: "swap"

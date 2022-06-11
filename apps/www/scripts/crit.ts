@@ -1,30 +1,16 @@
-import { writeFile } from "fs/promises"
 import { resolve } from "path"
-import { readdirSync } from "fs"
+import { readdir, readFile, writeFile } from "fs/promises"
 
-import crit from "critical"
 import { minify } from "html-minifier-terser"
 
-let srcHtml = readdirSync("dist").flatMap((f) =>
+let srcHtml = (await readdir("dist")).flatMap((f) =>
   f.endsWith(".html") ? [resolve("dist", f)] : []
-)
-
-let css = readdirSync("dist/assets").flatMap((f) =>
-  f.endsWith(".css") ? [resolve("dist", "assets", f)] : []
 )
 
 await Promise.all(
   srcHtml.map(async (name) => {
-    let htmlWithInlinedCSS: string = (
-      await crit.generate({
-        base: "/dist",
-        css: css,
-        inline: true,
-        src: name
-      })
-    ).html
-
-    let minifiedHTML = await minify(htmlWithInlinedCSS, {
+    let rawHTML = await readFile(name, "utf-8")
+    let minifiedHTML = await minify(rawHTML, {
       collapseBooleanAttributes: true,
       collapseWhitespace: true,
       minifyCSS: true,

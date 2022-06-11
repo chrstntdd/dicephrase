@@ -176,11 +176,18 @@
     />
   </head>
   <section id="app-toast-group"></section>
-  <body>
+
+  <body onload="document.body.style.visibility='visible'">
     <noscript>
       JavaScript is required to use this application.
       <br />
       Please enable it.
+
+      <style>
+        body {
+          visibility: visible;
+        }
+      </style>
     </noscript>
     <div id="root"><!--ssr-outlet--></div>
     <script type="module" src="/src/main.tsx"></script>

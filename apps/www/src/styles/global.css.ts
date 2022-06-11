@@ -56,7 +56,9 @@ globalStyle("body", {
   lineHeight: 1.4,
   minWidth: "100%",
   overflowX: "hidden",
-  textRendering: "optimizeSpeed"
+  textRendering: "optimizeSpeed",
+  // To prevent FOUC
+  visibility: "hidden"
 })
 
 globalStyle("p, h1, h2, h3, h4, h5, h6", {

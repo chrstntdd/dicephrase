@@ -30,7 +30,6 @@
     "@vanilla-extract/vite-plugin": "^3.1.6",
     "@xstate/inspect": "^0.6.5",
     "browserslist": "^4.20.3",
-    "critical": "^4.0.1",
     "esbuild": "^0.14.42",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",

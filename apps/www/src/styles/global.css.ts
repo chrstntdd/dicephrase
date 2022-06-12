@@ -4,9 +4,9 @@ import { vars } from "./vars.css"
 
 globalFontFace("manrope", {
   src: [
-    'url(/fonts/manrope/fonts/otf/Manrope-Medium.otf) format("otf")',
-    'url(/fonts/manrope/fonts/webfonts/Manrope-Regular.woff2) format("woff2")',
-    'url(/fonts/manrope/fonts/ttf/Manrope-Regular.ttf) format("truetype")'
+    'url(/fonts/manrope/Manrope-Regular.otf) format("otf")',
+    'url(/fonts/manrope/Manrope-Regular.woff2) format("woff2")',
+    'url(/fonts/manrope/Manrope-Regular.ttf) format("truetype")'
   ],
   fontWeight: 400,
   fontDisplay: "swap"
@@ -56,7 +56,9 @@ globalStyle("body", {
   lineHeight: 1.4,
   minWidth: "100%",
   overflowX: "hidden",
-  textRendering: "optimizeSpeed"
+  textRendering: "optimizeSpeed",
+  // To prevent FOUC
+  visibility: "hidden"
 })
 
 globalStyle("p, h1, h2, h3, h4, h5, h6", {

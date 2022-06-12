@@ -13,6 +13,5 @@ if (import.meta.env.DEV) {
 
 start(
   () => <App tags={[]} url={globalThis.location.pathname} />,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  document.getElementById("root")!
+  document.getElementById("root") as HTMLElement
 )

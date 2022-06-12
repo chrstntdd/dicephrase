@@ -1,5 +1,6 @@
 import { style } from "@vanilla-extract/css"
 import { PRESSABLE } from "../styles/shared"
+import { chromeStandalone, iOSStandalone } from "../styles/util"
 
 import { vars } from "../styles/vars.css"
 
@@ -15,11 +16,16 @@ export const copyBtn = style({
   padding: vars.space["3x"],
   display: "grid",
   placeItems: "center",
-  "@media": {
-    "all and (display-mode: standalone)": {
+
+  "@supports": {
+    ...chromeStandalone({
+      bottom: vars.space["4x"],
+      right: vars.space["4x"]
+    }),
+    ...iOSStandalone({
       bottom: `env(safe-area-inset-bottom)`,
       right: `env(safe-area-inset-bottom)`
-    }
+    })
   }
 })
 

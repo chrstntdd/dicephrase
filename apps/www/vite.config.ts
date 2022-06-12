@@ -17,7 +17,6 @@ export default defineConfig(({ mode }) => {
       ? undefined
       : {
           output: {
-            inlineDynamicImports: false,
             manualChunks(id) {
               if (!id.endsWith(".css") && id.includes("node_modules")) {
                 let directories = id.split(sep)

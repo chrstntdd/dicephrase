@@ -1,5 +1,6 @@
 import { style } from "@vanilla-extract/css"
 import { FOCUS_RING_Z_INDEX } from "./styles/constants"
+import { chromeStandalone, iOSStandalone } from "./styles/util"
 
 import { vars } from "./styles/vars.css"
 
@@ -14,11 +15,16 @@ export const main = style({
   // Pad the main area down the page from under the fixed header
   "@media": {
     "all and (display-mode: browser)": {
-      paddingBlockStart: `calc(env(safe-area-inset-top) + ${vars.space["7x"]})`
-    },
-    "all and (display-mode: standalone)": {
-      paddingBlockStart: `calc(env(safe-area-inset-top))`
+      paddingBlockStart: vars.space["7x"]
     }
+  },
+  "@supports": {
+    ...chromeStandalone({
+      paddingBlockStart: `calc(env(safe-area-inset-top) + ${vars.space["7x"]})`
+    }),
+    ...iOSStandalone({
+      paddingBlockStart: "env(safe-area-inset-top)"
+    })
   }
 })
 

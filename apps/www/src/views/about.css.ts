@@ -58,7 +58,7 @@ globalStyle(`${aboutPage} a abbr`, {
   textDecoration: "none"
 })
 
-globalStyle(`${aboutPage} p`, {
+globalStyle(`${aboutPage} :not(h1) ~ p`, {
   fontSize: vars.fontSize["0x"]
 })
 

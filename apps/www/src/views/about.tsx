@@ -61,12 +61,12 @@ function About() {
         to create passwords.
       </p>
       <p>
-        Under the hood, this means the rolling of dice is <em>simulated</em> as
-        the source of entropy with JavaScript's{" "}
+        Under the hood, this means the rolling of dice is <em>simulated</em> on
+        your device as the source of entropy powered by JavaScript's{" "}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues">
           <code class={styles.inlineCode}>crypto.getRandomValues</code>
-        </a>{" "}
-        on your device.
+        </a>
+        .
       </p>
       <p>
         The result of each roll is joined to form a 5 digit numeric key such as{" "}
@@ -83,7 +83,7 @@ function About() {
       </p>
 
       <h2>Privacy</h2>
-      <p>Everything happens within your browser entirely on your device</p>
+      <p>Everything happens within your browser entirely on your device.</p>
       <ul>
         <li>No cookies or browser storage</li>
         <li>No analytics</li>

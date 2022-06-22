@@ -29,7 +29,7 @@ importers:
       eslint-import-resolver-typescript: ^2.7.1
       eslint-plugin-import: ^2.26.0
       eslint-plugin-jsx-a11y: ^6.5.1
-      gen-utils: workspace:0.0.3
+      gen-utils: workspace:0.0.4
       html-minifier-terser: ^7.0.0-beta.0
       polished: ^4.2.2
       prettier: ^2.7.1

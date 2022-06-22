@@ -7,8 +7,10 @@ external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValue
 // Define `Array.fill`
 @send external fill: (Js.Array2.t<'a>, 'a) => Js.Array2.t<'a> = "fill"
 
-// Create fixed sized array with holes
-@new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
+// Define `Array.from({length: int})``
+type t_array_size = {length: int}
+@scope("Array") @val
+external array_from: t_array_size => Js.Array2.t<'a> = "from"
 
 @val external parseInt: (string, int) => int = "parseInt"
 

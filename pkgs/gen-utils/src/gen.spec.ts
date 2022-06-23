@@ -49,7 +49,7 @@ describe.concurrent("combine_zip", () => {
   })
 })
 
-describe("make_wl_keys", () => {
+describe.concurrent("make_wl_keys", () => {
   test("should return a list equal in size to the count param", () => {
     let count = 10
     let out = make_wl_keys(count)

@@ -35,16 +35,8 @@ let make_wl_keys = count => {
 
   let rec bits_to_keys = (acc, idx, out_idx) => {
     // Consume the next chunk
-    let chunk_of_random_bytes = raw_bits->Uint32Array.subarray(~start=idx, ~end_=idx + chunk_size)
-    let collection_length = Uint32Array.length(chunk_of_random_bytes)
-    let wl_key = make_key(
-      ~acc="",
-      ~idx=0,
-      ~data=chunk_of_random_bytes,
-      ~len=collection_length,
-      ~min,
-      ~max,
-    )
+    let chunk_of_random_bytes = Uint32Array.subarray(raw_bits, ~start=idx, ~end_=idx + chunk_size)
+    let wl_key = make_key(~acc="", ~idx=0, ~data=chunk_of_random_bytes, ~len=chunk_size, ~min, ~max)
 
     Js.Array2.unsafe_set(acc, out_idx, wl_key)
 
@@ -58,7 +50,7 @@ let make_wl_keys = count => {
     }
   }
 
-  bits_to_keys(Util.make_array_of_size(count), 0, 0)
+  bits_to_keys(Util.array_from({length: count}), 0, 0)
 }
 
 @genType
@@ -116,20 +108,20 @@ type phase_cfg = {
 @genType
 let parse_qs_to_phrase_config = qs => {
   open Js.Option
-  let url_inst = qs->Util.make_url_search
-  let count_from_qs = url_inst.get(. Const.count_key)->Util.nullable_to_option
-  let sep_from_qs = url_inst.get(. Const.sep_key)->Util.nullable_to_option
+  let url_inst = Util.make_url_search(qs)
+  let count_from_qs = Util.nullable_to_option(url_inst.get(. Const.count_key))
+  let sep_from_qs = Util.nullable_to_option(url_inst.get(. Const.sep_key))
 
   let count = count_from_qs |> andThen((. x) => {
     let count_int = Util.str_to_int(x)
 
-    andThen((. x) => {
+    count_int |> andThen((. x) => {
       if x >= Const.count_min && x <= Const.count_max {
         count_int
       } else {
         None
       }
-    }, count_int)
+    })
   })
 
   let sep = sep_from_qs |> andThen((. s) => {
@@ -157,16 +149,16 @@ let parse_count_val = v => {
 @genType
 let make_phrases = (. count, wlRecord) => {
   open Js.Array2
-  let keys = count->make_wl_keys
-  let key_length = keys->length
-  let phrases = key_length->Util.make_array_of_size
+  let keys = make_wl_keys(count)
+  let key_length = length(keys)
+  let phrases = Util.array_from({length: key_length})
 
   let rec inner = (acc, idx) => {
     if idx == key_length {
       acc
     } else {
-      let key = keys->unsafe_get(idx)
-      acc->unsafe_set(idx, Js.Dict.unsafeGet(wlRecord, key))
+      let key = unsafe_get(keys, idx)
+      unsafe_set(acc, idx, Js.Dict.unsafeGet(wlRecord, key))
       inner(acc, idx + 1)
     }
   }
@@ -181,11 +173,11 @@ let make_separators = (. separator_kind, count) => {
 
   if separator_kind == Const.sep_fallback {
     let separators = []
-    while separators->length < sep_count {
-      push(separators, shuffle(copy(Const.random_sep_chars))->unsafe_get(0))->ignore
+    while length(separators) < sep_count {
+      push(separators, unsafe_get(shuffle(copy(Const.random_sep_chars)), 0))->ignore
     }
     separators
   } else {
-    Util.fill(Util.make_array_of_size(sep_count), separator_kind)
+    Util.fill(Util.array_from({length: sep_count}), separator_kind)
   }
 }

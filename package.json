@@ -1,13 +1,23 @@
 {
-  "name": "dicephrase",
-  "version": "0.0.0",
-  "private": true,
-  "workspaces": [
-    "pkgs/*",
-    "apps/*"
-  ],
-  "engines": {
-    "node": ">=16",
-    "pnpm": "=6"
-  }
+	"name": "dicephrase",
+	"version": "0.0.0",
+	"private": true,
+	"workspaces": [
+		"pkgs/*",
+		"apps/*"
+	],
+	"engines": {
+		"node": ">=16",
+		"pnpm": "=6"
+	},
+	"scripts": {
+		"fmt": "pnpm fmt --recursive",
+		"lint": "pnpm fmt --recursive"
+	},
+	"prettier": {
+		"semi": false,
+		"tabWidth": 2,
+		"trailingComma": "all",
+		"useTabs": true
+	}
 }

@@ -3,19 +3,19 @@
 import * as Js_option from "rescript/lib/es6/js_option.js"
 
 function str_to_int(s) {
-  var nt = parseInt(s, 10)
-  var match = isNaN(nt)
-  if (match) {
-    return
-  } else {
-    return nt
-  }
+	var nt = parseInt(s, 10)
+	var match = isNaN(nt)
+	if (match) {
+		return
+	} else {
+		return nt
+	}
 }
 
 function nullable_to_option(n) {
-  if (null !== n) {
-    return Js_option.some(n)
-  }
+	if (null !== n) {
+		return Js_option.some(n)
+	}
 }
 
 export { str_to_int, nullable_to_option }

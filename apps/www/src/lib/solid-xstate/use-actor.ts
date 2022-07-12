@@ -5,19 +5,19 @@ import type { ActorRef } from "xstate"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type EmittedFromActorRef<TActor extends ActorRef<any, any>> =
-  TActor extends ActorRef<any, infer TEmitted> ? TEmitted : never
+	TActor extends ActorRef<any, infer TEmitted> ? TEmitted : never
 
 export function useActor<TActor extends ActorRef<any, any>>(
-  actor: TActor
+	actor: TActor,
 ): [state: Accessor<EmittedFromActorRef<TActor>>, send: TActor["send"]] {
-  let [state, setState] = createSignal(actor.getSnapshot().state)
-  let { unsubscribe } = actor.subscribe((s) => {
-    if (s.changed) {
-      setState(s)
-    }
-  })
+	let [state, setState] = createSignal(actor.getSnapshot().state)
+	let { unsubscribe } = actor.subscribe((s) => {
+		if (s.changed) {
+			setState(s)
+		}
+	})
 
-  onCleanup(() => unsubscribe())
+	onCleanup(() => unsubscribe())
 
-  return [state, actor.send]
+	return [state, actor.send]
 }

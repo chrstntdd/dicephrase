@@ -1,9 +1,6 @@
 let [firstArg, ...restArgs] = Deno.args
 
-let sharedOpts = [
-  "--allow-net=deno.land,unpkg.com",
-  "--import-map=./import-map.json"
-]
+let sharedOpts = ["--allow-net=deno.land,unpkg.com"]
 
 if (firstArg == "run") {
   await Deno.run({

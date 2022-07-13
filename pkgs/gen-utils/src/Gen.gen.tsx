@@ -18,12 +18,12 @@ export const shuffle: <T1>(arr: T1[]) => T1[] = GenBS.shuffle
 export const combine_zip: <T1>(_1: T1[], _2: T1[]) => T1[] = GenBS.combine_zip
 
 export const parse_qs_to_phrase_config: (qs: string) => phase_cfg =
-  GenBS.parse_qs_to_phrase_config
+	GenBS.parse_qs_to_phrase_config
 
 export const parse_count_val: (v: string) => number = GenBS.parse_count_val
 
 export const make_phrases: <T1>(_1: number, _2: Js_Dict_t<T1>) => T1[] =
-  GenBS.make_phrases
+	GenBS.make_phrases
 
 export const make_separators: (_1: string, _2: number) => string[] =
-  GenBS.make_separators
+	GenBS.make_separators

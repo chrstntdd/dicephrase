@@ -9,3 +9,4 @@ vite.config.ts
 *.res
 *.gen.ts
 *.gen.tsx
+*.typegen.ts

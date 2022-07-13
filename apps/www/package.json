@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
-		"solid-js": "1.4.3",
+		"solid-js": "1.4.7",
 		"solid-meta": "0.27.5",
 		"xstate": "^4.32.1"
 	},

@@ -10,8 +10,6 @@
 		"lint:fix": "eslint src/ --fix",
 		"lint": "eslint 'src/**'",
 		"preview": "pnpm dlx serve dist -p 3001 --ssl-key=localhost-key.pem --ssl-cert=localhost.pem",
-		"re:build": "rescript",
-		"re:start": "rescript build -w",
 		"tc": "tsc --noEmit",
 		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'"
 	},

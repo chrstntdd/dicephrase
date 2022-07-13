@@ -16,7 +16,6 @@ import { generateMachine } from "../features/generate/generate.machine"
 import { useMachine } from "../lib/solid-xstate/use-machine"
 
 import * as styles from "./generate.css"
-import type { ActorRefFrom } from "xstate"
 
 const PhraseOutput = lazy(() => import("./phrase-output"))
 const CopyBtn = lazy(() => import("../lib/copy-btn"))
@@ -43,7 +42,7 @@ const WORD_COUNT_OPTS = [
 const FORM_ID = "gen-form"
 
 function Generate() {
-	let [state, send, svc] = useMachine(
+	let [state, send] = useMachine(
 		// @ts-expect-error Typing kinda sux with the handrolled useMachine
 		// Once it's merged, we should use the official solid useMachine
 		// https://github.com/statelyai/xstate/pull/2932
@@ -120,7 +119,10 @@ function Generate() {
 				<Show when={hasOutput()}>
 					<>
 						<CopyBtn
-							svc={svc as unknown as ActorRefFrom<typeof generateMachine>}
+							copied={state.matches("idle.copying")}
+							handleCopy={() => {
+								send("COPY_PHRASE")
+							}}
 						/>
 						<PhraseOutput
 							formId={FORM_ID}
@@ -128,9 +130,6 @@ function Generate() {
 							separators={separators()!}
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							phrases={phrases()!}
-							handleCopyPress={() => {
-								send("COPY_PHRASE")
-							}}
 						/>
 					</>
 				</Show>

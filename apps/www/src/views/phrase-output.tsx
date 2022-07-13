@@ -6,7 +6,6 @@ import * as styles from "./phrase-output.css"
 function PhraseOutput(props: {
 	phrases: readonly string[]
 	separators: readonly string[]
-	handleCopyPress: () => void
 	formId: string
 }) {
 	return (

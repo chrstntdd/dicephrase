@@ -38,5 +38,5 @@ export function useMachine<C, S, E extends EventObject>(
 
 	onCleanup(() => service.stop())
 
-	return [state, service.send, service] as const
+	return [state, service.send] as const
 }

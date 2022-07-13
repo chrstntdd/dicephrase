@@ -1,29 +1,20 @@
-import { createMemo, Show } from "solid-js"
-import type { ActorRefFrom } from "xstate"
-
-import type { generateMachine } from "../features/generate/generate.machine"
-import { useActor } from "./solid-xstate/use-actor"
+import { Show } from "solid-js"
 import { Toast } from "./toast"
 
 import * as styles from "./copy-btn.css"
 import { SVGWrapper } from "./svg-wrapper"
 
 export default function CopyBtn(props: {
-	svc: ActorRefFrom<typeof generateMachine>
+	copied: boolean
+	handleCopy: () => void
 }) {
-	let [state, send] = useActor(props.svc)
-
-	let copied = createMemo(() => state().matches("idle.copying"))
-
 	return (
 		<button
 			classList={{ [styles.copyBtn]: true }}
 			aria-label="Copy to clipboard"
-			onClick={() => {
-				send("COPY_PHRASE")
-			}}
+			onClick={props.handleCopy}
 		>
-			<Show when={copied()}>
+			<Show when={props}>
 				<Toast msg="Copied to clipboard" />
 			</Show>
 

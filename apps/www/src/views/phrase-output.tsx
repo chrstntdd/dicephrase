@@ -49,22 +49,16 @@ function Word(props: { content: string; sep?: boolean }) {
 		<li class={styles.word}>
 			<For each={props.content.split("")}>
 				{(char, index) => (
-					<Char offset={index() * 22} content={char} sep={props.sep} />
+					<span
+						class={styles.phraseChar}
+						data-sep={props.sep}
+						style={{ "animation-delay": `${index() * 22}ms` }}
+					>
+						{char}
+					</span>
 				)}
 			</For>
 		</li>
-	)
-}
-
-function Char(props: { content: string; offset: number; sep?: boolean }) {
-	return (
-		<span
-			class={styles.phraseChar}
-			data-sep={props.sep}
-			style={{ "animation-delay": `${props.offset}ms` }}
-		>
-			{props.content}
-		</span>
 	)
 }
 

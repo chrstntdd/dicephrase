@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate"
+import { createMachine, assign, send } from "xstate"
 
 import {
 	parse_qs_to_phrase_config,
@@ -22,6 +22,8 @@ type Ctx = {
 type Msg =
 	| { type: "COPY_PHRASE" }
 	| { type: "GENERATE" }
+	| { type: "GENERATE_OK" }
+	| { type: "GENERATE_ERR" }
 	| { type: "SET_COUNT"; value: number }
 	| { type: "SET_SEP"; value: string }
 
@@ -35,7 +37,6 @@ let wlRecord: Record<string, string> | undefined
 let generateMachine = createMachine(
 	{
 		id: "dice-gen",
-		initial: "syncing_from_url",
 		tsTypes: {} as import("./generate.machine.typegen").Typegen0,
 		schema: {
 			context: {} as Ctx,
@@ -47,57 +48,56 @@ let generateMachine = createMachine(
 			count: 8,
 			separatorKind: "random",
 		},
+		entry: "assignParamsFromQueryString",
+		type: "parallel",
 		states: {
-			syncing_from_url: {
-				always: { target: "empty", actions: "assignParamsFromQueryString" },
-			},
-			empty: {
+			ui: {
+				initial: "empty",
 				on: {
-					GENERATE: "generating",
-					SET_COUNT: { target: "generating", actions: "assignCount" },
-					SET_SEP: { target: "generating", actions: "assignSep" },
+					GENERATE_ERR: ".error",
 				},
-			},
-			idle: {
-				on: {
-					GENERATE: "generating",
-					SET_COUNT: { target: "generating", actions: "assignCount" },
-					SET_SEP: { target: "generating", actions: "assignSep" },
-				},
-				initial: "idle",
 				states: {
-					idle: {
-						on: { COPY_PHRASE: "copying" },
-					},
-					copying: {
-						invoke: {
-							id: "copyToClipboard",
-							src: "copyToClipboard",
-							onDone: "idle",
-							onError: "idle",
+					empty: {
+						on: {
+							GENERATE_OK: "has_output",
 						},
 					},
+					has_output: {
+						on: { COPY_PHRASE: ".copying" },
+						initial: "idle",
+						states: {
+							idle: {},
+							copying: {
+								invoke: {
+									id: "copyToClipboard",
+									src: "copyToClipboard",
+									onDone: "idle",
+									onError: "idle",
+								},
+							},
+						},
+					},
+					error: {},
 				},
 			},
 
 			generating: {
-				initial: "debouncing",
-				onDone: "idle",
-				// Handles exit+re-entry when new messages come in that interrupt the work
-				// and reset the progress
+				initial: "idle",
 				exit: "cancelPending",
 				on: {
-					GENERATE: "generating",
+					/* external transitions to trigger the exit action above */
+					GENERATE: { target: "generating.debouncing" },
 					SET_COUNT: {
-						target: "generating",
+						target: "generating.debouncing",
 						actions: "assignCount",
 					},
 					SET_SEP: {
-						target: "generating",
+						target: "generating.debouncing",
 						actions: "assignSep",
 					},
 				},
 				states: {
+					idle: {},
 					debouncing: {
 						after: {
 							100: [
@@ -117,7 +117,7 @@ let generateMachine = createMachine(
 							},
 							onError: [
 								{ cond: "shouldRetry", target: "retrying" },
-								{ target: "error" },
+								{ target: "idle", actions: "notifyGenerationError" },
 							],
 						},
 					},
@@ -129,13 +129,16 @@ let generateMachine = createMachine(
 							},
 						},
 					},
-					error: {
-						entry: "resetRetries",
-						always: { target: "#dice-gen.idle" },
-					},
 					combining: {
-						type: "final",
-						entry: ["assignGeneratedPhrases", "syncToUrl", "resetRetries"],
+						always: {
+							target: "idle",
+							actions: [
+								"assignGeneratedPhrases",
+								"syncToUrl",
+								"resetRetries",
+								"notifyGenerationSuccess",
+							],
+						},
 					},
 				},
 			},
@@ -185,6 +188,8 @@ let generateMachine = createMachine(
 
 				history.pushState({}, "", url)
 			},
+			notifyGenerationSuccess: send("GENERATE_OK"),
+			notifyGenerationError: send("GENERATE_ERROR"),
 		},
 		guards: {
 			needsToFetchWl: () => !wlRecord,

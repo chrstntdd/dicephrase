@@ -1,42 +1,109 @@
 import { onCleanup, batch } from "solid-js"
-import { createStore } from "solid-js/store"
-import { interpret } from "xstate"
-import type { StateMachine, EventObject } from "xstate"
+import { createStore, reconcile, SetStoreFunction } from "solid-js/store"
+import type {
+	AnyStateMachine,
+	AreAllImplementationsAssumedToBeProvided,
+	InternalMachineOptions,
+	InterpreterFrom,
+	InterpreterOptions,
+	Prop,
+	StateFrom,
+} from "xstate"
 
-/* FORKED FROM https://codesandbox.io/s/xstate-solid-example-dgpd7?from-embed=&file=/useMachine.js:0-1088 */
+import { createService } from "./create-service"
+import type { UseMachineOptions } from "./types"
 
-// WARNING: This is a PoC and a bit hacky
-// I could have done a gone with treating the store as simple signal
-// like Svelte, React, Vue implementations.
-// Instead wanted to see if with a little hacking we could make
-// it work granularly.This should improve performance on larger objects.
-export function useMachine<C, S, E extends EventObject>(
-	machine: StateMachine<C, S, E>,
-	options: Parameters<typeof interpret>[1],
-) {
-	let service = interpret(machine, options).start()
+/**
+ * A fork of https://github.com/statelyai/xstate/pull/2932/files#diff-6223065f3a0c922de1cdb999cd558df10e4c94bdcd0c68aed3ef1210a3a93d30
+ * until it gets merged
+ */
 
-	let [state, setState] = createStore({
-		...service.initialState,
-		matches(...args: Parameters<typeof service.state.matches>): boolean {
-			// access state to track on value access
-			state.value
-			return service.state.matches(...args)
+/* eslint-disable */
+
+function updateState<NextState extends object>(
+	nextState: NextState,
+	setState: SetStoreFunction<NextState>,
+	merge = true,
+): void {
+	if (typeof nextState === "object" && !!nextState) {
+		setState(reconcile<NextState, unknown>(nextState, { merge }))
+	} else {
+		setState(nextState)
+	}
+}
+
+type RestParams<TMachine extends AnyStateMachine> =
+	AreAllImplementationsAssumedToBeProvided<
+		TMachine["__TResolvedTypesMeta"]
+	> extends false
+		? [
+				options: InterpreterOptions &
+					UseMachineOptions<TMachine["__TContext"], TMachine["__TEvent"]> &
+					InternalMachineOptions<
+						TMachine["__TContext"],
+						TMachine["__TEvent"],
+						TMachine["__TResolvedTypesMeta"],
+						true
+					>,
+		  ]
+		: [
+				options?: InterpreterOptions &
+					UseMachineOptions<TMachine["__TContext"], TMachine["__TEvent"]> &
+					InternalMachineOptions<
+						TMachine["__TContext"],
+						TMachine["__TEvent"],
+						TMachine["__TResolvedTypesMeta"]
+					>,
+		  ]
+
+export type UseMachineReturn<
+	TMachine extends AnyStateMachine,
+	TInterpreter = InterpreterFrom<TMachine>,
+> = [StateFrom<TMachine>, Prop<TInterpreter, "send">, TInterpreter]
+
+export function useMachine<TMachine extends AnyStateMachine>(
+	machine: TMachine,
+	...[options = {}]: RestParams<TMachine>
+): UseMachineReturn<TMachine> {
+	const service = createService(machine, options)
+
+	const [state, setState] = createStore<StateFrom<TMachine>>({
+		...service.state,
+		toJSON() {
+			return service.state.toJSON()
 		},
+		toStrings(...args: Parameters<StateFrom<TMachine>["toStrings"]>) {
+			return service.state.toStrings(args[0], args[1])
+		},
+		can(...args: Parameters<StateFrom<TMachine>["can"]>) {
+			state.value // sets state.value to be tracked
+			return service.state.can(args[0])
+		},
+		hasTag(...args: Parameters<StateFrom<TMachine>["hasTag"]>) {
+			state.tags // sets state.tags to be tracked
+			return service.state.hasTag(args[0])
+		},
+		matches(...args: Parameters<StateFrom<TMachine>["matches"]>) {
+			state.value // sets state.value to be tracked
+			return service.state.matches(args[0] as never)
+		},
+	} as StateFrom<TMachine>)
+
+	const { unsubscribe } = service.subscribe((nextState) => {
+		batch(() => {
+			updateState(
+				nextState,
+				setState as SetStoreFunction<StateFrom<AnyStateMachine>>,
+			)
+		})
 	})
 
-	service.onTransition((s) => {
-		// only focus on stuff that actually changes
-		if (s.changed) {
-			batch(() => {
-				setState("value", s.value)
-				// diff data to only update values that changes
-				setState("context", s.context)
-			})
-		}
-	})
+	onCleanup(unsubscribe)
 
-	onCleanup(() => service.stop())
-
-	return [state, service.send] as const
+	return [
+		// States are readonly by default, make downstream typing easier by casting away from DeepReadonly wrapper
+		state as unknown as StateFrom<TMachine>,
+		service.send,
+		service,
+	] as UseMachineReturn<TMachine>
 }

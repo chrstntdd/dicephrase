@@ -43,23 +43,25 @@ const FORM_ID = "gen-form"
 
 function Generate() {
 	let [state, send] = useMachine(
-		// @ts-expect-error Typing kinda sux with the handrolled useMachine
-		// Once it's merged, we should use the official solid useMachine
-		// https://github.com/statelyai/xstate/pull/2932
 		generateMachine,
 		import.meta.env.DEV ? { devTools: true } : undefined,
 	)
 
 	let phraseCount = createMemo(() => state.context.count)
-	let separator = createMemo(() => state.context.separatorKind)
+	let separatorKind = createMemo(() => state.context.separatorKind)
 	let separators = createMemo(() => state.context.separators)
 	let phrases = createMemo(() => state.context.phrases)
-	let hasOutput = createMemo(() => separators()?.length && phrases()?.length)
+	let hasOutput = createMemo(() => state.matches("ui.has_output"))
+	let copied = createMemo(() => state.matches("ui.has_output.copying"))
 
 	function handleSubmit(e: Event) {
 		send("GENERATE")
 
 		e.preventDefault()
+	}
+
+	function handleCopy() {
+		send("COPY_PHRASE")
 	}
 
 	return (
@@ -102,7 +104,7 @@ function Generate() {
 					<legend id={separatorId}>Word separator</legend>
 					<RadioGroup
 						class={styles.baseRadioGroupContainer}
-						value={separator()}
+						value={separatorKind()}
 						name={SEPARATOR_KEY}
 					>
 						{SEPARATOR_OPTS}
@@ -118,12 +120,7 @@ function Generate() {
 			<Suspense fallback="">
 				<Show when={hasOutput()}>
 					<>
-						<CopyBtn
-							copied={state.matches("idle.copying")}
-							handleCopy={() => {
-								send("COPY_PHRASE")
-							}}
-						/>
+						<CopyBtn copied={copied()} handleCopy={handleCopy} />
 						<PhraseOutput
 							formId={FORM_ID}
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

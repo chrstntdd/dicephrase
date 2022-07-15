@@ -14,7 +14,7 @@ export default function CopyBtn(props: {
 			aria-label="Copy to clipboard"
 			onClick={props.handleCopy}
 		>
-			<Show when={props}>
+			<Show when={props.copied}>
 				<Toast msg="Copied to clipboard" />
 			</Show>
 

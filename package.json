@@ -12,7 +12,7 @@
 	},
 	"scripts": {
 		"fmt": "pnpm fmt --recursive",
-		"lint": "pnpm fmt --recursive"
+		"lint": "pnpm lint --recursive"
 	},
 	"prettier": {
 		"semi": false,

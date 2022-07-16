@@ -8,61 +8,61 @@ import { onMount } from "solid-js"
 import * as styles from "./toast.css"
 
 function makeToast(msg: string, showTime: number) {
-  let node = document.createElement("output")
+	let node = document.createElement("output")
 
-  node.innerText = msg
-  node.setAttribute("role", "status")
-  node.setAttribute("aria-live", "polite")
-  node.style.setProperty(styles.TOAST_DURATION_VAR, `${showTime}ms`)
-  node.classList.add(styles.toastItem)
+	node.innerText = msg
+	node.setAttribute("role", "status")
+	node.setAttribute("aria-live", "polite")
+	node.style.setProperty(styles.TOAST_DURATION_VAR, `${showTime}ms`)
+	node.classList.add(styles.toastItem)
 
-  return node
+	return node
 }
 
 function flipToast(n: Node, parent: HTMLElement) {
-  let first = parent.offsetHeight
-  parent.appendChild(n)
+	let first = parent.offsetHeight
+	parent.appendChild(n)
 
-  let last = parent.offsetHeight
+	let last = parent.offsetHeight
 
-  let invert = last - first
+	let invert = last - first
 
-  let anim = parent.animate(
-    [{ transform: `translateY(${invert}px)` }, { transform: `translateY(0)` }],
-    {
-      duration: 150,
-      easing: "ease-out"
-    }
-  )
+	let anim = parent.animate(
+		[{ transform: `translateY(${invert}px)` }, { transform: `translateY(0)` }],
+		{
+			duration: 150,
+			easing: "ease-out",
+		},
+	)
 
-  anim.startTime = document.timeline.currentTime
+	anim.startTime = document.timeline.currentTime
 }
 
 function addToast(toast: HTMLElement, toastContainer: HTMLElement) {
-  toastContainer.children.length
-    ? flipToast(toast, toastContainer)
-    : toastContainer.appendChild(toast)
+	toastContainer.children.length
+		? flipToast(toast, toastContainer)
+		: toastContainer.appendChild(toast)
 }
 
 export function Toast(props: {
-  msg: string
-  /** @description How long (in ms) the Toast should display for. Default is 3000 */
-  showTime?: number
+	msg: string
+	/** @description How long (in ms) the Toast should display for. Default is 3000 */
+	showTime?: number
 }) {
-  // Defined in the index.html
-  onMount(async () => {
-    let toastContainer = document.getElementById(
-      "app-toast-group"
-    ) as HTMLElement
+	// Defined in the index.html
+	onMount(async () => {
+		let toastContainer = document.getElementById(
+			"app-toast-group",
+		) as HTMLElement
 
-    let toast = makeToast(props.msg, props.showTime || 3000)
+		let toast = makeToast(props.msg, props.showTime || 3000)
 
-    addToast(toast, toastContainer)
+		addToast(toast, toastContainer)
 
-    await Promise.allSettled(toast.getAnimations().map((ani) => ani.finished))
+		await Promise.allSettled(toast.getAnimations().map((ani) => ani.finished))
 
-    toastContainer.removeChild(toast)
-  })
+		toastContainer.removeChild(toast)
+	})
 
-  return null
+	return null
 }

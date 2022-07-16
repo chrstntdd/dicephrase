@@ -9,12 +9,12 @@ import { MetaProvider, renderTags } from "solid-meta"
 import { App } from "./app"
 
 async function render(url: string) {
-  let headTags: Required<ComponentProps<typeof MetaProvider>["tags"]> = []
-  let html = await renderToStringAsync(() => <App url={url} tags={headTags} />)
-  let renderedHeadTags = renderTags(headTags)
-  let hydrationScript = await renderToStringAsync(() => <HydrationScript />)
+	let headTags: Required<ComponentProps<typeof MetaProvider>["tags"]> = []
+	let html = await renderToStringAsync(() => <App url={url} tags={headTags} />)
+	let renderedHeadTags = renderTags(headTags)
+	let hydrationScript = await renderToStringAsync(() => <HydrationScript />)
 
-  return { html, hydrationScript, renderedHeadTags } as const
+	return { html, hydrationScript, renderedHeadTags } as const
 }
 
 export { render }

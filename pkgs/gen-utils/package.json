@@ -1,39 +1,33 @@
 {
-  "name": "gen-utils",
-  "version": "0.0.4",
-  "license": "UNLICENSED",
-  "description": "Shared utilities for generating a passphrase",
-  "type": "module",
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "import": "./src/index.ts"
-    },
-    "./package.json": "./package.json"
-  },
-  "types": "./src/index.ts",
-  "module": "./src/index.ts",
-  "scripts": {
-    "re:build": "rescript",
-    "re:start": "rescript build -w",
-    "emit-types": "tsc --emitDeclarationOnly",
-    "test": "vitest",
-    "test-cov": "vitest --watch false --coverage",
-    "build": "pnpm re:build && node make.js && pnpm emit-types",
-    "fmt": "prettier src --write"
-  },
-  "devDependencies": {
-    "c8": "^7.11.3",
-    "gentype": "^4.4.0",
-    "prettier": "^2.7.1",
-    "rescript": "^9.1.4",
-    "typescript": "^4.7.4",
-    "vitest": "^0.15.2"
-  },
-  "prettier": {
-    "semi": false,
-    "tabWidth": 2,
-    "trailingComma": "none",
-    "useTabs": false
-  }
+	"name": "gen-utils",
+	"version": "0.0.4",
+	"license": "UNLICENSED",
+	"description": "Shared utilities for generating a passphrase",
+	"type": "module",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"import": "./src/index.ts"
+		},
+		"./package.json": "./package.json"
+	},
+	"types": "./src/index.ts",
+	"module": "./src/index.ts",
+	"scripts": {
+		"re:build": "rescript",
+		"re:start": "rescript build -w",
+		"emit-types": "tsc --emitDeclarationOnly",
+		"test": "vitest",
+		"test-cov": "vitest --watch false --coverage",
+		"build": "pnpm re:build && node make.js && pnpm emit-types",
+		"fmt": "prettier src --write"
+	},
+	"devDependencies": {
+		"c8": "^7.11.3",
+		"gentype": "^4.4.0",
+		"prettier": "^2.7.1",
+		"rescript": "^9.1.4",
+		"typescript": "^4.7.4",
+		"vitest": "^0.18.0"
+	}
 }

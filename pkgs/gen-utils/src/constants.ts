@@ -14,16 +14,16 @@ export const VAL_DOLLAR = "$"
 export const VAL_RANDOM = "random"
 
 export const RANDOM_SEPARATOR_OPTS = [
-  "_",
-  ",",
-  "!",
-  "@",
-  "*",
-  "&",
-  "^",
-  "~",
-  VAL_DASH,
-  VAL_DOLLAR,
-  VAL_PERIOD,
-  VAL_SPACE
+	"_",
+	",",
+	"!",
+	"@",
+	"*",
+	"&",
+	"^",
+	"~",
+	VAL_DASH,
+	VAL_DOLLAR,
+	VAL_PERIOD,
+	VAL_SPACE,
 ]

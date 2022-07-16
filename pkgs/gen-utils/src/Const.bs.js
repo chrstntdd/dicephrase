@@ -17,12 +17,12 @@ var sep_fallback = Constants.SEPARATOR_FALLBACK
 var random_sep_chars = Constants.RANDOM_SEPARATOR_OPTS
 
 export {
-  count_key,
-  sep_key,
-  count_min,
-  count_max,
-  count_fallback,
-  sep_fallback,
-  random_sep_chars
+	count_key,
+	sep_key,
+	count_min,
+	count_max,
+	count_fallback,
+	sep_fallback,
+	random_sep_chars,
 }
 /* count_key Not a pure module */

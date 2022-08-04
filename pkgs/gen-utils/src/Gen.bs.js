@@ -28,9 +28,7 @@ function make_wl_keys(count) {
 	var key_count = Math.imul(count, 5)
 	var raw_bits = new Uint32Array(key_count)
 	crypto.getRandomValues(raw_bits)
-	var acc = Array.from({
-		length: count,
-	})
+	var acc = new Array(count).fill("")
 	var _idx = 0
 	var _out_idx = 0
 	while (true) {
@@ -124,9 +122,7 @@ function parse_count_val(v) {
 function make_phrases(count, wlRecord) {
 	var keys = make_wl_keys(count)
 	var key_length = keys.length
-	var phrases = Array.from({
-		length: key_length,
-	})
+	var phrases = new Array(key_length).fill("")
 	var _idx = 0
 	while (true) {
 		var idx = _idx
@@ -143,9 +139,7 @@ function make_phrases(count, wlRecord) {
 function make_separators(separator_kind, count) {
 	var sep_count = (count - 1) | 0
 	if (separator_kind !== Const.sep_fallback) {
-		return Array.from({
-			length: sep_count,
-		}).fill(separator_kind)
+		return new Array(sep_count).fill(separator_kind)
 	}
 	var separators = []
 	while (separators.length < sep_count) {

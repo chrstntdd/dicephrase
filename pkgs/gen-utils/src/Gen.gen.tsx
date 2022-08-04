@@ -5,6 +5,7 @@
 import * as GenBS__Es6Import from "./Gen.bs"
 const GenBS: any = GenBS__Es6Import
 
+// @ts-ignore
 import type { Dict_t as Js_Dict_t } from "./Js.gen"
 
 // tslint:disable-next-line:interface-over-type-literal

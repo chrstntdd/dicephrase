@@ -19,15 +19,15 @@
 		"emit-types": "tsc --emitDeclarationOnly",
 		"test": "vitest",
 		"test-cov": "vitest --watch false --coverage",
-		"build": "pnpm re:build && node make.js && pnpm emit-types",
 		"fmt": "prettier src --write"
 	},
 	"devDependencies": {
-		"c8": "^7.11.3",
-		"gentype": "^4.4.0",
+		"@vitest/coverage-c8": "^0.22.1",
+		"c8": "^7.12.0",
+		"gentype": "^4.5.0",
 		"prettier": "^2.7.1",
-		"rescript": "^9.1.4",
-		"typescript": "^4.7.4",
-		"vitest": "^0.18.0"
+		"rescript": "^10.0.1",
+		"typescript": "^4.8.2",
+		"vitest": "^0.22.1"
 	}
 }

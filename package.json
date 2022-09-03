@@ -7,8 +7,15 @@
 		"apps/*"
 	],
 	"engines": {
-		"node": ">=16",
-		"pnpm": "=6"
+		"node": ">=18.8.0",
+		"pnpm": ">=7.9.5"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"playwright",
+			"rescript"
+		]
 	},
 	"scripts": {
 		"fmt": "pnpm fmt --recursive",

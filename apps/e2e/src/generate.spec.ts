@@ -8,7 +8,7 @@ async function setupPage(page: Page, baseURL: string) {
 	await page.goto(baseURL, { waitUntil: "networkidle" })
 }
 
-test.describe("App e2e", () => {
+test.describe.parallel("App e2e", () => {
 	test.afterAll(async ({ browser }) => {
 		await browser.close()
 	})
@@ -53,7 +53,11 @@ test.describe("App e2e", () => {
 		})
 	})
 
-	test("should copy the results to the clipboard after the press of the output", async ({
+	// Too flaky. Run when https://github.com/microsoft/playwright/issues/13097 is resolved.
+	// TLDR: issue is that when we evaluate `navigator.clipboard.readText()` in the page
+	// it's actually returning the OS's clipboard value which isn't guaranteed to match
+	// what's on the page
+	test.skip("should copy the results to the clipboard after the press of the copy button", async ({
 		page,
 		browserName,
 		browser,
@@ -98,8 +102,7 @@ test.describe("App e2e", () => {
 		await setupPage(page, baseURL!)
 		let genBtn = page.locator("button[type='submit']")
 
-		await genBtn.click()
-		await page.waitForNavigation()
+		await Promise.all([genBtn.click(), page.waitForNavigation()])
 
 		let searchParams = await (
 			await page.evaluateHandle(() => Promise.resolve(location.search))

@@ -1,4 +1,4 @@
-import { lazy, Suspense, Switch, Match } from "solid-js"
+import { lazy, Suspense, Switch, Match, createUniqueId } from "solid-js"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import { OfflineToast } from "./lib/offline-toast"
@@ -8,15 +8,11 @@ const About = lazy(() => import("./views/about"))
 
 import * as styles from "./app.css"
 
-const SKIP_NAV_ID = "app-skip-nav"
-
 function App(props: { url: string }) {
+	const skipId = createUniqueId()
 	return (
 		<>
-			<SkipToContentLink
-				contentId={SKIP_NAV_ID}
-				aria-label="Skip to main content"
-			/>
+			<SkipToContentLink id={/*@once*/ skipId} />
 
 			<header class={styles.header}>
 				<h1 class={styles.pageTile}>
@@ -28,7 +24,7 @@ function App(props: { url: string }) {
 				</nav>
 			</header>
 
-			<SkipNavContent id={SKIP_NAV_ID} />
+			<SkipNavContent id={/*@once*/ skipId} />
 
 			<main class={styles.main}>
 				<Suspense>

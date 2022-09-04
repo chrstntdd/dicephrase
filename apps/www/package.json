@@ -12,7 +12,10 @@
 		"lint": "eslint 'src/**'",
 		"preview": "pnpm -s dlx serve dist -p 3001 --ssl-key=localhost-key.pem --ssl-cert=localhost.pem",
 		"tc": "tsc --noEmit",
-		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'"
+		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'",
+		"subset-fonts": "pnpm subset-sans-serif-font && pnpm subset-serif-font ",
+		"subset-sans-serif-font": "pnpm exec glyphhanger --formats=woff2 --subset=./public/fonts/manrope/Manrope-Regular.ttf",
+		"subset-serif-font": "pnpm exec glyphhanger --formats=woff2 --whitelist=Dicephrase --subset=./public/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf"
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
@@ -35,6 +38,7 @@
 		"eslint-import-resolver-typescript": "^3.5.0",
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-jsx-a11y": "^6.6.1",
+		"glyphhanger": "^5.0.0",
 		"html-minifier-terser": "^7.0.0",
 		"linkedom": "^0.14.12",
 		"polished": "^4.2.2",

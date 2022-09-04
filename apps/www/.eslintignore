@@ -3,6 +3,7 @@
 /node_modules
 index.html
 vite.config.ts
+src/assets/fonts**
 
 *.css
 *.bs.js

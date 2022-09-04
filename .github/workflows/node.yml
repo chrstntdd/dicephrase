@@ -3,7 +3,7 @@ name: Main CI
 on: [push]
 
 env:
-  PNPM_VERSION: 6.32.19
+  PNPM_VERSION: 7.9.5
 
 jobs:
   test:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - name: Checkout

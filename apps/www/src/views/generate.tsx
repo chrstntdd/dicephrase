@@ -18,23 +18,20 @@ import * as styles from "./generate.css"
 const PhraseOutput = lazy(() => import("./phrase-output"))
 const CopyBtn = lazy(() => import("../lib/copy-btn"))
 
-const countId = "word-count-gr"
-const separatorId = "separator-gr"
-
 const SEPARATOR_OPTS = [
-	{ name: "space", value: VAL_SPACE, label: "Space", id: "sep-space" },
-	{ name: "dash", value: VAL_DASH, label: "-", id: "sep-dash" },
-	{ name: "period", value: VAL_PERIOD, label: ".", id: "sep-period" },
-	{ name: "dollar", value: VAL_DOLLAR, label: "$", id: "sep-$" },
-	{ name: "random", value: VAL_RANDOM, label: "Random", id: "sep-rand" },
+	{ name: "space", value: VAL_SPACE, label: "Space" },
+	{ name: "dash", value: VAL_DASH, label: "-" },
+	{ name: "period", value: VAL_PERIOD, label: "." },
+	{ name: "dollar", value: VAL_DOLLAR, label: "$" },
+	{ name: "random", value: VAL_RANDOM, label: "Random" },
 ]
 
 const WORD_COUNT_OPTS = [
-	{ value: 6, label: "6", id: "count-6" },
-	{ value: 7, label: "7", id: "count-7" },
-	{ value: 8, label: "8", id: "count-8" },
-	{ value: 9, label: "9", id: "count-9" },
-	{ value: 10, label: "10", id: "count-10" },
+	{ value: 6, label: "6" },
+	{ value: 7, label: "7" },
+	{ value: 8, label: "8" },
+	{ value: 9, label: "9" },
+	{ value: 10, label: "10" },
 ]
 
 const FORM_ID = "gen-form"
@@ -57,7 +54,7 @@ function Generate() {
 						send({ type: "SET_COUNT", value })
 					}}
 				>
-					<legend id={countId}>Word count</legend>
+					<legend>Word count</legend>
 					<RadioGroup
 						class={styles.baseRadioGroupContainer}
 						value={ctx.phraseCount()}
@@ -75,7 +72,7 @@ function Generate() {
 						})
 					}}
 				>
-					<legend id={separatorId}>Word separator</legend>
+					<legend>Word separator</legend>
 					<RadioGroup
 						class={styles.baseRadioGroupContainer}
 						value={ctx.separatorKind()}

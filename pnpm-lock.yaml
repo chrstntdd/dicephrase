@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 onlyBuiltDependencies:
   - esbuild
-  - glyphhanger
   - playwright
   - rescript
 
@@ -25,6 +24,7 @@ importers:
     specifiers:
       '@ct/vite-plugin-parcel-css': workspace:^1.0.0
       '@types/escodegen': ^0.0.7
+      '@types/html-minifier-terser': ^7.0.0
       '@types/node': ^18.7.14
       '@typescript-eslint/eslint-plugin': ^5.36.1
       '@typescript-eslint/parser': ^5.36.1
@@ -59,6 +59,7 @@ importers:
     devDependencies:
       '@ct/vite-plugin-parcel-css': link:../../pkgs/vite-plugin-parcel-css
       '@types/escodegen': 0.0.7
+      '@types/html-minifier-terser': 7.0.0
       '@types/node': 18.7.14
       '@typescript-eslint/eslint-plugin': 5.36.1_lbwfnm54o3pmr3ypeqp3btnera
       '@typescript-eslint/parser': 5.36.1_yqf6kl63nyoq5megxukfnom5rm
@@ -712,6 +713,10 @@ packages:
     resolution: {integrity: sha512-jnqIUKDUqJbDIUxm0Uj7bnlMnRm1T/eZ9N+AVMqhPgzrba2GhGG5o/jCTwmdPK709nEZsGoMzXEDUjcXHa3W0g==}
     dev: true
     optional: true
+
+  /@types/html-minifier-terser/7.0.0:
+    resolution: {integrity: sha512-hw3bhStrg5e3FQT8qZKCJTrzt/UbEaunU1xRWJ+aNOTmeBMvE3S4Ml2HiiNnZgL8izu0LFVkHUoPFXL1s5QNpQ==}
+    dev: true
 
   /@types/istanbul-lib-coverage/2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}

@@ -24,7 +24,7 @@ ESB.buildSync({
 
 console.info("Built the service worker!")
 
-function makeFilePath(s) {
+function makeFilePath(s: string) {
 	return `"${s}"`
 }
 
@@ -40,14 +40,14 @@ function buildPrecacheList() {
 	)
 
 	for (const entry in manifest) {
-		let manifestChunk = manifest[entry]
+		let manifestChunk = manifest[entry]!
 		// Avoid pre-caching our index.css file since it's inlined into the document head
 		if (isBaseIndexCss(manifestChunk.file)) continue
 
 		filesToPrecache.add(makeFilePath(manifestChunk.file))
 		if (manifestChunk.css) {
 			for (let index = 0; index < manifestChunk.css.length; index++) {
-				const cssAsset = manifestChunk.css[index]
+				const cssAsset = manifestChunk.css[index]!
 
 				// Avoid pre-caching our index.css file since it's inlined into the document head
 				if (isBaseIndexCss(cssAsset)) continue

@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs"
-import { sep } from "node:path"
 
 import { defineConfig, UserConfig } from "vite"
 import solid from "vite-plugin-solid"
@@ -15,29 +14,6 @@ export default defineConfig(({ mode }) => {
 	let isSSG = mode === "ssg"
 	let sharedBuild: UserConfig["build"] = {
 		manifest: !isSSG,
-		rollupOptions: isSSG
-			? undefined
-			: {
-					output: {
-						manualChunks(id) {
-							if (!id.endsWith(".css") && id.includes("node_modules")) {
-								let directories = id.split(sep)
-								let name =
-									directories[directories.lastIndexOf("node_modules") + 1]
-
-								if (name.includes("solid-js")) {
-									return "vend-fw"
-								}
-
-								if (name === "xstate") {
-									return "vend-xstate"
-								}
-
-								// Defer to default behavior
-							}
-						},
-					},
-			  },
 	}
 	return {
 		plugins: [

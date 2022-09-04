@@ -3,10 +3,7 @@ import { createUniqueId, For } from "solid-js"
 function RadioGroup<V>(props: {
 	class: string
 	name: string
-	opts: ReadonlyArray<{
-		value: V
-		label: string
-	}>
+	opts: ReadonlyArray<{ value: V; label: string }>
 	value: V
 }) {
 	return (

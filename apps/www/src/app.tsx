@@ -9,7 +9,7 @@ const About = lazy(() => import("./views/about"))
 import * as styles from "./app.css"
 
 function App(props: { url: string }) {
-	const skipId = createUniqueId()
+	let skipId = createUniqueId()
 	return (
 		<>
 			<SkipToContentLink id={/*@once*/ skipId} />

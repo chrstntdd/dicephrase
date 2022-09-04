@@ -1,5 +1,4 @@
-import { lazy, Suspense, Switch, Match, ComponentProps } from "solid-js"
-import { MetaProvider } from "solid-meta"
+import { lazy, Suspense, Switch, Match } from "solid-js"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import { OfflineToast } from "./lib/offline-toast"
@@ -11,12 +10,9 @@ import * as styles from "./app.css"
 
 const SKIP_NAV_ID = "app-skip-nav"
 
-function App(props: {
-	url: string
-	tags: ComponentProps<typeof MetaProvider>["tags"]
-}) {
+function App(props: { url: string }) {
 	return (
-		<MetaProvider tags={props.tags}>
+		<>
 			<SkipToContentLink
 				contentId={SKIP_NAV_ID}
 				aria-label="Skip to main content"
@@ -49,7 +45,7 @@ function App(props: {
 			</main>
 
 			<OfflineToast />
-		</MetaProvider>
+		</>
 	)
 }
 

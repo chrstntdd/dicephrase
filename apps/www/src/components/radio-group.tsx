@@ -36,7 +36,7 @@ function Radio<V>(props: {
 
 	return (
 		<li>
-			<label for={linkingId}>{props.label}</label>
+			<label for={linkingId} textContent={props.label} />
 			<input
 				type="radio"
 				checked={props.checked}

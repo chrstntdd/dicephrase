@@ -1,5 +1,4 @@
 import { Show, lazy, Suspense } from "solid-js"
-import { Meta, Title } from "solid-meta"
 import {
 	parse_count_val,
 	VAL_SPACE,
@@ -51,14 +50,6 @@ function Generate() {
 	return (
 		<section class={styles.generatePage}>
 			<form id={FORM_ID} class={styles.formEl} onSubmit={handleSubmit}>
-				<Title>Dicephrase | Generate</Title>
-				<Meta property="og:image" content="/img/dicephrase-og.jpg" />
-				<Meta property="og:title" content="Dicephrase | Generate" />
-				<Meta
-					property="og:description"
-					content="Simple, random, and secure in-browser password generator"
-				/>
-				<Meta property="og:type" content="website" />
 				<fieldset
 					class={styles.fieldset}
 					onChange={(e) => {

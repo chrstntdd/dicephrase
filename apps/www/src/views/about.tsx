@@ -1,5 +1,3 @@
-import { Meta, Title } from "solid-meta"
-
 import { SVGWrapper } from "../lib/svg-wrapper"
 
 import * as styles from "./about.css"
@@ -7,14 +5,6 @@ import * as styles from "./about.css"
 function About() {
 	return (
 		<section class={styles.aboutPage}>
-			<Title>Dicephrase | About</Title>
-			<Meta property="og:image" content="/img/dicephrase-og.jpg" />
-			<Meta property="og:title" content="Dicephrase | About" />
-			<Meta
-				property="og:description"
-				content="Simple, random, and secure in-browser password generator"
-			/>
-			<Meta property="og:type" content="website" />
 			<h1>About</h1>
 			<p class={styles.tagline}>
 				Simple, random, and secure in-browser password generator{" "}

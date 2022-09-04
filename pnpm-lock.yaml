@@ -41,7 +41,6 @@ importers:
       rescript: ^10.0.1
       rollup: ^2.79.0
       solid-js: 1.5.4
-      solid-meta: 0.28.1
       tsm: ^2.2.2
       typescript: ^4.8.2
       vite: ^3.0.9
@@ -50,7 +49,6 @@ importers:
     dependencies:
       gen-utils: link:../../pkgs/gen-utils
       solid-js: 1.5.4
-      solid-meta: 0.28.1_solid-js@1.5.4
     devDependencies:
       '@ct/vite-plugin-parcel-css': link:../../pkgs/vite-plugin-parcel-css
       '@types/node': 18.7.14
@@ -587,6 +585,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [darwin]
+    dev: false
     optional: true
 
   /@parcel/css-darwin-x64/1.13.1:
@@ -594,6 +593,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [darwin]
+    dev: false
     optional: true
 
   /@parcel/css-linux-arm-gnueabihf/1.13.1:
@@ -601,6 +601,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm]
     os: [linux]
+    dev: false
     optional: true
 
   /@parcel/css-linux-arm64-gnu/1.13.1:
@@ -608,6 +609,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
+    dev: false
     optional: true
 
   /@parcel/css-linux-arm64-musl/1.13.1:
@@ -615,6 +617,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
+    dev: false
     optional: true
 
   /@parcel/css-linux-x64-gnu/1.13.1:
@@ -622,6 +625,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
+    dev: false
     optional: true
 
   /@parcel/css-linux-x64-musl/1.13.1:
@@ -629,6 +633,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
+    dev: false
     optional: true
 
   /@parcel/css-win32-x64-msvc/1.13.1:
@@ -636,6 +641,7 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [win32]
+    dev: false
     optional: true
 
   /@parcel/css/1.13.1:
@@ -1278,6 +1284,7 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
+    dev: false
 
   /dir-glob/3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
@@ -3012,14 +3019,6 @@ packages:
     resolution: {integrity: sha512-+65anSHhH27htkhP5LuC912fviMIckgc7/yN+WWrKhS9Kp3dvtDNl5/m4GWX1lpCvcubjShqJjGt16HET5z5Ig==}
     dependencies:
       csstype: 3.1.0
-
-  /solid-meta/0.28.1_solid-js@1.5.4:
-    resolution: {integrity: sha512-mYS1YccWZY6eda3wxY7GOVjx7fJcstCqCdyA6DI/2GjymjaYA5/FeObwvbP8sm48VwEgSBCw44bP7iVpQz/mcQ==}
-    peerDependencies:
-      solid-js: '>=1.4.0'
-    dependencies:
-      solid-js: 1.5.4
-    dev: false
 
   /solid-refresh/0.4.1_solid-js@1.5.4:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}

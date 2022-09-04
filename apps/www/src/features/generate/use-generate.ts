@@ -1,10 +1,17 @@
 import {
 	make_phrases,
 	make_separators,
+	parse_qs_to_phrase_config,
 	PHRASE_COUNT_KEY,
 	SEPARATOR_KEY,
 } from "gen-utils"
-import { batch, createEffect, createResource, createSignal } from "solid-js"
+import {
+	batch,
+	createEffect,
+	createResource,
+	createSignal,
+	onMount,
+} from "solid-js"
 
 import { assert } from "../../lib/assert"
 
@@ -35,6 +42,15 @@ export function useGenerate() {
 	let [separatorKind, setSeparatorKind] = createSignal("random")
 	let [separators, setSeparators] = createSignal<Array<string>>([])
 	let [phrases, setPhrases] = createSignal<Array<string>>([])
+
+	onMount(function setInitialStateFromURL() {
+		let cfg = parse_qs_to_phrase_config(globalThis.location?.search)
+
+		batch(() => {
+			setSeparatorKind(cfg.sep)
+			setPhraseCount(cfg.count)
+		})
+	})
 
 	createEffect(() => {
 		if (wlResource()) {

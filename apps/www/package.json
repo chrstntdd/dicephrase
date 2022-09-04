@@ -16,8 +16,7 @@
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
-		"solid-js": "1.5.4",
-		"solid-meta": "0.28.1"
+		"solid-js": "1.5.4"
 	},
 	"devDependencies": {
 		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",

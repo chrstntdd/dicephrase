@@ -1,9 +1,9 @@
-import { For } from "solid-js"
+import { createUniqueId, For } from "solid-js"
 
 function RadioGroup<V>(props: {
 	class: string
 	name: string
-	children: {
+	opts: {
 		value: V
 		label: string
 		id: string
@@ -12,13 +12,12 @@ function RadioGroup<V>(props: {
 }) {
 	return (
 		<ul class={props.class}>
-			<For each={props.children}>
-				{(kid, i) => (
+			<For each={props.opts}>
+				{(kid) => (
 					<Radio
-						checked={props.value == kid.value}
-						id={`${props.name}-${i()}`}
-						label={kid.label}
-						name={props.name}
+						checked={props.value === kid.value}
+						label={/*@once*/ kid.label}
+						name={/*@once*/ props.name}
 						value={kid.value}
 					/>
 				)}
@@ -28,19 +27,28 @@ function RadioGroup<V>(props: {
 }
 
 function Radio<V>(props: {
+	checked: boolean
 	label: string
 	name: string
-	id: string
 	value: V
-	checked: boolean
 }) {
+	let linkingId = createUniqueId()
+
 	return (
 		<li>
-			<label for={props.id}>{props.label}</label>
+			<label
+				for={linkingId}
+				/**
+				 * NOTE: This shouldn't be necessary, but after hydration, the child
+				 * text node is being removed despite its presence in the generated
+				 * HTML.
+				 */
+				textContent={props.label}
+			/>
 			<input
 				type="radio"
 				checked={props.checked}
-				id={props.id}
+				id={linkingId}
 				name={props.name}
 				value={props.value as unknown as string}
 			/>

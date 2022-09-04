@@ -1,5 +1,4 @@
-import { createMemo, Show, lazy, Suspense } from "solid-js"
-import { Meta, Title } from "solid-meta"
+import { Show, lazy, Suspense } from "solid-js"
 import {
 	parse_count_val,
 	VAL_SPACE,
@@ -12,8 +11,7 @@ import {
 } from "gen-utils"
 
 import { RadioGroup } from "../components/radio-group"
-import { generateMachine } from "../features/generate/generate.machine"
-import { useMachine } from "../lib/solid-xstate/use-machine"
+import { useGenerate } from "../features/generate/use-generate"
 
 import * as styles from "./generate.css"
 
@@ -42,39 +40,16 @@ const WORD_COUNT_OPTS = [
 const FORM_ID = "gen-form"
 
 function Generate() {
-	let [state, send] = useMachine(
-		generateMachine,
-		import.meta.env.DEV ? { devTools: true } : undefined,
-	)
-
-	let phraseCount = createMemo(() => state.context.count)
-	let separatorKind = createMemo(() => state.context.separatorKind)
-	let separators = createMemo(() => state.context.separators)
-	let phrases = createMemo(() => state.context.phrases)
-	let hasOutput = createMemo(() => state.matches("ui.has_output"))
-	let copied = createMemo(() => state.matches("ui.has_output.copying"))
+	let { ctx, state, send, handleCopy, copyState } = useGenerate()
 
 	function handleSubmit(e: Event) {
-		send("GENERATE")
-
 		e.preventDefault()
-	}
-
-	function handleCopy() {
-		send("COPY_PHRASE")
+		send({ type: "GENERATE" })
 	}
 
 	return (
 		<section class={styles.generatePage}>
 			<form id={FORM_ID} class={styles.formEl} onSubmit={handleSubmit}>
-				<Title>Dicephrase | Generate</Title>
-				<Meta property="og:image" content="/img/dicephrase-og.jpg" />
-				<Meta property="og:title" content="Dicephrase | Generate" />
-				<Meta
-					property="og:description"
-					content="Simple, random, and secure in-browser password generator"
-				/>
-				<Meta property="og:type" content="website" />
 				<fieldset
 					class={styles.fieldset}
 					onChange={(e) => {
@@ -85,11 +60,10 @@ function Generate() {
 					<legend id={countId}>Word count</legend>
 					<RadioGroup
 						class={styles.baseRadioGroupContainer}
-						value={phraseCount()}
+						value={ctx.phraseCount()}
 						name={PHRASE_COUNT_KEY}
-					>
-						{WORD_COUNT_OPTS}
-					</RadioGroup>
+						opts={WORD_COUNT_OPTS}
+					/>
 				</fieldset>
 
 				<fieldset
@@ -104,11 +78,10 @@ function Generate() {
 					<legend id={separatorId}>Word separator</legend>
 					<RadioGroup
 						class={styles.baseRadioGroupContainer}
-						value={separatorKind()}
+						value={ctx.separatorKind()}
 						name={SEPARATOR_KEY}
-					>
-						{SEPARATOR_OPTS}
-					</RadioGroup>
+						opts={SEPARATOR_OPTS}
+					/>
 				</fieldset>
 
 				<button class={styles.generateBtn} type="submit">
@@ -118,15 +91,16 @@ function Generate() {
 
 			{/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
 			<Suspense fallback="">
-				<Show when={hasOutput()}>
+				<Show when={state() === "idle-with-output"}>
 					<>
-						<CopyBtn copied={copied()} handleCopy={handleCopy} />
+						<CopyBtn
+							copied={copyState() === "copied"}
+							handleCopy={handleCopy}
+						/>
 						<PhraseOutput
 							formId={FORM_ID}
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							separators={separators()!}
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							phrases={phrases()!}
+							separators={ctx.separators()}
+							phrases={ctx.phrases()}
 						/>
 					</>
 				</Show>

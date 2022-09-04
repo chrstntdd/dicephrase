@@ -50,7 +50,7 @@ let make_wl_keys = count => {
     }
   }
 
-  bits_to_keys(Util.array_from({length: count}), 0, 0)
+  bits_to_keys(Util.fill(Util.make_array_of_size(count), ""), 0, 0)
 }
 
 @genType
@@ -151,7 +151,7 @@ let make_phrases = (. count, wlRecord) => {
   open Js.Array2
   let keys = make_wl_keys(count)
   let key_length = length(keys)
-  let phrases = Util.array_from({length: key_length})
+  let phrases = Util.fill(Util.make_array_of_size(key_length), "")
 
   let rec inner = (acc, idx) => {
     if idx == key_length {
@@ -178,6 +178,6 @@ let make_separators = (. separator_kind, count) => {
     }
     separators
   } else {
-    Util.fill(Util.array_from({length: sep_count}), separator_kind)
+    Util.fill(Util.make_array_of_size(sep_count), separator_kind)
   }
 }

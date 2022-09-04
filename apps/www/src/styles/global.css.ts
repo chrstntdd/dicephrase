@@ -3,19 +3,13 @@ import { FOCUS_RING_Z_INDEX } from "./constants"
 import { vars } from "./vars.css"
 
 globalFontFace("manrope", {
-	src: [
-		'url(/fonts/manrope/Manrope-Regular.otf) format("otf")',
-		'url(/fonts/manrope/Manrope-Regular.woff2) format("woff2")',
-		'url(/fonts/manrope/Manrope-Regular.ttf) format("truetype")',
-	],
+	src: ['url(/fonts/Manrope-Regular-subset.woff2) format("woff2")'],
 	fontWeight: 400,
 	fontDisplay: "swap",
 })
 
 globalFontFace("DMSerif", {
-	src: [
-		'url(/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf) format("truetype")',
-	],
+	src: ['url(/fonts/DMSerifDisplay-Regular-subset.woff2) format("woff2")'],
 	fontWeight: 400,
 	fontDisplay: "swap",
 })

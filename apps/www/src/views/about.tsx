@@ -1,5 +1,3 @@
-import { Meta, Title } from "solid-meta"
-
 import { SVGWrapper } from "../lib/svg-wrapper"
 
 import * as styles from "./about.css"
@@ -7,14 +5,6 @@ import * as styles from "./about.css"
 function About() {
 	return (
 		<section class={styles.aboutPage}>
-			<Title>Dicephrase | About</Title>
-			<Meta property="og:image" content="/img/dicephrase-og.jpg" />
-			<Meta property="og:title" content="Dicephrase | About" />
-			<Meta
-				property="og:description"
-				content="Simple, random, and secure in-browser password generator"
-			/>
-			<Meta property="og:type" content="website" />
 			<h1>About</h1>
 			<p class={styles.tagline}>
 				Simple, random, and secure in-browser password generator{" "}
@@ -94,11 +84,6 @@ function About() {
 						<abbr title="Content Security Policy">CSP</abbr>
 					</a>
 				</li>
-				<li>
-					<a href="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes#full-strict">
-						Full (strict) SSL from Cloudflare
-					</a>
-				</li>
 			</ul>
 
 			<h2>Credit</h2>
@@ -151,6 +136,19 @@ function About() {
 				</li>
 				<li>
 					<a href="https://pnpm.io/">pnpm</a>
+				</li>
+			</ul>
+
+			<h2>Fonts</h2>
+			<ul>
+				<li>
+					Sans Serif — <a href="https://www.manropefont.com/">Manrope</a>
+				</li>
+				<li>
+					Serif —{" "}
+					<a href="https://github.com/chrstntdd/dicephrase/blob/ee3c34d91c91220772ad66b48259ef819238d795/apps/www/src/assets/fonts/DM_Serif_Display/OFL.txt">
+						DMSerifDisplay-Regular
+					</a>
 				</li>
 			</ul>
 

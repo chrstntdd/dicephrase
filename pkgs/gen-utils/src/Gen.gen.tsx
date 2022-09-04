@@ -22,7 +22,7 @@ export const parse_qs_to_phrase_config: (qs: string) => phase_cfg =
 
 export const parse_count_val: (v: string) => number = GenBS.parse_count_val
 
-export const make_phrases: <T1>(_1: number, _2: Js_Dict_t<T1>) => T1[] =
+export const make_phrases: (_1: number, _2: Js_Dict_t<string>) => string[] =
 	GenBS.make_phrases
 
 export const make_separators: (_1: string, _2: number) => string[] =

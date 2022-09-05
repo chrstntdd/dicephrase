@@ -114,7 +114,7 @@ test.describe.parallel("App e2e", () => {
 	test("should handle space character properly", async ({ page, baseURL }) => {
 		await setupPage(page, baseURL!)
 
-		await page.click("[for='separator-0']")
+		await page.locator("text=Space").click()
 
 		let outputEl = await page.waitForSelector(
 			"output[role='status'][form='gen-form']",

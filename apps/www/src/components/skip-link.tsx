@@ -3,7 +3,7 @@ interface SkipToContentLinkProps {
 }
 
 function SkipToContentLink(props: SkipToContentLinkProps) {
-	return <a href={`#${props.id}`} />
+	return <a href={`#${props.id}`} aria-label="Skip to main content" />
 }
 
 interface SkipNavContentProps {

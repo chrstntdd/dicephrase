@@ -19,19 +19,19 @@ const PhraseOutput = lazy(() => import("./phrase-output"))
 const CopyBtn = lazy(() => import("../lib/copy-btn"))
 
 const SEPARATOR_OPTS = [
-	{ name: "space", value: VAL_SPACE, label: "Space" },
-	{ name: "dash", value: VAL_DASH, label: "-" },
-	{ name: "period", value: VAL_PERIOD, label: "." },
-	{ name: "dollar", value: VAL_DOLLAR, label: "$" },
-	{ name: "random", value: VAL_RANDOM, label: "Random" },
+	{ value: VAL_SPACE, label: "Space" },
+	{ value: VAL_DASH, label: "-" },
+	{ value: VAL_PERIOD, label: "." },
+	{ value: VAL_DOLLAR, label: "$" },
+	{ value: VAL_RANDOM, label: "Random" },
 ]
 
 const WORD_COUNT_OPTS = [
-	{ value: 6, label: "6" },
-	{ value: 7, label: "7" },
-	{ value: 8, label: "8" },
-	{ value: 9, label: "9" },
-	{ value: 10, label: "10" },
+	{ value: 6 },
+	{ value: 7 },
+	{ value: 8 },
+	{ value: 9 },
+	{ value: 10 },
 ]
 
 const FORM_ID = "gen-form"
@@ -45,10 +45,14 @@ function Generate() {
 	}
 
 	return (
-		<section class={styles.generatePage}>
-			<form id={FORM_ID} class={styles.formEl} onSubmit={handleSubmit}>
+		<section class={/*@once*/ styles.generatePage}>
+			<form
+				id={FORM_ID}
+				class={/*@once*/ styles.formEl}
+				onSubmit={handleSubmit}
+			>
 				<fieldset
-					class={styles.fieldset}
+					class={/*@once*/ styles.fieldset}
 					onChange={(e) => {
 						let value = parse_count_val((e.target as HTMLInputElement).value)
 						send({ type: "SET_COUNT", value })
@@ -56,7 +60,7 @@ function Generate() {
 				>
 					<legend>Word count</legend>
 					<RadioGroup
-						class={styles.baseRadioGroupContainer}
+						class={/*@once*/ styles.baseRadioGroupContainer}
 						value={ctx.phraseCount()}
 						name={PHRASE_COUNT_KEY}
 						opts={WORD_COUNT_OPTS}
@@ -64,7 +68,7 @@ function Generate() {
 				</fieldset>
 
 				<fieldset
-					class={styles.fieldset}
+					class={/*@once*/ styles.fieldset}
 					onChange={(e) => {
 						send({
 							type: "SET_SEP",
@@ -74,14 +78,14 @@ function Generate() {
 				>
 					<legend>Word separator</legend>
 					<RadioGroup
-						class={styles.baseRadioGroupContainer}
+						class={/*@once*/ styles.baseRadioGroupContainer}
 						value={ctx.separatorKind()}
 						name={SEPARATOR_KEY}
 						opts={SEPARATOR_OPTS}
 					/>
 				</fieldset>
 
-				<button class={styles.generateBtn} type="submit">
+				<button class={/*@once*/ styles.generateBtn} type="submit">
 					Generate
 				</button>
 			</form>

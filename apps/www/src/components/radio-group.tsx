@@ -3,16 +3,16 @@ import { createUniqueId, For } from "solid-js"
 function RadioGroup<V>(props: {
 	class: string
 	name: string
-	opts: ReadonlyArray<{ value: V; label: string }>
+	opts: ReadonlyArray<{ value: V; label?: string }>
 	value: V
 }) {
 	return (
-		<ul class={props.class}>
+		<ul class={/*@once*/ props.class}>
 			<For each={props.opts}>
 				{(kid) => (
 					<Radio
 						checked={props.value === kid.value}
-						label={/*@once*/ kid.label}
+						label={/*@once*/ kid.label || `${kid.value}`}
 						name={/*@once*/ props.name}
 						value={kid.value}
 					/>

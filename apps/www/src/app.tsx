@@ -25,8 +25,8 @@ function App(props: { url: string }) {
 		<>
 			<SkipToContentLink id={/*@once*/ skipId} />
 
-			<header class={styles.header}>
-				<h1 class={styles.pageTile}>
+			<header class={/*@once*/ styles.header}>
+				<h1 class={/*@once*/ styles.pageTile}>
 					<a href="/">Dicephrase</a>
 				</h1>
 
@@ -37,7 +37,7 @@ function App(props: { url: string }) {
 
 			<SkipNavContent id={/*@once*/ skipId} />
 
-			<main class={styles.main}>
+			<main class={/*@once*/ styles.main}>
 				<Suspense>
 					<Switch fallback={<Generate />}>
 						<Match when={props.url === "/"}>
@@ -51,9 +51,9 @@ function App(props: { url: string }) {
 				</Suspense>
 			</main>
 
-			<div class={styles.buildMetadataContainer}>
+			<div class={/*@once*/ styles.buildMetadataContainer}>
 				<button
-					class={styles.buildMetadataToggle}
+					class={/*@once*/ styles.buildMetadataToggle}
 					type="button"
 					aria-label="Show build metadata"
 					onClick={() => {
@@ -61,7 +61,7 @@ function App(props: { url: string }) {
 					}}
 				/>
 				<Suspense>
-					<Show when={show()} keyed>
+					<Show when={show()}>
 						<BuildData />
 					</Show>
 				</Suspense>

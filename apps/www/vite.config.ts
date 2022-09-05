@@ -4,6 +4,7 @@ import { defineConfig, UserConfig } from "vite"
 import solid from "vite-plugin-solid"
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin"
 import { parcelCSSPlugin } from "@ct/vite-plugin-parcel-css"
+import { buildPlugin } from "@ct/vite-plugin-build-info"
 
 import pkg from "./package.json"
 
@@ -27,6 +28,7 @@ export default defineConfig(({ mode }) => {
 				browserslist: pkg.browserslist,
 				minify: true,
 			}),
+			buildPlugin({ version: pkg.version }),
 		],
 		build: sharedBuild,
 		// Prevent build failures during cloudflare deployment

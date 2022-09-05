@@ -1,6 +1,5 @@
 import { Show, lazy, Suspense } from "solid-js"
 import {
-	parse_count_val,
 	VAL_SPACE,
 	VAL_DASH,
 	VAL_PERIOD,
@@ -37,27 +36,24 @@ const WORD_COUNT_OPTS = [
 const FORM_ID = "gen-form"
 
 function Generate() {
-	let { ctx, state, send, handleCopy, copyState } = useGenerate()
-
-	function handleSubmit(e: Event) {
-		e.preventDefault()
-		send({ type: "GENERATE" })
-	}
+	let {
+		ctx,
+		state,
+		copyState,
+		onCopyPress,
+		onCountChange,
+		onGeneratePress,
+		onSeparatorChange,
+	} = useGenerate()
 
 	return (
 		<section class={/*@once*/ styles.generatePage}>
 			<form
 				id={FORM_ID}
 				class={/*@once*/ styles.formEl}
-				onSubmit={handleSubmit}
+				onSubmit={onGeneratePress}
 			>
-				<fieldset
-					class={/*@once*/ styles.fieldset}
-					onChange={(e) => {
-						let value = parse_count_val((e.target as HTMLInputElement).value)
-						send({ type: "SET_COUNT", value })
-					}}
-				>
+				<fieldset class={/*@once*/ styles.fieldset} onChange={onCountChange}>
 					<legend>Word count</legend>
 					<RadioGroup
 						class={/*@once*/ styles.baseRadioGroupContainer}
@@ -69,12 +65,7 @@ function Generate() {
 
 				<fieldset
 					class={/*@once*/ styles.fieldset}
-					onChange={(e) => {
-						send({
-							type: "SET_SEP",
-							value: (e.target as HTMLInputElement).value,
-						})
-					}}
+					onChange={onSeparatorChange}
 				>
 					<legend>Word separator</legend>
 					<RadioGroup
@@ -96,7 +87,7 @@ function Generate() {
 					<>
 						<CopyBtn
 							copied={copyState() === "copied"}
-							handleCopy={handleCopy}
+							handleCopy={onCopyPress}
 						/>
 						<PhraseOutput
 							formId={FORM_ID}

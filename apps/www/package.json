@@ -22,6 +22,7 @@
 		"solid-js": "1.5.4"
 	},
 	"devDependencies": {
+		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
 		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",
 		"@types/escodegen": "^0.0.7",
 		"@types/html-minifier-terser": "^7.0.0",

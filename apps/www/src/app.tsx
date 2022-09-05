@@ -1,15 +1,26 @@
-import { lazy, Suspense, Switch, Match, createUniqueId } from "solid-js"
+import {
+	createSignal,
+	createUniqueId,
+	lazy,
+	Match,
+	Show,
+	Suspense,
+	Switch,
+} from "solid-js"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import { OfflineToast } from "./lib/offline-toast"
 
 const Generate = lazy(() => import("./views/generate"))
 const About = lazy(() => import("./views/about"))
+const BuildData = lazy(() => import("./features/build-data/build-data"))
 
 import * as styles from "./app.css"
 
 function App(props: { url: string }) {
+	let [show, setShow] = createSignal(false)
 	let skipId = createUniqueId()
+
 	return (
 		<>
 			<SkipToContentLink id={/*@once*/ skipId} />
@@ -39,6 +50,22 @@ function App(props: { url: string }) {
 					</Switch>
 				</Suspense>
 			</main>
+
+			<div class={styles.buildMetadataContainer}>
+				<button
+					class={styles.buildMetadataToggle}
+					type="button"
+					aria-label="Show build metadata"
+					onClick={() => {
+						setShow((x) => !x)
+					}}
+				/>
+				<Suspense>
+					<Show when={show()} keyed>
+						<BuildData />
+					</Show>
+				</Suspense>
+			</div>
 
 			<OfflineToast />
 		</>

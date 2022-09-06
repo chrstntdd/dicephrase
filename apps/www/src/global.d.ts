@@ -10,3 +10,9 @@ declare const __SW_CACHE_KEY__: string
  * to support offline usage
  */
 declare const __PRECACHE_BUILD_ASSETS__: string
+
+declare module "virtual:build-info" {
+	const nowISO: string
+	const gitHash: string
+	const version: string
+}

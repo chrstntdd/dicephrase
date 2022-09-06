@@ -1,25 +1,32 @@
-import { lazy, Suspense, Switch, Match } from "solid-js"
+import {
+	createSignal,
+	createUniqueId,
+	lazy,
+	Match,
+	Show,
+	Suspense,
+	Switch,
+} from "solid-js"
 
 import { SkipNavContent, SkipToContentLink } from "./components/skip-link"
 import { OfflineToast } from "./lib/offline-toast"
 
 const Generate = lazy(() => import("./views/generate"))
 const About = lazy(() => import("./views/about"))
+const BuildData = lazy(() => import("./features/build-data/build-data"))
 
 import * as styles from "./app.css"
 
-const SKIP_NAV_ID = "app-skip-nav"
-
 function App(props: { url: string }) {
+	let [show, setShow] = createSignal(false)
+	let skipId = createUniqueId()
+
 	return (
 		<>
-			<SkipToContentLink
-				contentId={SKIP_NAV_ID}
-				aria-label="Skip to main content"
-			/>
+			<SkipToContentLink id={/*@once*/ skipId} />
 
-			<header class={styles.header}>
-				<h1 class={styles.pageTile}>
+			<header class={/*@once*/ styles.header}>
+				<h1 class={/*@once*/ styles.pageTile}>
 					<a href="/">Dicephrase</a>
 				</h1>
 
@@ -28,9 +35,9 @@ function App(props: { url: string }) {
 				</nav>
 			</header>
 
-			<SkipNavContent id={SKIP_NAV_ID} />
+			<SkipNavContent id={/*@once*/ skipId} />
 
-			<main class={styles.main}>
+			<main class={/*@once*/ styles.main}>
 				<Suspense>
 					<Switch fallback={<Generate />}>
 						<Match when={props.url === "/"}>
@@ -43,6 +50,20 @@ function App(props: { url: string }) {
 					</Switch>
 				</Suspense>
 			</main>
+
+			<div class={/*@once*/ styles.buildMetadataContainer}>
+				<button
+					class={/*@once*/ styles.buildMetadataToggle}
+					type="button"
+					aria-label="Show build metadata"
+					onClick={() => {
+						setShow((x) => !x)
+					}}
+				/>
+				<Show when={show()}>
+					<BuildData />
+				</Show>
+			</div>
 
 			<OfflineToast />
 		</>

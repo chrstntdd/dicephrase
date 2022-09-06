@@ -15,14 +15,14 @@ function PhraseOutput(props: {
 				role="status"
 				aria-live="polite"
 				form={props.formId}
-				class={styles.outputEl}
+				class={/*@once*/ styles.outputEl}
 			>
 				{combine_zip(
 					props.phrases as string[],
 					props.separators as string[],
 				).join("")}
 			</output>
-			<ul class={styles.phrases}>
+			<ul class={/*@once*/ styles.phrases}>
 				<For each={props.phrases}>
 					{(phrase, index) => {
 						let idx = index()
@@ -46,11 +46,11 @@ function PhraseOutput(props: {
 
 function Word(props: { content: string; sep?: boolean }) {
 	return (
-		<li class={styles.word}>
+		<li class={/*@once*/ styles.word}>
 			<For each={props.content.split("")}>
 				{(char, index) => (
 					<span
-						class={styles.phraseChar}
+						class={/*@once*/ styles.phraseChar}
 						data-sep={props.sep}
 						style={{ "animation-delay": `${index() * 22}ms` }}
 					>

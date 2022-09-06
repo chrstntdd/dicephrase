@@ -7,6 +7,6 @@ import { App } from "./app"
 let start = import.meta.env.PROD ? hydrate : render
 
 start(
-	() => <App url={globalThis.location.pathname} />,
+	() => <App url={/*@once*/ globalThis.location.pathname} />,
 	document.getElementById("root") as HTMLElement,
 )

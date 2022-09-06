@@ -41,3 +41,23 @@ export const header = style({
 	left: 0,
 	zIndex: FOCUS_RING_Z_INDEX + 2,
 })
+
+export const buildMetadataContainer = style({
+	display: "flex",
+	position: "absolute",
+	bottom: 0,
+	left: 0,
+	width: "100%",
+	alignItems: "center",
+	gap: vars.space["2x"],
+	padding: vars.space["1x"],
+})
+
+export const buildMetadataToggle = style({
+	width: 42,
+	height: 42,
+	aspectRatio: "1/1",
+	border: 0,
+	background: "transparent",
+	borderRadius: vars.borderRadius["2x"],
+})

@@ -1,29 +1,26 @@
+import { batch, createSignal, onMount } from "solid-js"
 import {
 	make_phrases,
 	make_separators,
+	parse_count_val,
 	parse_qs_to_phrase_config,
+	PHRASE_COUNT_FALLBACK,
 	PHRASE_COUNT_KEY,
+	SEPARATOR_FALLBACK,
 	SEPARATOR_KEY,
 } from "gen-utils"
-import {
-	batch,
-	createEffect,
-	createResource,
-	createSignal,
-	onMount,
-} from "solid-js"
 
 import { assert } from "../../lib/assert"
-
-type Msg =
-	| { type: "COPY_PHRASE" }
-	| { type: "GENERATE" }
-	| { type: "SET_COUNT"; value: number }
-	| { type: "SET_SEP"; value: string }
 
 type State = "empty" | "idle-with-output"
 
 type CopyState = "idle" | "copying" | "copied"
+
+const enum Msg {
+	ChangeCount,
+	ChangeSeparator,
+	Generate,
+}
 
 async function fetchWordList(): Promise<Record<string, string>> {
 	let res = await fetch("/wl-2016.json")
@@ -32,14 +29,13 @@ async function fetchWordList(): Promise<Record<string, string>> {
 	return wl
 }
 
+let wl: ReturnType<typeof fetchWordList>
+
 export function useGenerate() {
-	let [resourceKey, setResourceKey] = createSignal<string>()
-	let [wlResource] = createResource(resourceKey, fetchWordList)
 	let [state, setState] = createSignal<State>("empty")
 	let [copyState, setCopyState] = createSignal<CopyState>("idle")
-	let [c, sC] = createSignal(0)
-	let [phraseCount, setPhraseCount] = createSignal(8)
-	let [separatorKind, setSeparatorKind] = createSignal("random")
+	let [phraseCount, setPhraseCount] = createSignal(PHRASE_COUNT_FALLBACK)
+	let [separatorKind, setSeparatorKind] = createSignal(SEPARATOR_FALLBACK)
 	let [separators, setSeparators] = createSignal<Array<string>>([])
 	let [phrases, setPhrases] = createSignal<Array<string>>([])
 
@@ -52,24 +48,44 @@ export function useGenerate() {
 		})
 	})
 
-	createEffect(() => {
-		if (wlResource()) {
-			batch(() => {
-				c() // Need to also track when "generate" is pressed
-				setSeparators(make_separators(separatorKind(), phraseCount()))
-				setPhrases(make_phrases(phraseCount(), wlResource()))
-				syncFormToURL()
-				setState("idle-with-output")
-			})
-		}
-	})
-
 	function syncFormToURL() {
-		const url = new URL(globalThis.location as unknown as string)
+		let url = new URL(globalThis.location as unknown as string)
 		url.searchParams.set(PHRASE_COUNT_KEY, `${phraseCount()}`)
 		url.searchParams.set(SEPARATOR_KEY, separatorKind())
 
 		history.pushState({}, "", url)
+	}
+
+	function handleEvent(kind: Msg, ogEvent: Event) {
+		switch (kind) {
+			case Msg.ChangeCount: {
+				let value = parse_count_val((ogEvent.target as HTMLInputElement).value)
+				setPhraseCount(value)
+				break
+			}
+			case Msg.ChangeSeparator: {
+				// TODO: validate here...?
+				let value = (ogEvent.target as HTMLInputElement).value
+				setSeparatorKind(value)
+				break
+			}
+
+			case Msg.Generate: {
+				ogEvent.preventDefault()
+				break
+			}
+		}
+
+		// Cache the promise to fetch only one time
+		;(wl ??= fetchWordList()).then((wordList) => {
+			batch(() => {
+				setSeparators(make_separators(separatorKind(), phraseCount()))
+				setPhrases(make_phrases(phraseCount(), wordList))
+
+				syncFormToURL()
+				setState("idle-with-output")
+			})
+		})
 	}
 
 	return {
@@ -81,7 +97,7 @@ export function useGenerate() {
 			separators,
 			phrases,
 		},
-		async handleCopy() {
+		async onCopyPress() {
 			setCopyState("copying")
 			let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
 
@@ -89,25 +105,14 @@ export function useGenerate() {
 			setCopyState("copied")
 			setCopyState("idle")
 		},
-		send(msg: Msg) {
-			// On first message, begin fetching the wordlist
-			if (state() === "empty") {
-				setResourceKey("wl-2016")
-			}
-
-			switch (msg.type) {
-				case "SET_COUNT":
-					setPhraseCount(msg.value)
-					break
-
-				case "SET_SEP":
-					setSeparatorKind(msg.value)
-					break
-
-				case "GENERATE":
-					sC((c) => c + 1)
-					break
-			}
+		onCountChange(e: Event) {
+			handleEvent(Msg.ChangeCount, e)
+		},
+		onSeparatorChange(e: Event) {
+			handleEvent(Msg.ChangeSeparator, e)
+		},
+		onGeneratePress(e: Event) {
+			handleEvent(Msg.Generate, e)
 		},
 	}
 }

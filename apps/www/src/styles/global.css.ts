@@ -28,35 +28,25 @@ globalStyle("*, *:after, *:before", {
 	boxSizing: "border-box",
 })
 
-globalStyle("html", {
-	height: "100%",
-	width: "100%",
-})
-
 globalStyle("html:focus-within", {
 	scrollBehavior: "smooth",
 })
 
 globalStyle("html, body", {
+	background: vars.color["primary-1000"],
 	margin: 0,
 	padding: 0,
 	WebkitTextSizeAdjust: "100%",
-	background: vars.color["primary-1000"],
 })
 
 globalStyle("body", {
 	fontFamily: vars.fontFamily.body,
 	height: "100vh",
 	lineHeight: 1.4,
-	minWidth: "100%",
 	overflowX: "hidden",
 	textRendering: "optimizeSpeed",
 	// To prevent FOUC
 	visibility: "hidden",
-})
-
-globalStyle("p, h1, h2, h3, h4, h5, h6", {
-	overflowWrap: "break-word",
 })
 
 globalStyle("input, button, textarea, select", {
@@ -70,8 +60,7 @@ globalStyle("img, picture, video, canvas, svg", {
 
 globalStyle("#root", {
 	isolation: "isolate",
-	minHeight: "100vh",
-	width: "100vw",
+	minHeight: "100%",
 	padding: [
 		`calc(env(safe-area-inset-top) + ${vars.space["2x"]})`,
 		`calc(env(safe-area-inset-right) + ${vars.space["2x"]})`,

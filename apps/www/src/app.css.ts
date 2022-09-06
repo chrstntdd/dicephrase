@@ -50,8 +50,6 @@ export const buildMetadataContainer = style({
 	width: "100%",
 	alignItems: "center",
 	gap: vars.space["2x"],
-	overflow: "hidden",
-	textOverflow: "ellipsis",
 	padding: vars.space["1x"],
 })
 

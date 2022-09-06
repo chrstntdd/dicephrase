@@ -60,11 +60,9 @@ function App(props: { url: string }) {
 						setShow((x) => !x)
 					}}
 				/>
-				<Suspense>
-					<Show when={show()}>
-						<BuildData />
-					</Show>
-				</Suspense>
+				<Show when={show()}>
+					<BuildData />
+				</Show>
 			</div>
 
 			<OfflineToast />

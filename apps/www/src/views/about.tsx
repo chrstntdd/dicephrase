@@ -78,12 +78,6 @@ function About() {
 				<li>No cookies or browser storage</li>
 				<li>No analytics</li>
 				<li>No server-side logic</li>
-				<li>
-					Strict{" "}
-					<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy">
-						<abbr title="Content Security Policy">CSP</abbr>
-					</a>
-				</li>
 			</ul>
 
 			<h2>Credit</h2>

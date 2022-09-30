@@ -18,23 +18,21 @@ async function main() {
 	let [_, clientOutput] = await Promise.all([
 		viteBuild({
 			mode: "ssg",
-			resolve: {
-				conditions: ["solid", "node"],
-			},
 			publicDir: false,
 			build: {
 				ssr: true,
 				outDir: resolve("dist-ssg"),
 				rollupOptions: {
 					output: {
-						format: "esm",
+						// Force a single JS file.
+						inlineDynamicImports: true,
 					},
 					external: ["solid-js", "solid-js/web"],
 					input: resolve("src", "main-ssg.tsx"),
 				},
 			},
 		}),
-		viteBuild({ resolve: { conditions: ["solid"] } }),
+		viteBuild(),
 	])
 
 	removeReferencedIndexCss(clientOutput as RollupOutput)

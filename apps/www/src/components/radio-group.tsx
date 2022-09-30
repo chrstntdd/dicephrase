@@ -32,15 +32,7 @@ function Radio<V>(props: {
 
 	return (
 		<li>
-			<label
-				for={linkingId}
-				/**
-				 * NOTE: This shouldn't be necessary, but after hydration, the child
-				 * text node is being removed despite its presence in the generated
-				 * HTML.
-				 */
-				textContent={props.label}
-			/>
+			<label for={linkingId}>{props.label}</label>
 			<input
 				type="radio"
 				checked={props.checked}

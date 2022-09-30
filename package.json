@@ -15,7 +15,10 @@
 			"esbuild",
 			"playwright",
 			"rescript"
-		]
+		],
+		"overrides": {
+			"esbuild": "^0.15.9"
+		}
 	},
 	"scripts": {
 		"fmt": "pnpm fmt --recursive",

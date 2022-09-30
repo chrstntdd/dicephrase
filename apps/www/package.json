@@ -19,39 +19,46 @@
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
-		"solid-js": "1.5.4"
+		"solid-js": "1.5.7"
 	},
 	"devDependencies": {
 		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
 		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",
 		"@types/escodegen": "^0.0.7",
 		"@types/html-minifier-terser": "^7.0.0",
-		"@types/node": "^18.7.14",
-		"@typescript-eslint/eslint-plugin": "^5.36.1",
-		"@typescript-eslint/parser": "^5.36.1",
-		"@typescript-eslint/typescript-estree": "^5.36.1",
-		"@vanilla-extract/css": "^1.7.3",
-		"@vanilla-extract/vite-plugin": "^3.3.1",
+		"@types/node": "^18.7.23",
+		"@typescript-eslint/eslint-plugin": "^5.38.1",
+		"@typescript-eslint/parser": "^5.38.1",
+		"@typescript-eslint/typescript-estree": "^5.38.1",
+		"@vanilla-extract/css": "^1.9.1",
+		"@vanilla-extract/vite-plugin": "^3.6.0",
 		"astray": "^1.1.1",
-		"esbuild": "^0.15.6",
+		"esbuild": "^0.15.10",
 		"escodegen": "^2.0.0",
-		"eslint": "^8.23.0",
+		"eslint": "^8.24.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-import-resolver-typescript": "^3.5.0",
+		"eslint-import-resolver-typescript": "^3.5.1",
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-jsx-a11y": "^6.6.1",
 		"glyphhanger": "^5.0.0",
 		"html-minifier-terser": "^7.0.0",
-		"linkedom": "^0.14.12",
+		"linkedom": "^0.14.16",
 		"polished": "^4.2.2",
 		"prettier": "^2.7.1",
 		"rescript": "^10.0.1",
-		"rollup": "^2.79.0",
+		"rollup": "^2.79.1",
 		"tsm": "^2.2.2",
-		"typescript": "^4.8.2",
-		"vite": "^3.0.9",
-		"vite-plugin-solid": "2.3.0",
-		"ws": "^8.8.1"
+		"typescript": "^4.8.4",
+		"vite": "^3.1.4",
+		"vite-plugin-solid": "2.3.9",
+		"ws": "^8.9.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"@vanilla-extract/vite-plugin": {
+				"vite": "^3"
+			}
+		}
 	},
 	"eslintConfig": {
 		"settings": {

@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
 			solid(
 				isSSG
 					? { ssr: true, solid: { hydratable: true, generate: "ssr" } }
-					: undefined,
+					: { ssr: false, solid: { hydratable: true, generate: "dom" } },
 			),
 			parcelCSSPlugin({
 				browserslist: pkg.browserslist,

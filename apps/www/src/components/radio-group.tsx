@@ -8,7 +8,7 @@ function RadioGroup<V>(props: {
 }) {
 	return (
 		<ul class={/*@once*/ props.class}>
-			<For each={props.opts}>
+			<For each={/*@once*/ props.opts}>
 				{(kid) => (
 					<Radio
 						checked={props.value === kid.value}
@@ -37,8 +37,8 @@ function Radio<V>(props: {
 				type="radio"
 				checked={props.checked}
 				id={linkingId}
-				name={props.name}
-				value={props.value as unknown as string}
+				name={/*@once*/ props.name}
+				value={/*@once*/ props.value as unknown as string}
 			/>
 		</li>
 	)

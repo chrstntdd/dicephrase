@@ -50,7 +50,7 @@ function lerp(a: number, b: number, p: number) {
 }
 
 function makeKeyframes(from: number, to: number) {
-	let out = Object.create(null) as Record<string, CSSProperties>
+	let out = {} as Record<string, CSSProperties>
 	const stops = 100
 
 	for (let i = 0; i <= stops; i++) {
@@ -67,6 +67,7 @@ const springLike = keyframes(makeKeyframes(36, 0))
 
 export const phraseChar = style({
 	animation: `0.7s ${springLike} linear`,
+	willChange: "transform, opacity",
 	animationFillMode: "both",
 	display: "inline-block",
 	selectors: {

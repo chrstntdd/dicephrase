@@ -83,7 +83,7 @@ function Generate() {
 
 			{/* Another boundary to prevent the parent from flashing the empty fallback as this component is rendered */}
 			<Suspense fallback="">
-				<Show when={state() === "idle-with-output"}>
+				<Show when={state() === "with-output"}>
 					<>
 						<CopyBtn
 							copied={copyState() === "copied"}

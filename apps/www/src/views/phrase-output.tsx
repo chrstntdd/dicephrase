@@ -27,13 +27,13 @@ function PhraseOutput(props: {
 					{(phrase, index) => {
 						let idx = index()
 						let isLast = idx === props.phrases.length - 1
-						let sep = props.separators[idx]
+						let sep = props.separators[idx] || ""
 
 						return (
 							<>
 								<Word content={phrase} />
 								<Show when={!isLast}>
-									<Word content={sep || ""} sep />
+									<Word content={sep} sep />
 								</Show>
 							</>
 						)
@@ -51,8 +51,8 @@ function Word(props: { content: string; sep?: boolean }) {
 				{(char, index) => (
 					<span
 						class={/*@once*/ styles.phraseChar}
-						data-sep={props.sep}
-						style={{ "animation-delay": `${index() * 22}ms` }}
+						data-sep={/*@once*/ props.sep}
+						style={/*@once*/ { "animation-delay": `${index() * 22}ms` }}
 					>
 						{char}
 					</span>

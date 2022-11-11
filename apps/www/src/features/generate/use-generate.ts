@@ -12,7 +12,7 @@ import {
 
 import { assert } from "../../lib/assert"
 
-type State = "empty" | "idle-with-output"
+type State = "empty" | "with-output"
 
 type CopyState = "idle" | "copying" | "copied"
 
@@ -30,6 +30,7 @@ async function fetchWordList(): Promise<Record<string, string>> {
 }
 
 let wl: ReturnType<typeof fetchWordList>
+let copy: typeof import("./copy")["copyPhraseToClipboard"] | undefined
 
 export function useGenerate() {
 	let [state, setState] = createSignal<State>("empty")
@@ -83,7 +84,7 @@ export function useGenerate() {
 				setPhrases(make_phrases(phraseCount(), wordList))
 
 				syncFormToURL()
-				setState("idle-with-output")
+				setState("with-output")
 			})
 		})
 	}
@@ -99,9 +100,9 @@ export function useGenerate() {
 		},
 		async onCopyPress() {
 			setCopyState("copying")
-			let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
+			copy ??= await import("./copy").then((m) => m.copyPhraseToClipboard)
 
-			await m(phrases(), separators())
+			await copy!(phrases(), separators())
 			setCopyState("copied")
 			setCopyState("idle")
 		},

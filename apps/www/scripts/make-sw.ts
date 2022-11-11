@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process"
+import { spawnSync } from "node:child_process"
 import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 
@@ -6,7 +6,7 @@ import ESB from "esbuild"
 
 import type { Manifest } from "vite"
 
-let commitHash = execSync("git rev-parse --short HEAD").toString().trim()
+let commitHash = spawnSync("git rev-parse --short HEAD").toString().trim()
 
 const filesToPrecache = buildPrecacheList()
 

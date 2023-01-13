@@ -25,19 +25,22 @@ function make_key(_acc, _idx, data, len, min, max) {
 }
 
 function make_wl_keys(count) {
-	var key_count = Math.imul(count, 5)
-	var raw_bits = new Uint32Array(key_count)
-	crypto.getRandomValues(raw_bits)
+	var chunk_size = 5
+	var key_count = Math.imul(count, chunk_size)
+	var random_bits = crypto.getRandomValues(new Uint32Array(key_count))
 	var acc = new Array(count).fill("")
 	var _idx = 0
 	var _out_idx = 0
 	while (true) {
 		var out_idx = _out_idx
 		var idx = _idx
-		var chunk_of_random_bytes = raw_bits.subarray(idx, (idx + 5) | 0)
-		var wl_key = make_key("", 0, chunk_of_random_bytes, 5, 1, 6)
+		var chunk_of_random_bytes = random_bits.subarray(
+			idx,
+			(idx + chunk_size) | 0,
+		)
+		var wl_key = make_key("", 0, chunk_of_random_bytes, chunk_size, 1, 6)
 		acc[out_idx] = wl_key
-		var next = (idx + 5) | 0
+		var next = (idx + chunk_size) | 0
 		if (next === key_count) {
 			return acc
 		}

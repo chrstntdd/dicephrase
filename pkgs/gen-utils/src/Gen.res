@@ -23,19 +23,19 @@
 @genType
 let make_wl_keys = count => {
   open Js.TypedArray2
-  let chunk_size = 5
-  let key_count = count * chunk_size
-  let raw_bits = Uint32Array.fromLength(key_count)
-
-  // Fill (mutates the raw_bits in place)
-  Util.getRandomValues(raw_bits)
-
   let min = 1
   let max = 6
+  let chunk_size = max - min
+  let key_count = count * chunk_size
+  let random_bits = key_count->Uint32Array.fromLength->Util.getRandomValuesU32
 
   let rec bits_to_keys = (acc, idx, out_idx) => {
     // Consume the next chunk
-    let chunk_of_random_bytes = Uint32Array.subarray(raw_bits, ~start=idx, ~end_=idx + chunk_size)
+    let chunk_of_random_bytes = Uint32Array.subarray(
+      random_bits,
+      ~start=idx,
+      ~end_=idx + chunk_size,
+    )
     let wl_key = make_key(~acc="", ~idx=0, ~data=chunk_of_random_bytes, ~len=chunk_size, ~min, ~max)
 
     Js.Array2.unsafe_set(acc, out_idx, wl_key)
@@ -50,7 +50,7 @@ let make_wl_keys = count => {
     }
   }
 
-  bits_to_keys(Util.fill(Util.make_array_of_size(count), ""), 0, 0)
+  count->Util.make_array_of_size->Util.fill("")->bits_to_keys(0, 0)
 }
 
 @genType

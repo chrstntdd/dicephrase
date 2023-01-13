@@ -1,7 +1,12 @@
-import * as crypto from "crypto"
-import { it, describe, expect, beforeAll, vi } from "vitest"
+import * as crypto from "node:crypto"
 
-import { random_int } from "./Util.bs"
+import { beforeAll, describe, expect, vi, it } from "vitest"
+
+import {
+	crack_time_in_years,
+	random_int,
+	sum_shannon_for_word,
+} from "./Util.bs"
 
 describe("random_int", () => {
 	beforeAll(() => {
@@ -27,5 +32,30 @@ describe("random_int", () => {
 
 		expect(res).toBeGreaterThanOrEqual(1_000_000)
 		expect(res).toBeLessThanOrEqual(100_000_000)
+	})
+})
+
+describe("sum_shannon_for_word", () => {
+	it("should work", () => {
+		let lowEnd = 6 * sum_shannon_for_word()
+		let highEnd = 10 * sum_shannon_for_word()
+
+		expect(lowEnd).toMatchInlineSnapshot("77.54887502163469")
+		expect(highEnd).toMatchInlineSnapshot("129.24812503605781")
+	})
+})
+
+describe("crack_time_in_years", () => {
+	it("should work", () => {
+		let lowEnd = 6 * sum_shannon_for_word()
+		let highEnd = 10 * sum_shannon_for_word()
+		let attemptsPerSec = 1_000_000_000
+
+		expect(crack_time_in_years(lowEnd, attemptsPerSec)).toMatchInlineSnapshot(
+			"7005.409781502188",
+		)
+		expect(crack_time_in_years(highEnd, attemptsPerSec)).toMatchInlineSnapshot(
+			"25612888098739036000",
+		)
 	})
 })

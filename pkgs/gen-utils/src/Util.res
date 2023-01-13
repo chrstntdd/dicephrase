@@ -1,10 +1,12 @@
 /* *************************************************************************** */
 /* Bindings */
 /* *************************************************************************** */
-@scope("crypto") @val
-external getRandomValues: Js.TypedArray2.Uint32Array.t => unit = "getRandomValues"
-@scope("crypto") @val
-external getRandomValuesU8: Js.TypedArray2.Uint8Array.t => unit = "getRandomValues"
+@scope("crypto")
+external getRandomValuesU32: Js.TypedArray2.Uint32Array.t => Js.TypedArray2.Uint32Array.t =
+  "getRandomValues"
+@scope("crypto")
+external getRandomValuesU8: Js.TypedArray2.Uint8Array.t => Js.TypedArray2.Uint8Array.t =
+  "getRandomValues"
 
 // Create fixed sized array with holes
 @new external make_array_of_size: int => Js.Array2.t<'a> = "Array"
@@ -40,60 +42,56 @@ let nullable_to_option = n => {
   }
 }
 
-%%private(
-  let sum_uint8_entries = t => {
-    // Intentionally using floats to avoid ReScript from truncating the numbers
-    // with `| 0` (similar to Math.floor).
-    let len = Js.TypedArray2.Uint8Array.length(t)
-    let get_from_index = Js.TypedArray2.Uint8Array.unsafe_get(t)
-
-    let rec loop = (acc, i) => {
-      if i == len {
-        acc
-      } else {
-        let curr = i->get_from_index->Belt.Int.toFloat
-        let acc = acc +. curr *. 256. ** Belt.Int.toFloat(i)
-
-        loop(acc, i + 1)
-      }
-    }
-
-    loop(0.0, 0)
-  }
-)
-
 // The built in `mod` function only works on ints
 // which is not what we want
-%%private(
-  let mod_float = (a: float, b: float): float => {
-    %raw(`a % b`)
+let remainder_float = (a: float, b: float): float => {
+  // "use" the variables to prevent the warning
+  let _ = a
+  let _ = b
+  %raw(`a % b`)
+}
+
+exception DivisionByZero({message: string})
+
+let remainder_float_exn = (. ~dividend, ~divisor) => {
+  if divisor == 0. {
+    raise(DivisionByZero({message: "Attempting to divide by 0"}))
+  } else {
+    remainder_float(dividend, divisor)
   }
-)
+}
 
 @genType
-let random_int = (min, max) => {
-  module Int = Belt.Int
-  open Js.Math
-  // Note the use of floats, this is to avoid ReScript
-  // casting the numbers to ints with `| 0` everywhere
-  // This only really matters for a max near 100_000_000
-  let range = Int.toFloat(max - min + 1)
-  let bytes_needed = ceil_int(log2(range) /. 8.)
-  let cutoff = floor_float(256. ** Int.toFloat(bytes_needed) /. range) *. range
-  let bytes = Js.TypedArray2.Uint8Array.fromLength(bytes_needed)
+let random_int = (. ~min, ~max) => {
+  let range = Js.Math.abs_float(max -. min) +. 1.
+  let bit =
+    Js.TypedArray2.Uint32Array.fromLength(1)
+    ->getRandomValuesU32
+    ->Js.TypedArray2.Uint32Array.unsafe_get(0)
+    ->Belt.Float.fromInt
 
-  let rec loop = _ => {
-    // Get new random values on each iteration
-    bytes->getRandomValuesU8
-    let value = sum_uint8_entries(bytes)
+  min +. remainder_float_exn(. ~dividend=bit, ~divisor=range)
+}
 
-    if value >= cutoff {
-      loop()
-    } else {
-      value
-    }
-  }
+// https://stackoverflow.com/questions/51105055/shannon-entropy-of-an-array-in-typescript
 
-  let value = loop()
-  Int.toFloat(min) +. mod_float(value, range)
+let shannon_entropy = outcome_count => {
+  let prob = 1. /. outcome_count
+  let entropy = prob *. -1. *. Js.Math.log2(prob)
+
+  entropy *. outcome_count
+}
+
+// Generates the amount of bit for a single word in the wordlist by "rolling" 5 6-sided die
+@genType
+let sum_shannon_for_word = (. ()) => {
+  shannon_entropy(6.) *. 5.
+}
+
+let ms_per_year = 365.25 *. 24. *. 60. *. 60. *. 1000.
+
+@genType
+let crack_time_in_years = (. ~bits_of_entropy, ~attempts_per_second) => {
+  let total_combos = Js.Math.pow_float(~base=2., ~exp=bits_of_entropy)
+  total_combos /. attempts_per_second /. ms_per_year
 }

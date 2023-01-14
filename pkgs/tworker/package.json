@@ -1,0 +1,25 @@
+{
+	"name": "@ct/tworker",
+	"description": "A utility to make communication with web workers not suck",
+	"version": "0.0.1",
+	"license": "MIT",
+	"type": "module",
+	"sideEffects": false,
+	"types": "./src/tworker.ts",
+	"module": "./src/tworker.ts",
+	"exports": {
+		".": {
+			"import": "./src/tworker.ts"
+		},
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"fmt": "prettier src --write"
+	},
+	"devDependencies": {
+		"typescript": "^4.9.4"
+	},
+	"dependencies": {
+		"mitt": "^3.0.0"
+	}
+}

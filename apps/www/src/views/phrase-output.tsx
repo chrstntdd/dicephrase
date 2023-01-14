@@ -46,13 +46,12 @@ function PhraseOutput(props: {
 
 function Word(props: { content: string; sep?: boolean }) {
 	return (
-		<div class={/*@once*/ styles.word}>
+		<div>
 			<For each={props.content.split("")}>
 				{(char, index) => (
 					<span
-						class={/*@once*/ styles.phraseChar}
 						data-sep={/*@once*/ props.sep}
-						style={/*@once*/ { "animation-delay": `${index() * 22}ms` }}
+						style={/*@once*/ `--ad:${index() * 22}`}
 					>
 						{char}
 					</span>

@@ -1,4 +1,4 @@
-import type { CSSProperties } from "@vanilla-extract/css"
+import { CSSProperties, globalStyle } from "@vanilla-extract/css"
 import { keyframes, style } from "@vanilla-extract/css"
 import { LIST_RESET } from "../styles/shared.css"
 
@@ -66,19 +66,17 @@ function makeKeyframes(from: number, to: number) {
 
 const springLike = keyframes(makeKeyframes(36, 0))
 
-export const phraseChar = style({
+globalStyle(`${phrases} > *`, {
+	overflow: "hidden",
+	whiteSpace: "nowrap",
+})
+globalStyle(`${phrases} > * > *`, {
 	animation: `0.7s ${springLike} linear`,
 	willChange: "transform, opacity",
 	animationFillMode: "both",
 	display: "inline-block",
-	selectors: {
-		"&[data-sep]": {
-			color: vars.color["primary-7"],
-		},
-	},
+	animationDelay: `calc(var(--ad) * 1ms)`,
 })
-
-export const word = style({
-	overflow: "hidden",
-	whiteSpace: "nowrap",
+globalStyle(`${phrases} > * > *[data-sep]`, {
+	color: vars.color["primary-7"],
 })

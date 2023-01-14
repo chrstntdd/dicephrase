@@ -49,11 +49,11 @@ globalStyle("body", {
 	visibility: "hidden",
 })
 
-globalStyle("input, button, textarea, select", {
+globalStyle("input, button", {
 	font: "inherit",
 })
 
-globalStyle("img, picture, video, canvas, svg", {
+globalStyle("img, svg", {
 	display: "block",
 	maxWidth: "100%",
 })

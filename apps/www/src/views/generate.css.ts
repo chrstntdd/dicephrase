@@ -19,7 +19,7 @@ export const formEl = style({
 	display: "flex",
 	flexDirection: "column",
 	gap: vars.space["3x"],
-	color: vars.color["primary-2"],
+	color: vars.color["primary-1"],
 })
 
 export const baseRadioGroupContainer = style({

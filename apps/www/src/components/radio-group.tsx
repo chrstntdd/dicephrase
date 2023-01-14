@@ -32,7 +32,6 @@ function Radio<V>(props: {
 
 	return (
 		<li>
-			<label for={linkingId}>{props.label}</label>
 			<input
 				type="radio"
 				checked={props.checked}
@@ -40,6 +39,7 @@ function Radio<V>(props: {
 				name={/*@once*/ props.name}
 				value={/*@once*/ props.value as unknown as string}
 			/>
+			<label for={linkingId}>{props.label}</label>
 		</li>
 	)
 }

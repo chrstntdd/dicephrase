@@ -5,7 +5,7 @@ import { chromeStandalone, iOSStandalone } from "./styles/util"
 import { vars } from "./styles/vars.css"
 
 export const pageTile = style({
-	color: vars.color["primary-200"],
+	color: vars.color["primary-2"],
 	fontFamily: vars.fontFamily.serif,
 	margin: 0,
 	fontSize: vars.fontSize["3x"],
@@ -32,7 +32,7 @@ export const header = style({
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "space-between",
-	background: vars.color["primary-1000"],
+	background: vars.color["primary-10"],
 	position: "fixed",
 	width: "100%",
 	paddingInline: "inherit",

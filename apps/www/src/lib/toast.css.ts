@@ -37,7 +37,7 @@ const slideIn = keyframes({
 
 export const toastItem = style({
 	borderRadius: vars.borderRadius["2x"],
-	background: vars.color["primary-900"],
+	background: vars.color["primary-9"],
 	paddingInline: vars.space["3x"],
 	paddingBlock: vars.space["2x"],
 	willChange: "transform",

@@ -85,14 +85,14 @@ function Generate() {
 			<Suspense fallback="">
 				<Show when={state() === "with-output"}>
 					<>
-						<CopyBtn
-							copied={copyState() === "copied"}
-							handleCopy={onCopyPress}
-						/>
 						<PhraseOutput
 							formId={FORM_ID}
 							separators={ctx.separators()}
 							phrases={ctx.phrases()}
+						/>
+						<CopyBtn
+							copied={copyState() === "copied"}
+							handleCopy={onCopyPress}
 						/>
 					</>
 				</Show>

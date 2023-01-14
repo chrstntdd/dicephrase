@@ -1,6 +1,6 @@
 import type { CSSProperties } from "@vanilla-extract/css"
 import { keyframes, style } from "@vanilla-extract/css"
-import { LIST_RESET } from "../styles/shared"
+import { LIST_RESET } from "../styles/shared.css"
 
 import { vars } from "../styles/vars.css"
 
@@ -20,13 +20,14 @@ export const phrases = style({
 	flexWrap: "wrap",
 	overflow: "hidden",
 	borderRadius: vars.borderRadius["3x"],
-	color: vars.color["primary-300"],
+	color: vars.color["primary-1"],
 	fontWeight: 900,
 	fontSize: vars.fontSize["3x"],
-	padding: vars.space["1x"],
+	paddingInline: vars.space["1x"],
+	paddingBlock: vars.space["5x"],
 	width: "100%",
 	transition: "background 200ms ease-in-out",
-	background: vars.color["primary-1100"],
+	background: vars.color["primary-12"],
 })
 
 /**
@@ -72,7 +73,7 @@ export const phraseChar = style({
 	display: "inline-block",
 	selectors: {
 		"&[data-sep]": {
-			color: vars.color["primary-600"],
+			color: vars.color["primary-7"],
 		},
 	},
 })

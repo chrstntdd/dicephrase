@@ -1,13 +1,17 @@
-import type { CSSProperties } from "@vanilla-extract/css"
+import type { CSSProperties, GlobalStyleRule } from "@vanilla-extract/css"
 
-export function supportsHover(v: CSSProperties) {
+type ValueOf<T> = T[keyof T]
+
+export function mediaSupportsHover(v: CSSProperties, isGlobalStyle?: boolean) {
 	return {
-		"not all and (hover: none)": {
-			selectors: {
-				"&:hover": v,
-			},
-		},
-	}
+		"not all and (hover: none)": isGlobalStyle
+			? v
+			: {
+					selectors: {
+						"&:hover": v,
+					},
+			  },
+	} as const
 }
 
 export function iOSStandalone(v: CSSProperties) {

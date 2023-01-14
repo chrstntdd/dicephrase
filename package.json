@@ -12,6 +12,7 @@
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
+			"@ct/tworker",
 			"esbuild",
 			"playwright",
 			"rescript"
@@ -22,7 +23,9 @@
 	},
 	"scripts": {
 		"fmt": "pnpm fmt --recursive",
-		"lint": "pnpm lint --recursive"
+		"lint": "pnpm lint --recursive",
+		"postinstall": "pnpm build-pkgs",
+		"build-pkgs": "pnpm --stream -F './pkgs/**' make"
 	},
 	"prettier": {
 		"semi": false,

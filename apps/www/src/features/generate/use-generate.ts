@@ -1,16 +1,16 @@
 import { batch, createSignal, onMount } from "solid-js"
-import {
-	make_phrases,
-	make_separators,
-	parse_count_val,
-	parse_qs_to_phrase_config,
-	PHRASE_COUNT_FALLBACK,
-	PHRASE_COUNT_KEY,
-	SEPARATOR_FALLBACK,
-	SEPARATOR_KEY,
-} from "gen-utils"
+import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "gen-utils"
+import { makeWorker } from "@ct/tworker"
 
-import { assert } from "../../lib/assert"
+import type { Actions } from "./generate.worker"
+
+let generateWorker = makeWorker<Actions>(() =>
+	import.meta.env.SSR
+		? ({ addEventListener() {} } as unknown as Worker)
+		: new Worker(new URL("./generate.worker.ts", import.meta.url), {
+				type: "module",
+		  }),
+)
 
 type State = "empty" | "with-output"
 
@@ -22,70 +22,55 @@ const enum Msg {
 	Generate,
 }
 
-async function fetchWordList(): Promise<Record<string, string>> {
-	let res = await fetch("/wl-2016.json")
-	assert(res.ok)
-	let wl = res.json()
-	return wl
-}
-
-let wl: ReturnType<typeof fetchWordList>
 let copy: typeof import("./copy")["copyPhraseToClipboard"] | undefined
 
 export function useGenerate() {
+	let handle: ReturnType<typeof requestIdleCallback>
 	let [state, setState] = createSignal<State>("empty")
 	let [copyState, setCopyState] = createSignal<CopyState>("idle")
-	let [phraseCount, setPhraseCount] = createSignal(PHRASE_COUNT_FALLBACK)
-	let [separatorKind, setSeparatorKind] = createSignal(SEPARATOR_FALLBACK)
-	let [separators, setSeparators] = createSignal<Array<string>>([])
-	let [phrases, setPhrases] = createSignal<Array<string>>([])
+	let [phraseCount, setPhraseCount] = createSignal()
+	let [separatorKind, setSeparatorKind] = createSignal()
+	let [separators, setSeparators] = createSignal<ReadonlyArray<string>>([])
+	let [phrases, setPhrases] = createSignal<ReadonlyArray<string>>([])
 
-	onMount(function setInitialStateFromURL() {
-		let cfg = parse_qs_to_phrase_config(globalThis.location?.search)
-
+	onMount(async function setInitialStateFromURL() {
+		let workerState = await generateWorker.run(
+			"hydrateInitialStateFromURL",
+			globalThis.location?.search,
+		)
 		batch(() => {
-			setSeparatorKind(cfg.sep)
-			setPhraseCount(cfg.count)
+			setSeparatorKind(workerState.separatorKind)
+			setPhraseCount(workerState.phraseCount)
+			setSeparators(workerState.separators)
+			setPhrases(workerState.phrases)
 		})
 	})
 
-	function syncFormToURL() {
-		let url = new URL(globalThis.location as unknown as string)
-		url.searchParams.set(PHRASE_COUNT_KEY, `${phraseCount()}`)
-		url.searchParams.set(SEPARATOR_KEY, separatorKind())
+	async function handleEvent(kind: Msg, ogEvent: Event) {
+		let nextState = await generateWorker.run("handleEvent", {
+			// @ts-expect-error
+			kind,
+			value: (ogEvent.target as HTMLInputElement).value,
+		})
 
-		history.pushState({}, "", url)
-	}
+		setState("with-output")
+		batch(() => {
+			setSeparatorKind(nextState.separatorKind)
+			setPhraseCount(nextState.phraseCount)
+			setSeparators(nextState.separators)
+			setPhrases(nextState.phrases)
+		})
 
-	function handleEvent(kind: Msg, ogEvent: Event) {
-		switch (kind) {
-			case Msg.ChangeCount: {
-				let value = parse_count_val((ogEvent.target as HTMLInputElement).value)
-				setPhraseCount(value)
-				break
-			}
-			case Msg.ChangeSeparator: {
-				// TODO: validate here...?
-				let value = (ogEvent.target as HTMLInputElement).value
-				setSeparatorKind(value)
-				break
-			}
-
-			case Msg.Generate: {
-				ogEvent.preventDefault()
-				break
-			}
+		if (handle) {
+			cancelIdleCallback(handle)
 		}
 
-		// Cache the promise to fetch only one time
-		;(wl ??= fetchWordList()).then((wordList) => {
-			batch(() => {
-				setSeparators(make_separators(separatorKind(), phraseCount()))
-				setPhrases(make_phrases(phraseCount(), wordList))
+		handle = requestIdleCallback(() => {
+			let url = new URL(globalThis.location as unknown as string)
+			url.searchParams.set(PHRASE_COUNT_KEY, `${nextState.phraseCount}`)
+			url.searchParams.set(SEPARATOR_KEY, nextState.separatorKind)
 
-				syncFormToURL()
-				setState("with-output")
-			})
+			history.pushState({}, "", url)
 		})
 	}
 
@@ -100,7 +85,7 @@ export function useGenerate() {
 		},
 		async onCopyPress() {
 			setCopyState("copying")
-			copy ??= await import("./copy").then((m) => m.copyPhraseToClipboard)
+			copy ||= await import("./copy").then((m) => m.copyPhraseToClipboard)
 
 			await copy!(phrases(), separators())
 			setCopyState("copied")
@@ -113,6 +98,7 @@ export function useGenerate() {
 			handleEvent(Msg.ChangeSeparator, e)
 		},
 		onGeneratePress(e: Event) {
+			e.preventDefault()
 			handleEvent(Msg.Generate, e)
 		},
 	}

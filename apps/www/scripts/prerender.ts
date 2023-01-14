@@ -179,7 +179,7 @@ function removeLinkedIndexCss(html: string) {
 	)
 
 	for (const el of nodeList) {
-		if ((el as HTMLLinkElement).href.includes("index.")) {
+		if ((el as HTMLLinkElement).href.includes("index")) {
 			el.remove()
 		}
 	}

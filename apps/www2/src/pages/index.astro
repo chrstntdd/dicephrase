@@ -1,0 +1,68 @@
+---
+import {
+	VAL_SPACE,
+	VAL_DASH,
+	VAL_PERIOD,
+	VAL_DOLLAR,
+	VAL_RANDOM,
+	PHRASE_COUNT_KEY,
+	SEPARATOR_KEY,
+} from "gen-utils"
+import { RadioGroup } from "~/components/radio-group"
+import RootDoc from "~/layouts/root-doc.astro"
+import CopyBtn from "~/lib/copy-btn"
+
+import * as styles from "./index.css"
+
+const SEPARATOR_OPTS = [
+	{ value: VAL_SPACE, label: "Space" },
+	{ value: VAL_DASH, label: "-" },
+	{ value: VAL_PERIOD, label: "." },
+	{ value: VAL_DOLLAR, label: "$" },
+	{ value: VAL_RANDOM, label: "Random" },
+] as const
+
+const WORD_COUNT_OPTS = [
+	{ value: 6 },
+	{ value: 7 },
+	{ value: 8 },
+	{ value: 9 },
+	{ value: 10 },
+] as const
+
+const FORM_ID = "gen-form"
+---
+
+<RootDoc>
+	<script>
+		import "~/features/generate/mod.ts"
+	</script>
+	<section class={styles.generatePage}>
+		<form id={FORM_ID} class={styles.formEl}>
+			<fieldset class={styles.fieldset}>
+				<legend>Word count</legend>
+				<RadioGroup
+					class={styles.baseRadioGroupContainer}
+					value={WORD_COUNT_OPTS[2].value}
+					name={PHRASE_COUNT_KEY}
+					opts={WORD_COUNT_OPTS}
+				/>
+			</fieldset>
+
+			<fieldset class={styles.fieldset}>
+				<legend>Word separator</legend>
+				<RadioGroup
+					class={styles.baseRadioGroupContainer}
+					value={SEPARATOR_OPTS[4].value}
+					name={SEPARATOR_KEY}
+					opts={SEPARATOR_OPTS}
+				/>
+			</fieldset>
+
+			<button class={styles.generateBtn} type="submit">Generate</button>
+
+			<div class={styles.outputContainer}></div>
+		</form>
+		<CopyBtn />
+	</section>
+</RootDoc>

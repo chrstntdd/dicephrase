@@ -1,4 +1,4 @@
-import { browserslistToTargets, transform } from "@parcel/css"
+import { browserslistToTargets, transform } from "lightningcss"
 import browserslist from "browserslist"
 import type { Plugin } from "vite"
 

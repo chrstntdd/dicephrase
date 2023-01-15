@@ -1,14 +1,13 @@
 ---
-import "~/styles/global.css"
 import "~/styles/base.css"
+import "~/styles/global.css.ts"
 import "~/offline-entry"
 
 import { SkipNavContent, SkipToContentLink } from "~/components/skip-link"
 import { Header } from "~/components/header"
-import { OfflineToast } from "~/lib/offline-toast"
 import BuildData from "~/features/build-data/build-data"
 
-import * as styles from "./root-doc.css"
+import * as styles from "./root-doc.css.ts"
 
 let skipId = "__skip" as const
 ---
@@ -30,6 +29,14 @@ let skipId = "__skip" as const
 			name="description"
 			content="Simple, random, unique secure passphrase generator based on the diceware method"
 		/>
+		<slot name="page-head" />
+		<meta property="og:image" content="/img/dicephrase-og.jpg" />
+		<meta property="og:title" content="Dicephrase | Generate" />
+		<meta
+			property="og:description"
+			content="Simple, random, and secure in-browser password generator"
+		/>
+		<meta property="og:type" content="website" />
 		<!-- INJECTED_HEAD_TAGS -->
 
 		<link
@@ -205,7 +212,7 @@ let skipId = "__skip" as const
 	</head>
 	<section id="app-toast-group"></section>
 
-	<body onload="document.body.style.visibility='visible'">
+	<body>
 		<noscript>
 			JavaScript is required to use this application.
 			<br />

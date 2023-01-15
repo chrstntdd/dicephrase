@@ -17,12 +17,13 @@ import {
 	visualOutputContainer,
 } from "./phrase-output.css"
 import { outputContainer } from "~/pages/index.css"
+import { copyBtn } from "~/lib/copy-btn.css"
 
 type State = "empty" | "with-output"
 
 type CopyState = "idle" | "copying" | "copied"
 
-let $ = (s: Parameters<typeof document["querySelector"]>[0]) =>
+let $ = (s: Parameters<(typeof document)["querySelector"]>[0]) =>
 	document.querySelector(s)
 
 let generateWorker = makeWorker<Actions>(() =>
@@ -35,8 +36,8 @@ let generateWorker = makeWorker<Actions>(() =>
 
 let state = signal<State>("empty")
 export let copyState = signal<CopyState>("idle")
-let phraseCount = signal()
-let separatorKind = signal()
+let phraseCount = signal(8)
+let separatorKind = signal("")
 export let separators = signal<ReadonlyArray<string>>([])
 export let phrases = signal<ReadonlyArray<string>>([])
 
@@ -60,6 +61,12 @@ export async function handleEvent(kind: Msg, ogEvent: Event) {
 effect(() => {
 	if (state.value === "with-output") {
 		outputContainerEl.innerHTML = render()
+	}
+})
+
+effect(() => {
+	if (state.value === "with-output") {
+		$(`.${copyBtn}`)!.setAttribute("vis", "")
 	}
 })
 

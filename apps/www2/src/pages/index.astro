@@ -8,8 +8,8 @@ import {
 	PHRASE_COUNT_KEY,
 	SEPARATOR_KEY,
 } from "gen-utils"
-import { RadioGroup } from "~/components/radio-group"
 import RootDoc from "~/layouts/root-doc.astro"
+import { RadioGroup } from "~/components/radio-group"
 import CopyBtn from "~/lib/copy-btn"
 
 import * as styles from "./index.css"
@@ -34,6 +34,10 @@ const FORM_ID = "gen-form"
 ---
 
 <RootDoc>
+	<Fragment slot="page-head">
+		<title>Dicephrase | Generate</title>
+		<meta property="og:title" content="Dicephrase | Generate" />
+	</Fragment>
 	<script>
 		import "~/features/generate/mod.ts"
 	</script>
@@ -65,4 +69,12 @@ const FORM_ID = "gen-form"
 		</form>
 		<CopyBtn />
 	</section>
+
+	<script is:inline>
+		addEventListener("load", () => {
+			navigator.serviceWorker.register("/sw.js").then(null, (err) => {
+				console.error("ServiceWorker registration failed: ", err)
+			})
+		})
+	</script>
 </RootDoc>

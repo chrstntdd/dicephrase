@@ -21,10 +21,16 @@ export const copyBtn = style({
 	padding: vars.space["3x"],
 	display: "grid",
 	placeItems: "center",
+	visibility: "hidden",
+	selectors: {
+		"&[vis]": {
+			visibility: "visible",
+		},
+	},
 	"@media": {
 		...makeResponsiveMq("tablet", {
 			position: "unset",
-			transform: `translate(${vars.space["1x"]}, calc(-1 * ${vars.space["6x"]}))`,
+			transform: `translate(${vars.space["1x"]}, calc(-1 * ${vars.space["7x"]}))`,
 		}),
 		...mediaSupportsHover({
 			background: vars.color["primary-9"],

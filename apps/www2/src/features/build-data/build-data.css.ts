@@ -8,6 +8,11 @@ export const buildDataContainer = style({
 	display: "flex",
 	gap: vars.space["1x"],
 	overflow: "hidden",
+	selectors: {
+		"&[hidden]": {
+			visibility: "hidden",
+		},
+	},
 })
 
 export const releaseTime = style({

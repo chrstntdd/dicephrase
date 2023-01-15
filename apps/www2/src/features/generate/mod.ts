@@ -1,3 +1,4 @@
+import { buildMetadataToggle } from "~/layouts/root-doc.css"
 import { copyBtn } from "~/lib/copy-btn.css"
 
 import { ChangeCount, ChangeSeparator, Generate } from "./types"
@@ -11,13 +12,14 @@ import { ChangeCount, ChangeSeparator, Generate } from "./types"
  * - Have the web worker generate the updated HTML?
  */
 
-let $ = (s: Parameters<typeof document["querySelector"]>[0]) =>
+let $ = (s: Parameters<(typeof document)["querySelector"]>[0]) =>
 	document.querySelector(s)
 
 let wordCountRad = $("fieldset:first-of-type") as HTMLFieldSetElement
 let separatorRad = $("fieldset:nth-of-type(2)") as HTMLFieldSetElement
 let genForm = $(`#gen-form`) as HTMLFormElement
 let copyBtnEl = $(`.${copyBtn}`) as HTMLButtonElement
+let buildData = $(`.${buildMetadataToggle}`) as HTMLButtonElement
 
 async function handleEventProxy(
 	...args: Parameters<typeof import("./gen-behavior")["handleEvent"]>
@@ -41,4 +43,8 @@ genForm.addEventListener("submit", (e) => {
 copyBtnEl.addEventListener("click", async () => {
 	let { copyPhraseToClipboard } = await import("./copy-behavior")
 	copyPhraseToClipboard()
+})
+
+buildData.addEventListener("click", () => {
+	buildData.nextElementSibling!.toggleAttribute("hidden")
 })

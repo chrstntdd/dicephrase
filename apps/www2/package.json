@@ -22,8 +22,10 @@
 		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
 		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",
 		"@vanilla-extract/css": "^1.9.2",
+		"@vanilla-extract/vite-plugin": "^3.7.0",
 		"polished": "^4.2.2",
-		"typescript": "^4.9.4"
+		"typescript": "^4.9.4",
+		"vite-plugin-lightningcss": "^0.0.3"
 	},
 	"browserslist": [
 		"> 2%",

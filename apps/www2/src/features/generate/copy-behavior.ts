@@ -1,5 +1,6 @@
 import { combine_zip } from "gen-utils"
-import { makeToast, addToast, toastWrapper } from "~/lib/toast"
+
+import { toastWrapper } from "~/lib/toast"
 
 import { copyTextToClipboard } from "../../lib/clippy"
 import { phrases, separators } from "./gen-behavior"

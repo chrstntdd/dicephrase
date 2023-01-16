@@ -89,6 +89,7 @@ globalStyle(`${baseRadioGroupContainer} label`, {
 
 /* Cant use supports hover here since using globals :/ */
 globalStyle(`${baseRadioGroupContainer} input[type='radio']:hover`, {
+	// @ts-expect-error Meh, this does work tho!
 	"@media": {
 		...mediaSupportsHover({ background: vars.color["primary-9"] }, true),
 	},

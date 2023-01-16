@@ -6,9 +6,7 @@ import {
 	parse_count_val,
 	parse_qs_to_phrase_config,
 	PHRASE_COUNT_FALLBACK,
-	PHRASE_COUNT_KEY,
 	SEPARATOR_FALLBACK,
-	SEPARATOR_KEY,
 } from "gen-utils"
 import { assert } from "../../lib/assert"
 

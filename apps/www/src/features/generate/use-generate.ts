@@ -5,11 +5,10 @@ import { makeWorker } from "@ct/tworker"
 import type { Actions } from "./generate.worker"
 
 let generateWorker = makeWorker<Actions>(() =>
+	// prettier-ignore
 	import.meta.env.SSR
-		? ({ addEventListener() {} } as unknown as Worker)
-		: new Worker(new URL("./generate.worker.ts", import.meta.url), {
-				type: "module",
-		  }),
+		? ({} as unknown as Worker)
+		: new Worker(new URL("./generate.worker.ts", import.meta.url), {type: "module"}),
 )
 
 type State = "empty" | "with-output"
@@ -48,7 +47,7 @@ export function useGenerate() {
 
 	async function handleEvent(kind: Msg, ogEvent: Event) {
 		let nextState = await generateWorker.run("handleEvent", {
-			// @ts-expect-error
+			// @ts-expect-error Close enough
 			kind,
 			value: (ogEvent.target as HTMLInputElement).value,
 		})
@@ -87,7 +86,8 @@ export function useGenerate() {
 			setCopyState("copying")
 			copy ||= await import("./copy").then((m) => m.copyPhraseToClipboard)
 
-			await copy!(phrases(), separators())
+			// @ts-expect-error It'll be here, i promise
+			await copy(phrases(), separators())
 			setCopyState("copied")
 			setCopyState("idle")
 		},

@@ -1,16 +1,10 @@
-import type { CSSProperties, GlobalStyleRule } from "@vanilla-extract/css"
-
-type ValueOf<T> = T[keyof T]
+import type { CSSProperties } from "@vanilla-extract/css"
 
 export function mediaSupportsHover(v: CSSProperties, isGlobalStyle?: boolean) {
 	return {
 		"not all and (hover: none)": isGlobalStyle
 			? v
-			: {
-					selectors: {
-						"&:hover": v,
-					},
-			  },
+			: { selectors: { "&:hover": v } },
 	} as const
 }
 

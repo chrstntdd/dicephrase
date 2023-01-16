@@ -8,5 +8,8 @@ build = {command = "pnpm build-dev"}
 [env.development.build]
 command = "pnpm build-dev"
 
+[env.stg.build]
+command = "pnpm build-prod"
+
 [env.production.build]
 command = "pnpm build-prod"

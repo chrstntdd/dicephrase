@@ -168,13 +168,27 @@ let make_phrases = (. count, wlRecord) => {
 
 @genType
 let make_separators = (. separator_kind, count) => {
-  open Js.Array2
+  // Offset to fit between each word
   let sep_count = count - 1
 
   if separator_kind == Const.sep_fallback {
-    let separators = []
-    while length(separators) < sep_count {
-      push(separators, unsafe_get(shuffle(copy(Const.random_sep_chars)), 0))->ignore
+    let separators = {
+      let all_chars = Js.Array2.length(Const.random_sep_chars)
+      let empty_arr = Util.fill(Util.make_array_of_size(sep_count), "")
+      let read_from_separators = Js.Array2.unsafe_get(Const.random_sep_chars)
+      let max = Belt.Int.toFloat(all_chars - 1)
+      let rec inner = (acc, i) => {
+        if i == sep_count {
+          acc
+        } else {
+          let random_separator_char =
+            Util.random_int(. ~min=0., ~max)->Belt.Int.fromFloat->read_from_separators
+          Js.Array2.unsafe_set(empty_arr, i, random_separator_char)
+          inner(acc, i + 1)
+        }
+      }
+
+      inner(empty_arr, 0)
     }
     separators
   } else {

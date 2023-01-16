@@ -144,11 +144,21 @@ function make_separators(separator_kind, count) {
 	if (separator_kind !== Const.sep_fallback) {
 		return new Array(sep_count).fill(separator_kind)
 	}
-	var separators = []
-	while (separators.length < sep_count) {
-		separators.push(shuffle(Const.random_sep_chars.slice())[0])
+	var all_chars = Const.random_sep_chars.length
+	var empty_arr = new Array(sep_count).fill("")
+	var max = (all_chars - 1) | 0
+	var _i = 0
+	while (true) {
+		var i = _i
+		if (i === sep_count) {
+			return empty_arr
+		}
+		var param = Util.random_int(0, max) | 0
+		var random_separator_char = Const.random_sep_chars[param]
+		empty_arr[i] = random_separator_char
+		_i = (i + 1) | 0
+		continue
 	}
-	return separators
 }
 
 export {

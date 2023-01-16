@@ -17,6 +17,7 @@ importers:
   apps/api:
     specifiers:
       '@badrap/valita': ^0.1.9
+      '@playwright/test': ^1.26.1
       concurrently: ^7.6.0
       gen-utils: workspace:^0.0.4
       hono: ^2.7.2
@@ -26,6 +27,7 @@ importers:
       gen-utils: link:../../pkgs/gen-utils
       hono: 2.7.2
     devDependencies:
+      '@playwright/test': 1.26.1
       concurrently: 7.6.0
       wrangler: 2.7.1
 
@@ -1024,7 +1026,7 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@types/node': 18.7.23
+      '@types/node': 18.11.18
       playwright-core: 1.26.1
     dev: true
 

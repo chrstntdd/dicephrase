@@ -13,11 +13,11 @@ let app = new Hono()
 let queryParamParser = v.object({
 	count: v.string().chain((rawCount) => {
 		let c = +rawCount
+		if (Number.isNaN(c)) {
+			return v.err(new Error("Count must be valid whole number"))
+		}
 		if (!Number.isInteger(c)) {
 			return v.err(new Error("Count must be a whole number"))
-		}
-		if (Number.isNaN(c)) {
-			return v.err(new Error("Count is invalid"))
 		}
 		if (c > 50) {
 			return v.err(new Error("Count is too large"))

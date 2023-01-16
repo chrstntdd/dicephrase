@@ -1,0 +1,12 @@
+name = "dicephrase-api"
+main = "./dist/cf-worker.mjs"
+compatibility_date = "2023-1-15"
+workers_dev = false
+build = {command = "pnpm build-dev"}
+
+
+[env.development.build]
+command = "pnpm build-dev"
+
+[env.production.build]
+command = "pnpm build-prod"

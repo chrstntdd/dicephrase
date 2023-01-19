@@ -3,7 +3,7 @@ use rand::{
     rngs::ThreadRng,
     Rng,
 };
-use std::{collections::HashMap, fs::read_to_string, io};
+use std::{collections::HashMap, io};
 
 pub fn dicephrase(
     count: usize,
@@ -104,9 +104,6 @@ pub fn make_separators(count: usize, separator_kind: &str) -> Vec<String> {
 }
 
 fn read_wl() -> io::Result<HashMap<String, String>> {
-    let path = "./src/wl-2016.json";
-    let data = read_to_string(path)?;
-    let lookup: HashMap<String, String> = serde_json::from_str(&data)?;
-
-    Ok(lookup)
+    // Use the macro that way we "package" the JSON wordlist with the create
+    Ok(serde_json::from_str(include_str!("wl-2016.json"))?)
 }

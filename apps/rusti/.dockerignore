@@ -1,0 +1,10 @@
+# Deny all
+*
+
+# Allow 
+!core/
+!server/
+!Cargo.toml
+!Cargo.lock
+# Part of the workspace, but not really needed
+!cli/ 

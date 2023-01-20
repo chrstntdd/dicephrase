@@ -10,3 +10,4 @@ edition = "2021"
 core-dicephrase = { path = "../core" }
 dotenv = "0.15"
 actix-web = "4"
+serde = { version = "1.0", features = ["derive"] }

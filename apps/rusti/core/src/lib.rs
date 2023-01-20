@@ -103,7 +103,7 @@ pub fn make_separators(count: usize, separator_kind: &str) -> Vec<String> {
     separators
 }
 
-fn read_wl() -> io::Result<HashMap<String, String>> {
+pub fn read_wl() -> io::Result<HashMap<String, String>> {
     // Use the macro that way we "package" the JSON wordlist with the create
     Ok(serde_json::from_str(include_str!("wl-2016.json"))?)
 }

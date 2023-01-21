@@ -35,7 +35,7 @@ struct DicephraseCfg {
 
 #[derive(Serialize)]
 struct PartsResp {
-    phrases: Vec<String>,
+    words: Vec<String>,
     separators: Vec<String>,
 }
 
@@ -44,14 +44,11 @@ async fn gen(
     cfg: web::Query<DicephraseCfg>,
 ) -> Either<Result<impl Responder>, Result<impl Responder>> {
     let word_list = read_wl().expect("Unable to read wordlist");
-    let separators = make_separators(cfg.count, &cfg.sep.to_string());
-    let words = make_words(cfg.count, word_list);
+    let separators = make_separators(cfg.count, &cfg.sep);
+    let words = make_words(cfg.count, &word_list);
 
     match cfg.fmt {
-        OutputFmt::Text => Either::Left(Ok(make_full_phrase(words.clone(), separators.clone()))),
-        OutputFmt::Parts => Either::Right(Ok(web::Json(PartsResp {
-            phrases: words,
-            separators,
-        }))),
+        OutputFmt::Text => Either::Left(Ok(make_full_phrase(&words, &separators))),
+        OutputFmt::Parts => Either::Right(Ok(web::Json(PartsResp { words, separators }))),
     }
 }

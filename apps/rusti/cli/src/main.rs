@@ -1,17 +1,26 @@
-use std::io;
+use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
 
-use core_dicephrase::{make_full_phrase, make_separators, make_words, read_wl};
+use clap::Parser;
 
-fn main() -> io::Result<()> {
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Single character or the string literal "random"
+    #[arg(long)]
+    sep: String,
+
+    /// Number of times to greet
+    #[arg(long, default_value_t = 11)]
+    count: usize,
+}
+
+fn main() {
+    let args = Args::parse();
+
     let word_list = read_wl().expect("Unable to read wordlist");
-    let count = 11;
-    let sep = "random";
-    let separators = make_separators(count, &sep.to_string());
-    let words = make_words(count, &word_list);
-    let full = make_full_phrase(&words, &separators);
+    let separators = make_separators(args.count, &args.sep);
+    let words = make_words(args.count, &word_list);
+    let full = combine_zip(&words, &separators);
 
-    // TODO: Integrate with CLI library (clap?)
-    println!("{:?}", full);
-
-    Ok(())
+    println!("{:?}", full)
 }

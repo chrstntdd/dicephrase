@@ -5,23 +5,19 @@ use rand::{
 };
 use std::{collections::HashMap, io};
 
-pub fn make_full_phrase(words: &Vec<String>, separators: &Vec<String>) -> String {
-    let final_index = words.len() - 1;
-    words
-        .iter()
-        .zip(separators.iter())
-        .enumerate()
-        .map(|(i, (word, sep))| {
-            let word = word.clone();
-            // Drop the dangling separator at the end.
-            if i == final_index {
-                word
-            } else {
-                word + sep
-            }
-        })
-        .collect::<Vec<String>>()
-        .join("")
+pub fn combine_zip(words: &Vec<String>, separators: &Vec<String>) -> String {
+    let mut result = vec![];
+    let mut i = 0;
+
+    for word in words {
+        result.push(word.clone());
+        if let Some(el) = separators.get(i) {
+            result.push(el.clone());
+        }
+        i += 1;
+    }
+
+    result.join("")
 }
 
 pub fn make_words(count: usize, word_list: &HashMap<String, String>) -> Vec<String> {
@@ -62,13 +58,11 @@ const SEPARATOR_OPTS: [&'static str; 12] =
 const SEPARATOR_OPTS_LEN: usize = SEPARATOR_OPTS.len();
 
 pub fn make_separators(count: usize, separator_kind: &str) -> Vec<String> {
-    // TODO: Figure out how to have count be `count - 1` and have the caller
-    // zip the two uneven vectors - might be more work than just zipping the
-    // two being equal by generating 1 extra element
+    let sep_count = count - 1;
     match separator_kind {
         "random" => {
             let mut rng = rand::thread_rng();
-            (0..count)
+            (0..sep_count)
                 .into_iter()
                 .filter_map(|_| {
                     let random_index = rng.gen_range(0..SEPARATOR_OPTS_LEN);
@@ -79,11 +73,10 @@ pub fn make_separators(count: usize, separator_kind: &str) -> Vec<String> {
                 })
                 .collect()
         }
-        _ => separator_kind
-            .repeat(count)
+        ch => ch
+            .repeat(sep_count)
             .split("")
-            .map(|x| x.to_owned())
-            .filter(|x| x.trim() != "")
+            .filter_map(|x| if x != "" { Some(x.to_owned()) } else { None })
             .collect(),
     }
 }

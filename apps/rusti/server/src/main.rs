@@ -1,5 +1,5 @@
 use actix_web::{get, middleware, web, App, Either, HttpServer, Responder, Result};
-use core_dicephrase::{make_full_phrase, make_separators, make_words, read_wl};
+use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 
@@ -48,7 +48,7 @@ async fn gen(
     let words = make_words(cfg.count, &word_list);
 
     match cfg.fmt {
-        OutputFmt::Text => Either::Left(Ok(make_full_phrase(&words, &separators))),
+        OutputFmt::Text => Either::Left(Ok(combine_zip(&words, &separators))),
         OutputFmt::Parts => Either::Right(Ok(web::Json(PartsResp { words, separators }))),
     }
 }

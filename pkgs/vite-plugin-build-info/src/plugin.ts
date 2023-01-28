@@ -1,4 +1,4 @@
-import { execSync } from "child_process"
+import { spawnSync } from "node:child_process"
 import type { Plugin } from "vite"
 
 type BuildInfoPluginOpts = {
@@ -17,7 +17,7 @@ export function buildPlugin(opts: BuildInfoPluginOpts): Plugin {
 		load(id) {
 			if (id === resolvedVirtualModuleId) {
 				let now = new Date().toISOString()
-				let fullGitHash = execSync("git rev-parse HEAD").toString().trim()
+				let fullGitHash = spawnSync("git rev-parse HEAD").toString().trim()
 				let version = opts.version || "--"
 				return `export const nowISO = "${now}", gitHash = "${fullGitHash}", version="${version}"`
 			}

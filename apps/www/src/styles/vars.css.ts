@@ -12,6 +12,22 @@ const spaceScale = createScale(1.4, 4)
 const fontSizeScale = createScale(1.3, 16, true)
 const borderRadiusScale = createScale(1.5, 4)
 
+const color = {
+	"primary-1": "hsl(200,13.04%,4.51%)",
+	"primary-2": "hsl(204,23.81%,8.24%)",
+	"primary-3": "hsl(201,33.33%,11.76%)",
+	"primary-4": "hsl(200.57,44.3%,15.49%)",
+	"primary-5": "hsl(200.38,52.48%,19.8%)",
+	"primary-6": "hsl(200.8,59.06%,24.9%)",
+	"primary-7": "hsl(201.43,61.25%,31.37%)",
+	"primary-8": "hsl(201.03,58.79%,39.02%)",
+	"primary-9": "hsl(201.09,52.46%,47.84%)",
+	"primary-10": "hsl(200.84,43.78%,57.45%)",
+	"primary-11": "hsl(200.73,33.33%,67.65%)",
+	"primary-12": "hsl(201.6,22.52%,78.24%)",
+	"primary-13": "hsl(200,10.34%,88.63%)",
+} as const
+
 export const vars = createGlobalTheme(":root", {
 	space: {
 		none: "0",
@@ -25,20 +41,7 @@ export const vars = createGlobalTheme(":root", {
 		"7x": spaceScale(7),
 		"8x": spaceScale(8),
 	},
-	color: {
-		"primary-50": "#07100c",
-		"primary-100": "#13261c",
-		"primary-200": "#1c3c2c",
-		"primary-300": "#1d533e",
-		"primary-400": "#117156",
-		"primary-500": "#039474",
-		"primary-600": "#11b495",
-		"primary-700": "#2bc3a7",
-		"primary-800": "#51d1b9",
-		"primary-900": "#7fdecc",
-		"primary-1000": "#b4ebdf",
-		"primary-1100": "#ecf8f2",
-	},
+	color,
 	borderRadius: {
 		"1x": borderRadiusScale(1),
 		"2x": borderRadiusScale(2),

@@ -25,19 +25,22 @@ function make_key(_acc, _idx, data, len, min, max) {
 }
 
 function make_wl_keys(count) {
-	var key_count = Math.imul(count, 5)
-	var raw_bits = new Uint32Array(key_count)
-	crypto.getRandomValues(raw_bits)
+	var chunk_size = 5
+	var key_count = Math.imul(count, chunk_size)
+	var random_bits = crypto.getRandomValues(new Uint32Array(key_count))
 	var acc = new Array(count).fill("")
 	var _idx = 0
 	var _out_idx = 0
 	while (true) {
 		var out_idx = _out_idx
 		var idx = _idx
-		var chunk_of_random_bytes = raw_bits.subarray(idx, (idx + 5) | 0)
-		var wl_key = make_key("", 0, chunk_of_random_bytes, 5, 1, 6)
+		var chunk_of_random_bytes = random_bits.subarray(
+			idx,
+			(idx + chunk_size) | 0,
+		)
+		var wl_key = make_key("", 0, chunk_of_random_bytes, chunk_size, 1, 6)
 		acc[out_idx] = wl_key
-		var next = (idx + 5) | 0
+		var next = (idx + chunk_size) | 0
 		if (next === key_count) {
 			return acc
 		}
@@ -141,11 +144,21 @@ function make_separators(separator_kind, count) {
 	if (separator_kind !== Const.sep_fallback) {
 		return new Array(sep_count).fill(separator_kind)
 	}
-	var separators = []
-	while (separators.length < sep_count) {
-		separators.push(shuffle(Const.random_sep_chars.slice())[0])
+	var all_chars = Const.random_sep_chars.length
+	var empty_arr = new Array(sep_count).fill("")
+	var max = (all_chars - 1) | 0
+	var _i = 0
+	while (true) {
+		var i = _i
+		if (i === sep_count) {
+			return empty_arr
+		}
+		var param = Util.random_int(0, max) | 0
+		var random_separator_char = Const.random_sep_chars[param]
+		empty_arr[i] = random_separator_char
+		_i = (i + 1) | 0
+		continue
 	}
-	return separators
 }
 
 export {

@@ -1,22 +1,22 @@
 import type { StyleRule } from "@vanilla-extract/css"
-import { supportsHover } from "./util"
+import { mediaSupportsHover } from "./util"
 import { vars } from "./vars.css"
 
 export const PRESSABLE: StyleRule = {
-	color: vars.color["primary-300"],
+	color: vars.color["primary-3"],
 	borderWidth: vars.borderWidth["1x"],
 	borderStyle: "solid",
-	borderColor: vars.color["primary-800"],
+	borderColor: vars.color["primary-7"],
 	transition: "background 50ms ease",
 	"@media": {
-		...supportsHover({
-			background: vars.color["primary-900"],
+		...mediaSupportsHover({
+			background: vars.color["primary-9"],
 		}),
 	},
 	selectors: {
 		"&:focus-visible": {
-			background: vars.color["primary-900"],
-			borderColor: vars.color["primary-900"],
+			background: vars.color["primary-9"],
+			borderColor: vars.color["primary-9"],
 		},
 	},
 }

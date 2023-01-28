@@ -48,13 +48,15 @@ async function main() {
 	assert(!Array.isArray(clientOutput) && "output" in clientOutput)
 
 	let template = (
-		clientOutput.output.find((m) => m.fileName === "index.html") as OutputAsset
+		clientOutput.output.find(
+			(m) => m.fileName === "index.html",
+		) as unknown as OutputAsset
 	).source as string
 
 	let criticalBaseCSS = (
 		clientOutput.output.find(
 			(m) => m.fileName.endsWith(".css") && m.fileName.includes("index"),
-		) as OutputAsset
+		) as unknown as OutputAsset
 	).source as string
 
 	let ssgEntryPath = resolve("dist-ssg", "main-ssg.js")
@@ -179,7 +181,7 @@ function removeLinkedIndexCss(html: string) {
 	)
 
 	for (const el of nodeList) {
-		if ((el as HTMLLinkElement).href.includes("index.")) {
+		if ((el as HTMLLinkElement).href.includes("index")) {
 			el.remove()
 		}
 	}

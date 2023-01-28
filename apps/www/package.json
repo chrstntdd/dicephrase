@@ -1,6 +1,6 @@
 {
 	"name": "www",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"license": "UNLICENSED",
 	"type": "module",
 	"scripts": {
@@ -15,48 +15,49 @@
 		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'",
 		"subset-fonts": "pnpm subset-sans-serif-font && pnpm subset-serif-font ",
 		"subset-sans-serif-font": "pnpm exec glyphhanger --formats=woff2 --subset=./public/fonts/manrope/Manrope-Regular.ttf",
-		"subset-serif-font": "pnpm exec glyphhanger --formats=woff2 --whitelist=Dicephrase --subset=./public/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf"
+		"subset-serif-font": "pnpm exec glyphhanger --formats=woff2 --whitelist=Dicephrase --subset=./public/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf",
+		"gen-splash": "pwa-asset-generator src/assets/logo.svg -i ./index.html -m ./public/favicons/site.webmanifest -b 'linear-gradient(  45deg,  hsl(201deg 61% 31%) 0%,  hsl(201deg 61% 33%) 1%,  hsl(201deg 60% 35%) 5%,  hsl(201deg 60% 36%) 12%,  hsl(201deg 59% 38%) 19%,  hsl(201deg 58% 40%) 27%,  hsl(201deg 55% 44%) 35%,  hsl(201deg 51% 48%) 44%,  hsl(201deg 48% 52%) 54%,  hsl(201deg 45% 56%) 63%,  hsl(201deg 41% 60%) 72%,  hsl(201deg 36% 65%) 81%,  hsl(202deg 32% 69%) 90%,  hsl(202deg 27% 74%) 97%,  hsl(202deg 23% 78%) 100%)' ./public/img/splash"
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
-		"solid-js": "1.5.7"
+		"solid-js": "1.6.9"
 	},
 	"devDependencies": {
 		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
-		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",
 		"@types/escodegen": "^0.0.7",
 		"@types/html-minifier-terser": "^7.0.0",
-		"@types/node": "^18.7.23",
-		"@typescript-eslint/eslint-plugin": "^5.38.1",
-		"@typescript-eslint/parser": "^5.38.1",
-		"@typescript-eslint/typescript-estree": "^5.38.1",
-		"@vanilla-extract/css": "^1.9.1",
-		"@vanilla-extract/vite-plugin": "^3.6.0",
+		"@types/node": "^18.11.18",
+		"@typescript-eslint/eslint-plugin": "^5.49.0",
+		"@typescript-eslint/parser": "^5.49.0",
+		"@typescript-eslint/typescript-estree": "^5.49.0",
+		"@vanilla-extract/css": "^1.9.3",
+		"@vanilla-extract/vite-plugin": "^3.7.1",
 		"astray": "^1.1.1",
-		"esbuild": "^0.15.10",
+		"esbuild": "^0.15.18",
 		"escodegen": "^2.0.0",
-		"eslint": "^8.24.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-import-resolver-typescript": "^3.5.1",
-		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsx-a11y": "^6.6.1",
+		"eslint": "^8.32.0",
+		"eslint-config-prettier": "^8.6.0",
+		"eslint-import-resolver-typescript": "^3.5.3",
+		"eslint-plugin-import": "^2.27.5",
+		"eslint-plugin-jsx-a11y": "^6.7.1",
 		"glyphhanger": "^5.0.0",
-		"html-minifier-terser": "^7.0.0",
-		"linkedom": "^0.14.16",
+		"html-minifier-terser": "^7.1.0",
+		"linkedom": "^0.14.21",
 		"polished": "^4.2.2",
-		"prettier": "^2.7.1",
+		"prettier": "^2.8.3",
+		"pwa-asset-generator": "^6.2.1",
 		"rescript": "^10.0.1",
 		"rollup": "^2.79.1",
-		"tsm": "^2.2.2",
-		"typescript": "^4.8.4",
-		"vite": "^3.1.4",
-		"vite-plugin-solid": "2.3.9",
-		"ws": "^8.9.0"
+		"tsm": "^2.3.0",
+		"typescript": "^4.9.4",
+		"vite": "^4.0.4",
+		"vite-plugin-lightningcss": "^0.0.3",
+		"vite-plugin-solid": "2.5.0"
 	},
 	"pnpm": {
 		"overrides": {
 			"@vanilla-extract/vite-plugin": {
-				"vite": "^3"
+				"vite": "^4"
 			}
 		}
 	},

@@ -1,6 +1,6 @@
-import type { CSSProperties } from "@vanilla-extract/css"
+import { CSSProperties, globalStyle } from "@vanilla-extract/css"
 import { keyframes, style } from "@vanilla-extract/css"
-import { LIST_RESET } from "../styles/shared"
+import { LIST_RESET } from "../styles/shared.css"
 
 import { vars } from "../styles/vars.css"
 
@@ -20,13 +20,14 @@ export const phrases = style({
 	flexWrap: "wrap",
 	overflow: "hidden",
 	borderRadius: vars.borderRadius["3x"],
-	color: vars.color["primary-300"],
+	color: vars.color["primary-1"],
 	fontWeight: 900,
 	fontSize: vars.fontSize["3x"],
-	padding: vars.space["1x"],
+	paddingInline: vars.space["1x"],
+	paddingBlock: vars.space["5x"],
 	width: "100%",
 	transition: "background 200ms ease-in-out",
-	background: vars.color["primary-1100"],
+	background: vars.color["primary-12"],
 })
 
 /**
@@ -50,7 +51,7 @@ function lerp(a: number, b: number, p: number) {
 }
 
 function makeKeyframes(from: number, to: number) {
-	let out = Object.create(null) as Record<string, CSSProperties>
+	let out = {} as Record<string, CSSProperties>
 	const stops = 100
 
 	for (let i = 0; i <= stops; i++) {
@@ -65,18 +66,17 @@ function makeKeyframes(from: number, to: number) {
 
 const springLike = keyframes(makeKeyframes(36, 0))
 
-export const phraseChar = style({
-	animation: `0.7s ${springLike} linear`,
-	animationFillMode: "both",
-	display: "inline-block",
-	selectors: {
-		"&[data-sep]": {
-			color: vars.color["primary-600"],
-		},
-	},
-})
-
-export const word = style({
+globalStyle(`${phrases} > *`, {
 	overflow: "hidden",
 	whiteSpace: "nowrap",
+})
+globalStyle(`${phrases} > * > *`, {
+	animation: `0.7s ${springLike} linear`,
+	willChange: "transform, opacity",
+	animationFillMode: "both",
+	display: "inline-block",
+	animationDelay: `calc(var(--ad) * 1ms)`,
+})
+globalStyle(`${phrases} > * > *[data-sep]`, {
+	color: vars.color["primary-7"],
 })

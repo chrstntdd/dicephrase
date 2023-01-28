@@ -1,5 +1,5 @@
 /*
-    Content-Security-Policy: default-src 'self' 'unsafe-inline'; frame-ancestors 'none'; object-src 'none';
+    Content-Security-Policy: default-src 'self' 'unsafe-inline'; font-src 'self' https: data:;form-action 'self';img-src 'self' data:;base-uri 'none';frame-ancestors 'none';object-src 'none';upgrade-insecure-requests
     X-Frame-Options: DENY
     X-Content-Type-Options: nosniff
     Referrer-Policy: no-referrer

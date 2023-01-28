@@ -1,6 +1,5 @@
-import { test, expect } from "@playwright/test"
-import type { Page } from "@playwright/test"
-import { resolve } from "path"
+import { resolve } from "node:path"
+import { test, expect, type Page } from "@playwright/test"
 
 import { E2E_SCREENSHOT_DIR } from "../config"
 
@@ -9,10 +8,6 @@ async function setupPage(page: Page, baseURL: string) {
 }
 
 test.describe.parallel("App e2e", () => {
-	test.afterAll(async ({ browser }) => {
-		await browser.close()
-	})
-
 	test("shows the heading", async ({ page, baseURL }) => {
 		await setupPage(page, baseURL!)
 		let heading = page.locator("h1")
@@ -53,11 +48,7 @@ test.describe.parallel("App e2e", () => {
 		})
 	})
 
-	// Too flaky. Run when https://github.com/microsoft/playwright/issues/13097 is resolved.
-	// TLDR: issue is that when we evaluate `navigator.clipboard.readText()` in the page
-	// it's actually returning the OS's clipboard value which isn't guaranteed to match
-	// what's on the page
-	test.skip("should copy the results to the clipboard after the press of the copy button", async ({
+	test("should copy the results to the clipboard after the press of the copy button", async ({
 		page,
 		browserName,
 		browser,
@@ -100,15 +91,36 @@ test.describe.parallel("App e2e", () => {
 		baseURL,
 	}) => {
 		await setupPage(page, baseURL!)
-		let genBtn = page.locator("button[type='submit']")
 
-		await Promise.all([genBtn.click(), page.waitForNavigation()])
+		await Promise.all([
+			page.locator("button[type='submit']").click(),
+			page.waitForURL("**/?phrase-count=8&separator=random"),
+		])
 
-		let searchParams = await (
-			await page.evaluateHandle(() => Promise.resolve(location.search))
-		).jsonValue()
+		expect(new URL(page.url()).searchParams.toString()).toEqual(
+			"phrase-count=8&separator=random",
+		)
 
-		expect(searchParams).toEqual("?phrase-count=8&separator=random")
+		await Promise.all([
+			page
+				.getByRole("group", { name: "Word separator" })
+				.getByText(".")
+				.click(),
+			page.waitForURL("**/?phrase-count=8&separator=."),
+		])
+
+		expect(new URL(page.url()).searchParams.toString()).toEqual(
+			"phrase-count=8&separator=.",
+		)
+
+		await Promise.all([
+			page.getByRole("group", { name: "Word count" }).getByText("9").click(),
+			page.waitForURL("**/?phrase-count=9&separator=."),
+		])
+
+		expect(new URL(page.url()).searchParams.toString()).toEqual(
+			"phrase-count=9&separator=.",
+		)
 	})
 
 	test("should handle space character properly", async ({ page, baseURL }) => {

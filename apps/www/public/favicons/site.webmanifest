@@ -1,35 +1,35 @@
 {
-  "name": "Dicephrase",
-  "short_name": "Dicephrase",
-  "description": "Simple, random, unique secure passphrase generator based on the diceware method",
-  "display": "standalone",
-  "start_url": "/",
-  "background_color": "#b4ebdf",
-  "theme_color": "#b4ebdf",
-  "icons": [
-    {
-      "src": "/img/splash/manifest-icon-192.maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/img/splash/manifest-icon-192.maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/img/splash/manifest-icon-512.maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/img/splash/manifest-icon-512.maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ]
+	"name": "Dicephrase",
+	"short_name": "Dicephrase",
+	"description": "Simple, random, unique secure passphrase generator based on the diceware method",
+	"display": "standalone",
+	"start_url": "/",
+	"background_color": "#63a1c2",
+	"theme_color": "#63a1c2",
+	"icons": [
+		{
+			"src": "/img/splash/manifest-icon-192.maskable.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/img/splash/manifest-icon-192.maskable.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/img/splash/manifest-icon-512.maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/img/splash/manifest-icon-512.maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	]
 }

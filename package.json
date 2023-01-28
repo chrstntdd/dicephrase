@@ -7,8 +7,8 @@
 		"apps/*"
 	],
 	"engines": {
-		"node": ">=18.8.0",
-		"pnpm": ">=7.9.5"
+		"node": ">=18",
+		"pnpm": ">=7.25.0"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
@@ -22,7 +22,9 @@
 	},
 	"scripts": {
 		"fmt": "pnpm fmt --recursive",
-		"lint": "pnpm lint --recursive"
+		"lint": "pnpm lint --recursive",
+		"postinstall": "pnpm build-pkgs",
+		"build-pkgs": "pnpm --stream -F './pkgs/**' make"
 	},
 	"prettier": {
 		"semi": false,

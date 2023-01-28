@@ -5,14 +5,14 @@ import {
 	parse_count_val,
 	parse_qs_to_phrase_config,
 	PHRASE_COUNT_FALLBACK,
-	PHRASE_COUNT_KEY,
 	SEPARATOR_FALLBACK,
+	PHRASE_COUNT_KEY,
 	SEPARATOR_KEY,
 } from "gen-utils"
 
 import { assert } from "../../lib/assert"
 
-type State = "empty" | "idle-with-output"
+type State = "empty" | "with-output"
 
 type CopyState = "idle" | "copying" | "copied"
 
@@ -22,6 +22,10 @@ const enum Msg {
 	Generate,
 }
 
+let wl: ReturnType<typeof fetchWordList>
+let copy: typeof import("./copy")["copyPhraseToClipboard"] | undefined
+let idleCallbackSupported, rIC, cIC
+
 async function fetchWordList(): Promise<Record<string, string>> {
 	let res = await fetch("/wl-2016.json")
 	assert(res.ok)
@@ -29,18 +33,17 @@ async function fetchWordList(): Promise<Record<string, string>> {
 	return wl
 }
 
-let wl: ReturnType<typeof fetchWordList>
-
 export function useGenerate() {
+	let handle: ReturnType<typeof requestIdleCallback>
 	let [state, setState] = createSignal<State>("empty")
 	let [copyState, setCopyState] = createSignal<CopyState>("idle")
 	let [phraseCount, setPhraseCount] = createSignal(PHRASE_COUNT_FALLBACK)
 	let [separatorKind, setSeparatorKind] = createSignal(SEPARATOR_FALLBACK)
-	let [separators, setSeparators] = createSignal<Array<string>>([])
-	let [phrases, setPhrases] = createSignal<Array<string>>([])
+	let [separators, setSeparators] = createSignal<ReadonlyArray<string>>([])
+	let [phrases, setPhrases] = createSignal<ReadonlyArray<string>>([])
 
-	onMount(function setInitialStateFromURL() {
-		let cfg = parse_qs_to_phrase_config(globalThis.location?.search)
+	onMount(async function setInitialStateFromURL() {
+		let cfg = parse_qs_to_phrase_config(globalThis.location.search)
 
 		batch(() => {
 			setSeparatorKind(cfg.sep)
@@ -48,43 +51,42 @@ export function useGenerate() {
 		})
 	})
 
-	function syncFormToURL() {
-		let url = new URL(globalThis.location as unknown as string)
-		url.searchParams.set(PHRASE_COUNT_KEY, `${phraseCount()}`)
-		url.searchParams.set(SEPARATOR_KEY, separatorKind())
-
-		history.pushState({}, "", url)
-	}
-
-	function handleEvent(kind: Msg, ogEvent: Event) {
+	async function handleEvent(kind: Msg, ogEvent: Event) {
+		let value = (ogEvent.target as HTMLInputElement).value
 		switch (kind) {
 			case Msg.ChangeCount: {
-				let value = parse_count_val((ogEvent.target as HTMLInputElement).value)
-				setPhraseCount(value)
+				setPhraseCount(parse_count_val(value))
 				break
 			}
 			case Msg.ChangeSeparator: {
-				// TODO: validate here...?
-				let value = (ogEvent.target as HTMLInputElement).value
 				setSeparatorKind(value)
-				break
-			}
-
-			case Msg.Generate: {
-				ogEvent.preventDefault()
 				break
 			}
 		}
 
 		// Cache the promise to fetch only one time
-		;(wl ??= fetchWordList()).then((wordList) => {
-			batch(() => {
-				setSeparators(make_separators(separatorKind(), phraseCount()))
-				setPhrases(make_phrases(phraseCount(), wordList))
+		let wordList = await (wl ||= fetchWordList())
+		batch(() => {
+			setSeparators(make_separators(separatorKind(), phraseCount()))
+			setPhrases(make_phrases(phraseCount(), wordList))
+		})
 
-				syncFormToURL()
-				setState("idle-with-output")
-			})
+		setState("with-output")
+
+		idleCallbackSupported ||= "requestIdleCallback" in globalThis
+		rIC ||= idleCallbackSupported ? requestIdleCallback : requestAnimationFrame
+		cIC ||= idleCallbackSupported ? cancelIdleCallback : cancelAnimationFrame
+
+		if (handle) {
+			cIC(handle)
+		}
+
+		handle = rIC(() => {
+			let url = new URL(globalThis.location as unknown as string)
+			url.searchParams.set(PHRASE_COUNT_KEY, `${phraseCount()}`)
+			url.searchParams.set(SEPARATOR_KEY, separatorKind())
+
+			history.pushState({}, "", url)
 		})
 	}
 
@@ -99,9 +101,10 @@ export function useGenerate() {
 		},
 		async onCopyPress() {
 			setCopyState("copying")
-			let m = await import("./copy").then((m) => m.copyPhraseToClipboard)
+			copy ||= await import("./copy").then((m) => m.copyPhraseToClipboard)
 
-			await m(phrases(), separators())
+			// @ts-expect-error It'll be here, i promise
+			await copy(phrases(), separators())
 			setCopyState("copied")
 			setCopyState("idle")
 		},
@@ -112,6 +115,7 @@ export function useGenerate() {
 			handleEvent(Msg.ChangeSeparator, e)
 		},
 		onGeneratePress(e: Event) {
+			e.preventDefault()
 			handleEvent(Msg.Generate, e)
 		},
 	}

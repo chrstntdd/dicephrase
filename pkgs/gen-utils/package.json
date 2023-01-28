@@ -7,7 +7,7 @@
 	"sideEffects": false,
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
+			"import": "./dist/mod.js"
 		},
 		"./package.json": "./package.json"
 	},
@@ -19,14 +19,17 @@
 		"emit-types": "tsc --emitDeclarationOnly",
 		"test": "vitest",
 		"test-cov": "vitest --watch false --coverage",
-		"fmt": "prettier src --write"
+		"fmt": "prettier src --write",
+		"make": "esbuild src/index.ts --bundle --minify --platform=browser  --format=esm --outfile=dist/mod.js"
 	},
 	"devDependencies": {
-		"@vitest/coverage-c8": "^0.23.4",
+		"@vitest/coverage-c8": "^0.28.3",
+		"esbuild": "^0.15.18",
+		"fast-check": "^3.6.2",
 		"gentype": "^4.5.0",
-		"prettier": "^2.7.1",
+		"prettier": "^2.8.3",
 		"rescript": "^10.0.1",
-		"typescript": "^4.8.4",
-		"vitest": "^0.23.4"
+		"typescript": "^4.9.4",
+		"vitest": "^0.28.3"
 	}
 }

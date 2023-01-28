@@ -12,9 +12,9 @@ export const aboutPage = style({
 export const tagline = style({
 	margin: 0,
 	fontWeight: "600",
-	color: vars.color["primary-200"],
+	color: vars.color["primary-2"],
 	fontSize: vars.fontSize["1x"],
-	background: vars.color["primary-900"],
+	background: vars.color["primary-9"],
 	padding: vars.space["1x"],
 	borderRadius: vars.borderRadius["2x"],
 })
@@ -22,7 +22,7 @@ export const tagline = style({
 export const inlineCode = style({
 	paddingBlock: vars.space["0x"],
 	paddingInline: vars.space["1x"],
-	background: vars.color["primary-900"],
+	background: vars.color["primary-9"],
 	borderRadius: vars.borderRadius["1x"],
 })
 
@@ -30,7 +30,7 @@ export const appFooter = style({
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "center",
-	color: vars.color["primary-200"],
+	color: vars.color["primary-2"],
 })
 
 export const sourceLink = style({
@@ -64,5 +64,5 @@ globalStyle(`${aboutPage} :not(h1) ~ p`, {
 
 globalStyle(`${aboutPage} *`, {
 	fontWeight: "600",
-	color: vars.color["primary-200"],
+	color: vars.color["primary-2"],
 })

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs"
 import { defineConfig, UserConfig } from "vite"
 import solid from "vite-plugin-solid"
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin"
-import { parcelCSSPlugin } from "@ct/vite-plugin-parcel-css"
+import lightningcss from "vite-plugin-lightningcss"
 import { buildPlugin } from "@ct/vite-plugin-build-info"
 
 import pkg from "./package.json"
@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
 					? { ssr: true, solid: { hydratable: true, generate: "ssr" } }
 					: { ssr: false, solid: { hydratable: true, generate: "dom" } },
 			),
-			parcelCSSPlugin({
+			lightningcss({
 				browserslist: pkg.browserslist,
 				minify: true,
 			}),

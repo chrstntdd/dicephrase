@@ -14,14 +14,12 @@ import {
 	make_phrases,
 } from "."
 
-vi.stubGlobal("crypto", {
-	// @ts-expect-error
-	getRandomValues: (x) => crypto.webcrypto.getRandomValues(x),
-})
-
 let wl
 
 beforeAll(() => {
+	vi.stubGlobal("crypto", {
+		getRandomValues: (x) => crypto.webcrypto.getRandomValues(x),
+	})
 	wl = JSON.parse(
 		readFileSync(resolve("../../apps/www/public/wl-2016.json"), "utf-8"),
 	)
@@ -138,7 +136,7 @@ describe.concurrent("parse_qs_to_phrase_config", () => {
 describe.concurrent("make_phrases", () => {
 	test("should return an array of words", () => {
 		let count = 4
-		let out = make_phrases<string>(count, wl)
+		let out = make_phrases(count, wl)
 
 		expect(out.length).toEqual(count)
 		expect(out.every((word) => /\w{1}/.test(word))).toBeTruthy()

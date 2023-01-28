@@ -33,7 +33,7 @@ globalStyle("html:focus-within", {
 })
 
 globalStyle("html, body", {
-	background: vars.color["primary-1000"],
+	background: vars.color["primary-10"],
 	margin: 0,
 	padding: 0,
 	WebkitTextSizeAdjust: "100%",
@@ -49,11 +49,11 @@ globalStyle("body", {
 	visibility: "hidden",
 })
 
-globalStyle("input, button, textarea, select", {
+globalStyle("input, button", {
 	font: "inherit",
 })
 
-globalStyle("img, picture, video, canvas, svg", {
+globalStyle("img, svg", {
 	display: "block",
 	maxWidth: "100%",
 })
@@ -82,5 +82,5 @@ globalStyle("input,button,a", {
 globalStyle("*:focus,*:focus-visible", {
 	outline: 0,
 	zIndex: FOCUS_RING_Z_INDEX,
-	boxShadow: `0 0 0 2px ${vars.color["primary-400"]}`,
+	boxShadow: `0 0 0 2px ${vars.color["primary-4"]}`,
 })

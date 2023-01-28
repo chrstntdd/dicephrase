@@ -5,19 +5,23 @@ use rand::{
 };
 use std::{collections::HashMap, io};
 
-pub fn combine_zip(words: &Vec<String>, separators: &Vec<String>) -> String {
-    let mut result = vec![];
+pub fn combine_zip(words: &[String], separators: &[String]) -> String {
     let mut i = 0;
+    let separators_len = separators.len();
+    let mut result = String::with_capacity(
+        // Pre-allocate since the size is known ahead of time
+        words.iter().map(|x| x.len()).sum::<usize>()
+            + separators.iter().map(|x| x.len()).sum::<usize>(),
+    );
 
     for word in words {
-        result.push(word.clone());
-        if let Some(el) = separators.get(i) {
-            result.push(el.clone());
+        result.push_str(word);
+        if i < separators_len {
+            result.push_str(&separators[i]);
         }
         i += 1;
     }
-
-    result.join("")
+    result
 }
 
 pub fn make_words(count: usize, word_list: &HashMap<String, String>) -> Vec<String> {

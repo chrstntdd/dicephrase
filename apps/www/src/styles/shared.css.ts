@@ -6,7 +6,7 @@ export const PRESSABLE: StyleRule = {
 	color: vars.color["primary-3"],
 	borderWidth: vars.borderWidth["1x"],
 	borderStyle: "solid",
-	borderColor: vars.color["primary-8"],
+	borderColor: vars.color["primary-7"],
 	transition: "background 50ms ease",
 	"@media": {
 		...mediaSupportsHover({

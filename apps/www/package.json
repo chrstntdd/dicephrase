@@ -23,7 +23,6 @@
 	},
 	"devDependencies": {
 		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
-		"@ct/vite-plugin-parcel-css": "workspace:^1.0.0",
 		"@types/escodegen": "^0.0.7",
 		"@types/html-minifier-terser": "^7.0.0",
 		"@types/node": "^18.11.18",
@@ -50,6 +49,7 @@
 		"tsm": "^2.3.0",
 		"typescript": "^4.9.4",
 		"vite": "^4.0.4",
+		"vite-plugin-lightningcss": "^0.0.3",
 		"vite-plugin-solid": "2.5.0"
 	},
 	"pnpm": {

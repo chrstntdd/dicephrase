@@ -1,10 +1,8 @@
-import * as crypto from "crypto"
-import { readFileSync } from "fs"
-import { resolve } from "path"
+import * as crypto from "node:crypto"
 import * as fc from "fast-check"
 
 import { test, describe, expect, vi, beforeAll } from "vitest"
-import { PHRASE_COUNT_FALLBACK, RANDOM_SEPARATOR_OPTS } from "./constants"
+import { RANDOM_SEPARATOR_OPTS } from "./constants"
 
 import { make_separators } from "."
 

@@ -12,7 +12,6 @@
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"@ct/tworker",
 			"esbuild",
 			"playwright",
 			"rescript"

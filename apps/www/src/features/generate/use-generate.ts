@@ -1,15 +1,16 @@
 import { batch, createSignal, onMount } from "solid-js"
-import { PHRASE_COUNT_KEY, SEPARATOR_KEY } from "gen-utils"
-import { makeWorker } from "@ct/tworker"
+import {
+	make_phrases,
+	make_separators,
+	parse_count_val,
+	parse_qs_to_phrase_config,
+	PHRASE_COUNT_FALLBACK,
+	SEPARATOR_FALLBACK,
+	PHRASE_COUNT_KEY,
+	SEPARATOR_KEY,
+} from "gen-utils"
 
-import type { Actions } from "./generate.worker"
-
-let generateWorker = makeWorker<Actions>(() =>
-	// prettier-ignore
-	import.meta.env.SSR
-		? ({} as unknown as Worker)
-		: new Worker(new URL("./generate.worker.ts", import.meta.url), {type: "module"}),
-)
+import { assert } from "../../lib/assert"
 
 type State = "empty" | "with-output"
 
@@ -21,53 +22,69 @@ const enum Msg {
 	Generate,
 }
 
+let wl: ReturnType<typeof fetchWordList>
 let copy: typeof import("./copy")["copyPhraseToClipboard"] | undefined
+let idleCallbackSupported, rIC, cIC
+
+async function fetchWordList(): Promise<Record<string, string>> {
+	let res = await fetch("/wl-2016.json")
+	assert(res.ok)
+	let wl = res.json()
+	return wl
+}
 
 export function useGenerate() {
 	let handle: ReturnType<typeof requestIdleCallback>
 	let [state, setState] = createSignal<State>("empty")
 	let [copyState, setCopyState] = createSignal<CopyState>("idle")
-	let [phraseCount, setPhraseCount] = createSignal()
-	let [separatorKind, setSeparatorKind] = createSignal()
+	let [phraseCount, setPhraseCount] = createSignal(PHRASE_COUNT_FALLBACK)
+	let [separatorKind, setSeparatorKind] = createSignal(SEPARATOR_FALLBACK)
 	let [separators, setSeparators] = createSignal<ReadonlyArray<string>>([])
 	let [phrases, setPhrases] = createSignal<ReadonlyArray<string>>([])
 
 	onMount(async function setInitialStateFromURL() {
-		let workerState = await generateWorker.run(
-			"hydrateInitialStateFromURL",
-			globalThis.location?.search,
-		)
+		let cfg = parse_qs_to_phrase_config(globalThis.location.search)
+
 		batch(() => {
-			setSeparatorKind(workerState.separatorKind)
-			setPhraseCount(workerState.phraseCount)
-			setSeparators(workerState.separators)
-			setPhrases(workerState.phrases)
+			setSeparatorKind(cfg.sep)
+			setPhraseCount(cfg.count)
 		})
 	})
 
 	async function handleEvent(kind: Msg, ogEvent: Event) {
-		let nextState = await generateWorker.run("handleEvent", {
-			// @ts-expect-error Close enough
-			kind,
-			value: (ogEvent.target as HTMLInputElement).value,
+		let value = (ogEvent.target as HTMLInputElement).value
+		switch (kind) {
+			case Msg.ChangeCount: {
+				setPhraseCount(parse_count_val(value))
+				break
+			}
+			case Msg.ChangeSeparator: {
+				setSeparatorKind(value)
+				break
+			}
+		}
+
+		// Cache the promise to fetch only one time
+		let wordList = await (wl ||= fetchWordList())
+		batch(() => {
+			setSeparators(make_separators(separatorKind(), phraseCount()))
+			setPhrases(make_phrases(phraseCount(), wordList))
 		})
 
 		setState("with-output")
-		batch(() => {
-			setSeparatorKind(nextState.separatorKind)
-			setPhraseCount(nextState.phraseCount)
-			setSeparators(nextState.separators)
-			setPhrases(nextState.phrases)
-		})
+
+		idleCallbackSupported ||= "requestIdleCallback" in globalThis
+		rIC ||= idleCallbackSupported ? requestIdleCallback : requestAnimationFrame
+		cIC ||= idleCallbackSupported ? cancelIdleCallback : cancelAnimationFrame
 
 		if (handle) {
-			cancelIdleCallback(handle)
+			cIC(handle)
 		}
 
-		handle = requestIdleCallback(() => {
+		handle = rIC(() => {
 			let url = new URL(globalThis.location as unknown as string)
-			url.searchParams.set(PHRASE_COUNT_KEY, `${nextState.phraseCount}`)
-			url.searchParams.set(SEPARATOR_KEY, nextState.separatorKind)
+			url.searchParams.set(PHRASE_COUNT_KEY, `${phraseCount()}`)
+			url.searchParams.set(SEPARATOR_KEY, separatorKind())
 
 			history.pushState({}, "", url)
 		})

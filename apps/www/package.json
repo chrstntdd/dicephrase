@@ -15,7 +15,8 @@
 		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'",
 		"subset-fonts": "pnpm subset-sans-serif-font && pnpm subset-serif-font ",
 		"subset-sans-serif-font": "pnpm exec glyphhanger --formats=woff2 --subset=./public/fonts/manrope/Manrope-Regular.ttf",
-		"subset-serif-font": "pnpm exec glyphhanger --formats=woff2 --whitelist=Dicephrase --subset=./public/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf"
+		"subset-serif-font": "pnpm exec glyphhanger --formats=woff2 --whitelist=Dicephrase --subset=./public/fonts/DM_Serif_Display/DMSerifDisplay-Regular.ttf",
+		"gen-splash": "pwa-asset-generator src/assets/logo.svg -i ./index.html -m ./public/favicons/site.webmanifest -b 'linear-gradient(  45deg,  hsl(201deg 44% 15%) 0%,  hsl(201deg 47% 21%) 1%,  hsl(201deg 51% 25%) 6%,  hsl(201deg 54% 31%) 12%,  hsl(201deg 57% 36%) 19%,  hsl(201deg 58% 40%) 28%,  hsl(201deg 55% 44%) 37%,  hsl(201deg 51% 48%) 46%,  hsl(201deg 48% 52%) 55%,  hsl(201deg 45% 56%) 65%,  hsl(201deg 41% 60%) 74%,  hsl(201deg 36% 65%) 83%,  hsl(202deg 32% 69%) 91%,  hsl(202deg 27% 74%) 98%,  hsl(202deg 23% 78%) 100%)' ./public/img/splash"
 	},
 	"dependencies": {
 		"gen-utils": "workspace:0.0.4",
@@ -44,6 +45,7 @@
 		"linkedom": "^0.14.21",
 		"polished": "^4.2.2",
 		"prettier": "^2.8.3",
+		"pwa-asset-generator": "^6.2.1",
 		"rescript": "^10.0.1",
 		"rollup": "^2.79.1",
 		"tsm": "^2.3.0",

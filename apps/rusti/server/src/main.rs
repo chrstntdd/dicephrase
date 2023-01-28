@@ -44,8 +44,10 @@ async fn gen(
     cfg: web::Query<DicephraseCfg>,
 ) -> Either<Result<impl Responder>, Result<impl Responder>> {
     let word_list = read_wl().expect("Unable to read wordlist");
-    let separators = make_separators(cfg.count, &cfg.sep);
-    let words = make_words(cfg.count, &word_list);
+    //  Limit to slightly over 256 bits of entropy
+    let count = cfg.count.clamp(4, 20);
+    let separators = make_separators(count, &cfg.sep);
+    let words = make_words(count, &word_list);
 
     match cfg.fmt {
         OutputFmt::Text => Either::Left(Ok(combine_zip(&words, &separators))),

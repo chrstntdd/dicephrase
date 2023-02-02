@@ -8,6 +8,7 @@ import {
 	SEPARATOR_FALLBACK,
 	PHRASE_COUNT_KEY,
 	SEPARATOR_KEY,
+	combine_zip,
 } from "gen-utils"
 
 import { assert } from "../../lib/assert"
@@ -23,7 +24,6 @@ const enum Msg {
 }
 
 let wl: ReturnType<typeof fetchWordList>
-let copy: typeof import("./copy")["copyPhraseToClipboard"] | undefined
 let idleCallbackSupported, rIC, cIC
 
 async function fetchWordList(): Promise<Record<string, string>> {
@@ -101,10 +101,12 @@ export function useGenerate() {
 		},
 		async onCopyPress() {
 			setCopyState("copying")
-			copy ||= await import("./copy").then((m) => m.copyPhraseToClipboard)
-
-			// @ts-expect-error It'll be here, i promise
-			await copy(phrases(), separators())
+			await navigator.clipboard.writeText(
+				combine_zip(
+					phrases() as Array<string>,
+					separators() as Array<string>,
+				).join(""),
+			)
 			setCopyState("copied")
 			setCopyState("idle")
 		},

@@ -6,8 +6,8 @@ function assert<T>(
 	message?: string,
 ): asserts value is T
 function assert(value: any, message?: string) {
-	if (value === false || value === null || typeof value === "undefined") {
-		throw Error(message || "Assertion failed")
+	if (value === false ?? value === null ?? typeof value === "undefined") {
+		throw Error(message ?? "Assertion failed")
 	}
 }
 

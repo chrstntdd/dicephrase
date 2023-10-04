@@ -23,12 +23,12 @@
 		"make": "esbuild src/index.ts --bundle --minify --platform=browser  --format=esm --outfile=dist/mod.js"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "^0.34.5",
-		"esbuild": "^0.15.18",
+		"@vitest/coverage-v8": "^0.34.6",
+		"esbuild": "^0.19.4",
 		"fast-check": "^3.13.0",
-		"prettier": "^2.8.8",
+		"prettier": "^3.0.3",
 		"rescript": "10.1.4",
 		"typescript": "^4.9.5",
-		"vitest": "^0.34.5"
+		"vitest": "^0.34.6"
 	}
 }

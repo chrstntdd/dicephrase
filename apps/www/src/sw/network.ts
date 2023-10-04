@@ -37,7 +37,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
 		case /.(ttf|otf|woff2)$/.test(reqUrl.pathname):
 			return caches.match(request).then(
 				(response) =>
-					response ||
+					response ??
 					fetch(request).then(async (response) => {
 						let copy = response.clone()
 						let cache = await caches.open(__SW_CACHE_KEY__)
@@ -51,7 +51,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
 		default:
 			return caches
 				.match(event.request)
-				.then((response) => response || fetch(event.request))
+				.then((response) => response ?? fetch(event.request))
 				.catch(async () => {
 					let cache = await caches.open(__SW_CACHE_KEY__)
 					let cachedResponse = await cache.match("/")

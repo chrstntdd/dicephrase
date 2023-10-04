@@ -17,7 +17,7 @@
 			"rescript"
 		],
 		"overrides": {
-			"esbuild": "^0.15.9"
+			"esbuild": "^0.19.4"
 		}
 	},
 	"scripts": {

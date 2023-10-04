@@ -4,8 +4,8 @@ import { combine_zip } from "gen-utils"
 import * as styles from "./phrase-output.css"
 
 function PhraseOutput(props: {
-	phrases: readonly string[]
-	separators: readonly string[]
+	phrases: ReadonlyArray<string>
+	separators: ReadonlyArray<string>
 	formId: string
 }) {
 	return (
@@ -18,8 +18,8 @@ function PhraseOutput(props: {
 				class={/*@once*/ styles.outputEl}
 			>
 				{combine_zip(
-					props.phrases as string[],
-					props.separators as string[],
+					props.phrases as Array<string>,
+					props.separators as Array<string>,
 				).join("")}
 			</output>
 			<div class={/*@once*/ styles.phrases}>
@@ -27,7 +27,7 @@ function PhraseOutput(props: {
 					{(phrase, index) => {
 						let idx = index()
 						let isLast = idx === props.phrases.length - 1
-						let sep = props.separators[idx] || ""
+						let sep = props.separators[idx] ?? ""
 
 						return (
 							<>

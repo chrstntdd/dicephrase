@@ -3,15 +3,12 @@ name: Main CI
 on: [push]
 
 env:
-  PNPM_VERSION: 7.25.0
+  PNPM_VERSION: 8.8.0
+  NODE_VERSION: 18.18.0
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
       - name: Checkout
@@ -21,11 +18,11 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          NODE_VERSION: ${{ matrix.NODE_VERSION }}
+          cache: "pnpm"
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -33,9 +30,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-test-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-test-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
 
       - name: Install gen-utils dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -53,10 +50,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -65,11 +58,11 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -77,9 +70,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-lint-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-lint-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
 
       - name: Install linting dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -88,16 +81,12 @@ jobs:
           run_install: |
             - recursive: false
               args: [--filter, './apps/www', --frozen-lockfile, --prefer-offline, --ignore-scripts]
-            
+
       - name: Lint
         run: pnpm --filter ./apps/www lint
 
   type-check:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
       - name: Checkout
@@ -107,11 +96,11 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -119,9 +108,9 @@ jobs:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ matrix.node-version }}-
+            ${{ runner.os }}-type-check-${{ env.cache-name }}-${{ env.NODE_VERSION }}-
 
       - name: Install TypeScript type checker dependencies
         uses: pnpm/action-setup@v2.2.1
@@ -133,9 +122,8 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
 
       - name: Type check
         run: pnpm --filter ./apps/www tc
-

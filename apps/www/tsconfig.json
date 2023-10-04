@@ -3,7 +3,7 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": false,
 		"forceConsistentCasingInFileNames": true,
-		"importsNotUsedAsValues": "error",
+		"verbatimModuleSyntax": true,
 		"isolatedModules": true,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",

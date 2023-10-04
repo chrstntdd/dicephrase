@@ -1,23 +1,17 @@
 {
+	"extends": ["../../tsconfig.json"],
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": false,
-		"forceConsistentCasingInFileNames": true,
-		"importsNotUsedAsValues": "error",
 		"isolatedModules": true,
 		"lib": ["DOM", "ESNext"],
-		"module": "ESNEXT",
-		"moduleResolution": "node",
+		"moduleResolution": "Bundler",
 		"noEmit": true,
 		"resolveJsonModule": true,
-		"skipDefaultLibCheck": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"strictNullChecks": true,
-		"noUncheckedIndexedAccess": true,
 		"target": "ESNEXT",
 		"useDefineForClassFields": true,
 		"baseUrl": ".",
+		"rootDir": "src",
 		"paths": {
 			"~/*": ["src/*"]
 		}

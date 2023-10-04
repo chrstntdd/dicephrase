@@ -7,7 +7,7 @@
 		"fmt": "prettier src --write"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.30.0",
+		"@playwright/test": "^1.38.1",
 		"prettier": "^3.0.3"
 	},
 	"eslintConfig": {

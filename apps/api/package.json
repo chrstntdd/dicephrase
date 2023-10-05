@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "playwright test",
 		"tc": "tsc --noEmit",
-		"pub": "wrangler publish",
+		"pub": "wrangler deploy",
 		"dev": "wrangler dev --env development --port 3000",
 		"build-prod": "vite build --mode production --minify --ssr src/cf-worker.ts",
 		"build-dev": "vite build --mode development --ssr src/cf-worker.ts"

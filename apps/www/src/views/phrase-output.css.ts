@@ -1,4 +1,4 @@
-import { CSSProperties, globalStyle } from "@vanilla-extract/css"
+import { type CSSProperties, globalStyle } from "@vanilla-extract/css"
 import { keyframes, style } from "@vanilla-extract/css"
 import { LIST_RESET } from "../styles/shared.css"
 

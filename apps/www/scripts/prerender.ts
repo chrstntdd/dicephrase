@@ -120,6 +120,7 @@ async function main() {
 	process.exit(0)
 }
 
+// @ts-expect-error Third party types incompatible :/
 import { parse } from "@typescript-eslint/typescript-estree"
 import escg from "escodegen"
 import * as astray from "astray"

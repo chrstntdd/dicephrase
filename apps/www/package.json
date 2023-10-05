@@ -8,8 +8,8 @@
 		"dev:l": "bun vite",
 		"dev": "vite",
 		"fmt": "prettier src --write",
-		"lint:fix": "eslint src/ --fix",
-		"lint": "eslint 'src/**'",
+		"lint:fix": "eslint src --ext tx,tsx --fix",
+		"lint": "eslint src --ext ts,tsx",
 		"preview": "pnpm -s dlx serve dist -p 3001 --ssl-key=localhost-key.pem --ssl-cert=localhost.pem",
 		"tc": "tsc --noEmit",
 		"pub": "pnpx wrangler@2 pages publish './dist' --project-name='dicephrase'",
@@ -19,47 +19,40 @@
 		"gen-splash": "pwa-asset-generator src/assets/logo.svg -i ./index.html -m ./public/favicons/site.webmanifest -b 'linear-gradient(  45deg,  hsl(201deg 61% 31%) 0%,  hsl(201deg 61% 33%) 1%,  hsl(201deg 60% 35%) 5%,  hsl(201deg 60% 36%) 12%,  hsl(201deg 59% 38%) 19%,  hsl(201deg 58% 40%) 27%,  hsl(201deg 55% 44%) 35%,  hsl(201deg 51% 48%) 44%,  hsl(201deg 48% 52%) 54%,  hsl(201deg 45% 56%) 63%,  hsl(201deg 41% 60%) 72%,  hsl(201deg 36% 65%) 81%,  hsl(202deg 32% 69%) 90%,  hsl(202deg 27% 74%) 97%,  hsl(202deg 23% 78%) 100%)' ./public/img/splash"
 	},
 	"dependencies": {
-		"gen-utils": "workspace:0.0.4",
-		"solid-js": "1.6.9"
+		"gen-utils": "workspace:*",
+		"solid-js": "1.7.12"
 	},
 	"devDependencies": {
-		"@ct/vite-plugin-build-info": "workspace:^1.0.0",
-		"@types/escodegen": "^0.0.7",
+		"@ct/vite-plugin-build-info": "workspace:^",
+		"@types/escodegen": "^0.0.8",
 		"@types/html-minifier-terser": "^7.0.0",
-		"@types/node": "^18.11.18",
-		"@typescript-eslint/eslint-plugin": "^5.49.0",
-		"@typescript-eslint/parser": "^5.49.0",
-		"@typescript-eslint/typescript-estree": "^5.49.0",
-		"@vanilla-extract/css": "^1.9.3",
-		"@vanilla-extract/vite-plugin": "^3.7.1",
+		"@types/node": "18.18.3",
+		"@typescript-eslint/eslint-plugin": "^6.7.4",
+		"@typescript-eslint/parser": "^6.7.4",
+		"@typescript-eslint/typescript-estree": "^6.7.4",
+		"@vanilla-extract/css": "^1.13.0",
+		"@vanilla-extract/vite-plugin": "^3.9.0",
 		"astray": "^1.1.1",
-		"esbuild": "^0.15.18",
-		"escodegen": "^2.0.0",
-		"eslint": "^8.32.0",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-import-resolver-typescript": "^3.5.3",
-		"eslint-plugin-import": "^2.27.5",
+		"esbuild": "^0.19.4",
+		"escodegen": "^2.1.0",
+		"eslint": "^8.50.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-import-resolver-typescript": "^3.6.1",
+		"eslint-plugin-import": "^2.28.1",
 		"eslint-plugin-jsx-a11y": "^6.7.1",
 		"glyphhanger": "^5.0.0",
-		"html-minifier-terser": "^7.1.0",
-		"linkedom": "^0.14.21",
+		"html-minifier-terser": "^7.2.0",
+		"linkedom": "^0.15.3",
 		"polished": "^4.2.2",
-		"prettier": "^2.8.3",
-		"pwa-asset-generator": "^6.2.1",
-		"rescript": "^10.0.1",
-		"rollup": "^2.79.1",
+		"prettier": "^3.0.3",
+		"pwa-asset-generator": "^6.3.1",
+		"rescript": "^10.1.4",
+		"rollup": "^3.10.1",
 		"tsm": "^2.3.0",
-		"typescript": "^4.9.4",
-		"vite": "^4.0.4",
-		"vite-plugin-lightningcss": "^0.0.3",
-		"vite-plugin-solid": "2.5.0"
-	},
-	"pnpm": {
-		"overrides": {
-			"@vanilla-extract/vite-plugin": {
-				"vite": "^4"
-			}
-		}
+		"typescript": "^5.2.2",
+		"vite": "^4.4.10",
+		"vite-plugin-lightningcss": "^0.0.5",
+		"vite-plugin-solid": "2.7.0"
 	},
 	"eslintConfig": {
 		"settings": {
@@ -74,21 +67,11 @@
 		"extends": [
 			"prettier",
 			"eslint:recommended",
-			"plugin:@typescript-eslint/eslint-recommended",
-			"plugin:@typescript-eslint/recommended"
+			"plugin:@typescript-eslint/recommended",
+			"plugin:@typescript-eslint/strict",
+			"plugin:@typescript-eslint/stylistic-type-checked"
 		],
 		"overrides": [
-			{
-				"files": [
-					"*.ts",
-					"*.tsx"
-				],
-				"parserOptions": {
-					"project": [
-						"./tsconfig.json"
-					]
-				}
-			},
 			{
 				"files": [
 					"*.spec.ts",
@@ -105,7 +88,8 @@
 				"jsx": true
 			},
 			"ecmaVersion": 12,
-			"sourceType": "module"
+			"sourceType": "module",
+			"project": true
 		},
 		"plugins": [
 			"@typescript-eslint",
@@ -122,7 +106,14 @@
 					"varsIgnorePattern": "^_",
 					"caughtErrorsIgnorePattern": "^_"
 				}
-			]
+			],
+			"@typescript-eslint/array-type": [
+				"error",
+				{
+					"default": "generic"
+				}
+			],
+			"@typescript-eslint/non-nullable-type-assertion-style": "off"
 		}
 	},
 	"browserslist": [

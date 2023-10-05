@@ -1,27 +1,26 @@
 {
-  "name": "dicephrase",
-
-  "sources": [
-    {
-      "dir": "src",
-      "subdirs": true
-    }
-  ],
-  "package-specs": [
-    {
-      "module": "es6",
-      "in-source": true
-    }
-  ],
-  "suffix": ".bs.js",
-  "gentypeconfig": {
-    "language": "typescript",
-    "shims": {},
-    "module": "es6",
-    "debug": {
-      "all": false,
-      "basic": false
-    },
-    "importPath": "relative"
-  }
+	"name": "dicephrase",
+	"sources": [
+		{
+			"dir": "src",
+			"subdirs": true
+		}
+	],
+	"package-specs": [
+		{
+			"module": "es6",
+			"in-source": true
+		}
+	],
+	"suffix": ".bs.js",
+	"gentypeconfig": {
+		"language": "typescript",
+		"shims": {},
+		"module": "es6",
+		"debug": {
+			"all": false,
+			"basic": false
+		},
+		"importPath": "relative"
+	}
 }

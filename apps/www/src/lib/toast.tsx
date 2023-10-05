@@ -55,7 +55,7 @@ export function Toast(props: {
 			"app-toast-group",
 		) as HTMLElement
 
-		let toast = makeToast(props.msg, props.showTime || 3000)
+		let toast = makeToast(props.msg, props.showTime ?? 3000)
 
 		addToast(toast, toastContainer)
 

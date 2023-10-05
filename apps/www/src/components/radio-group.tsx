@@ -12,7 +12,7 @@ function RadioGroup<V>(props: {
 				{(kid) => (
 					<Radio
 						checked={props.value === kid.value}
-						label={/*@once*/ kid.label || `${kid.value}`}
+						label={/*@once*/ kid.label ?? `${kid.value}`}
 						name={/*@once*/ props.name}
 						value={/*@once*/ kid.value}
 					/>

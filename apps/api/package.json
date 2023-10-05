@@ -5,8 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "playwright test",
-		"pub": "wrangler publish",
-		"dev": "wrangler dev --local --port 3000",
+		"tc": "tsc --noEmit",
+		"pub": "wrangler deploy",
+		"dev": "wrangler dev --env development --port 3000",
 		"build-prod": "vite build --mode production --minify --ssr src/cf-worker.ts",
 		"build-dev": "vite build --mode development --ssr src/cf-worker.ts"
 	},
@@ -14,12 +15,16 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"@badrap/valita": "^0.1.9",
-		"gen-utils": "workspace:^0.0.4",
-		"hono": "^2.7.5"
+		"@badrap/valita": "^0.3.0",
+		"@chrstntdd/valita-validator": "^0.0.2",
+		"gen-utils": "workspace:^",
+		"hono": "^3.7.3"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.30.0",
-		"wrangler": "^2.8.1"
+		"@playwright/test": "^1.38.1",
+		"prettier": "^3.0.3",
+		"typescript": "^5.2.2",
+		"vite": "^4.4.10",
+		"wrangler": "^3.10.1"
 	}
 }

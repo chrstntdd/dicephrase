@@ -1,0 +1,7 @@
+(melange.emit
+ (target app)
+ (libraries javascript)
+ (module_systems
+  (es6 mjs)))
+
+(dirs :standard \ node_modules)

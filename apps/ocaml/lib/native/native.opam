@@ -1,0 +1,14 @@
+opam-version: "2.0"
+synopsis: "Native platform adapter for dicephrase"
+description: "A longer description"
+maintainer: ["world"]
+authors: ["A. N. Other"]
+license: "MIT"
+tags: ["json" "native"]
+homepage: "https://github.com/username/reponame"
+doc: "https://url/to/documentation"
+bug-reports: "https://github.com/username/reponame/issues"
+depends: [
+  "yojson" {= "2.1.0"}
+  "ppx_blob"
+]

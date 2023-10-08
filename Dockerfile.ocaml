@@ -1,0 +1,29 @@
+FROM ocaml/opam:alpine-3.18-ocaml-5.1-flambda AS init-opam
+
+RUN set -x && \
+  sudo apk update && sudo apk upgrade && \
+  # Note, adding in newer version of opam than what comes with the base
+  sudo apk add gmp-dev opam
+
+FROM init-opam AS ocaml-app-base
+COPY . .
+
+RUN set -x && \
+  opam install ./server.opam.locked ./native.opam.locked --deps-only --locked
+
+RUN eval $(opam env) && \
+  # Build the runtime application
+  dune build ./apps/ocaml/bin/server.exe
+RUN sudo cp ./_build/default/apps/ocaml/bin/server.exe /usr/bin/server.exe
+
+FROM alpine AS final
+COPY --from=ocaml-app-base /usr/bin/server.exe /home/app/server.exe
+RUN set -x && \
+  apk update && apk upgrade && \
+  apk add gmp-dev && \
+  adduser -D app && \
+  chown app:app /home/app/server.exe
+
+WORKDIR /home/app
+EXPOSE 8080
+ENTRYPOINT ["/home/app/server.exe"]

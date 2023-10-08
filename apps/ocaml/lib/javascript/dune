@@ -1,0 +1,6 @@
+(library
+ (name javascript)
+ (modes melange)
+ (libraries core)
+ (preprocess
+  (pps melange.ppx)))

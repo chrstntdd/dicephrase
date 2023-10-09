@@ -1,0 +1,16 @@
+(executable
+ (name server)
+ (ocamlopt_flags -O3 -nodynlink -unbox-closures -compact)
+ (libraries
+  ; Internal libs
+  core
+  native
+  ; Third party deps
+  eio_main
+  eio.unix
+  fmt.tty
+  logs.fmt
+  logs.threaded
+  piaf
+  unix
+  uri))

@@ -1,0 +1,20 @@
+{
+	"extends": ["../../tsconfig.json"],
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": false,
+		"isolatedModules": true,
+		"lib": ["DOM", "ESNext"],
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"target": "ESNEXT",
+		"useDefineForClassFields": true,
+		"baseUrl": ".",
+		"rootDir": "src",
+		"paths": {
+			"~/*": ["src/*"]
+		}
+	},
+	"include": ["./src"]
+}

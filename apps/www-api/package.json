@@ -1,0 +1,32 @@
+{
+	"name": "www-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"tc": "tsc --noEmit",
+		"pub": "wrangler deploy",
+		"dev": "wrangler dev --env development --port 3001",
+		"build-prod": "vite build --mode production --minify --ssr src/cf-worker.ts",
+		"build-dev": "vite build --mode development --ssr src/cf-worker.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@badrap/valita": "^0.3.0",
+		"@chrstntdd/valita-validator": "^0.0.2",
+		"hono": "^3.7.3",
+		"kysely": "^0.26.3",
+		"kysely-postgres-js": "^1.1.1",
+		"pg": "^8.11.3",
+		"postgres": "^3.3.5"
+	},
+	"devDependencies": {
+		"@types/pg": "^8.10.3",
+		"prettier": "^3.0.3",
+		"typescript": "^5.2.2",
+		"vite": "^4.4.10",
+		"wrangler": "^3.10.1"
+	}
+}

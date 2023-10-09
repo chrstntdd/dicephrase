@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  pg:
+    image: postgres:16.0-alpine
+    restart: always
+    volumes:
+      - local_pg:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 5s
+      timeout: 1s
+      retries: 2
+
+  flyway:
+    image: flyway/flyway
+    volumes:
+      - ${PWD}/server/db/sql:/flyway/sql
+      - ${PWD}/flyway/conf/flyway.conf.local:/flyway/conf/flyway.config
+    command: -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    depends_on:
+      pg:
+        condition: service_healthy
+
+volumes:
+  local_pg:

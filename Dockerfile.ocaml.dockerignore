@@ -1,0 +1,9 @@
+* 
+!apps/ocaml/lib/core/**
+!apps/ocaml/lib/native/**
+!apps/ocaml/bin/**
+
+!dicephrase.opam
+!dune-project
+!server.opam.locked
+!native.opam.locked

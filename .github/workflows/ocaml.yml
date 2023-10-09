@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "apps/ocaml/**"
+      - ".github/workflows/ocaml.yml"
 
 jobs:
   build:

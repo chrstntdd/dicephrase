@@ -62,8 +62,9 @@ let connection_handler ~wl ({ request; _ } : Request_info.t Server.ctx) =
       Response.of_string ~headers `Not_found ~body:""
 
 let run ~sw ~host ~port env handler =
+  let domains = Domain.recommended_domain_count () in
   let config =
-    Server.Config.create ~buffer_size:0x1000 ~domains:1 (`Tcp (host, port))
+    Server.Config.create ~buffer_size:0x1000 ~domains (`Tcp (host, port))
   in
   let server = Server.create ~config handler in
   let command = Server.Command.start ~sw env server in

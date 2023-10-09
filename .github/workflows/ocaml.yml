@@ -1,0 +1,17 @@
+name: Build native Ocaml HTTP Server
+
+on:
+  push:
+    paths:
+      - "apps/ocaml/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t your-image-name dicephrase-ocaml-http-server --file ./Dockerfile.ocaml  .

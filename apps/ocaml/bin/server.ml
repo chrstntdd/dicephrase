@@ -1,6 +1,24 @@
 open Piaf
 open Eio.Std
 
+module Env : sig
+  type 'a parser = string -> ('a, string) result
+
+  val fetch : key:string -> parser:'a parser -> default:'a -> 'a
+end = struct
+  type 'a parser = string -> ('a, string) result
+
+  let fetch ~key ~parser ~default =
+    match Sys.getenv_opt key with
+    | Some value -> ( match parser value with Ok v -> v | Error _ -> default)
+    | None -> default
+end
+
+let int_ str =
+  match int_of_string_opt str with
+  | Some v -> Ok v
+  | None -> Error "Failed to convert to int"
+
 module ArgParser = struct
   type url_params = {
     word_count : int;
@@ -61,8 +79,7 @@ let connection_handler ~wl ({ request; _ } : Request_info.t Server.ctx) =
       let headers = Headers.of_list [ ("connection", "close") ] in
       Response.of_string ~headers `Not_found ~body:""
 
-let run ~sw ~host ~port env handler =
-  let domains = Domain.recommended_domain_count () in
+let run ~sw ~host ~port ~domains env handler =
   let config =
     Server.Config.create ~buffer_size:0x1000 ~domains (`Tcp (host, port))
   in
@@ -71,10 +88,15 @@ let run ~sw ~host ~port env handler =
   command
 
 let start ~sw env =
+  let int_parser = Env.fetch ~parser:int_ in
+  let domains =
+    int_parser ~key:"DOMAINS" ~default:(Domain.recommended_domain_count ())
+  in
+  let port = int_parser ~key:"PORT" ~default:8080 in
   let host = Eio.Net.Ipaddr.V4.any in
   let _ = Native.init () in
   let wl = Native.load_list () in
-  run ~sw ~host ~port:8080 env (connection_handler ~wl)
+  run ~sw ~host ~port ~domains env (connection_handler ~wl)
 
 let setup_log ?style_renderer level =
   Logs_threaded.enable ();

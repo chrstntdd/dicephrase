@@ -25,5 +25,6 @@ RUN set -x && \
   chown app:app /home/app/server.exe
 
 WORKDIR /home/app
-EXPOSE 8080
+ENV PORT=8080
+EXPOSE $PORT
 ENTRYPOINT ["/home/app/server.exe"]

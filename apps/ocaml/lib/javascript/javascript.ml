@@ -31,3 +31,5 @@ end
 
 (* Creates the dicephrase module for the implied module created by this file *)
 include Core.MakeDicephrase (JSPlatform)
+
+let make_separator = Core.make_separator

@@ -22,3 +22,5 @@ end
 
 (* Creates the dicephrase module for the implied module created by this file *)
 include Core.MakeDicephrase (NativePlatform)
+
+let make_separator = Core.make_separator

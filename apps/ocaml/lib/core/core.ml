@@ -26,10 +26,14 @@ module type PlatformAdapter = sig
   end
 end
 
+type t = string list
+type separator = Char of string | Rand of string array
+
+let make_separator ~randoms str =
+  match str with "random" -> Rand randoms | str -> Char str
+
 module MakeDicephrase (P : PlatformAdapter) = struct
-  type t = string list
   type wordlist = P.WordList.t
-  type separator = [ `Char of string | `Rand of string array ]
 
   let load_list = P.WordList.load_list
   let init = P.Random.init
@@ -87,8 +91,8 @@ module MakeDicephrase (P : PlatformAdapter) = struct
     let separators =
       let separator_count = word_count - 1 in
       match sep with
-      | `Char x -> repeat x separator_count
-      | `Rand separators ->
+      | Char x -> repeat x separator_count
+      | Rand separators ->
           make_random_separators ~count:separator_count ~separators
     in
     let combined = join words separators in

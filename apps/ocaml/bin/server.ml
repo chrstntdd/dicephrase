@@ -4,7 +4,7 @@ open Eio.Std
 module ArgParser = struct
   type url_params = {
     word_count : int;
-    separator : Native.separator;
+    separator : Core.separator;
     fmt : string;
   }
 
@@ -23,11 +23,9 @@ module ArgParser = struct
   let to_fmt str =
     if String.equal str "txt" then Ok str else Error "Format unsupported"
 
-  let validate_separator ~randoms str =
-    match str with
-    | "random" -> Ok (`Rand randoms)
-    | str -> ( try Ok (`Char str) with Failure _ -> Error "Not a character")
+  let validate_separator ~randoms str = Ok (Core.make_separator ~randoms str)
 
+  (* Custom operator to make chaining Results nicer *)
   let ( >>=? ) x f = match x with Error _ as e -> e | Ok v -> f v
 
   let parse_count read_param =

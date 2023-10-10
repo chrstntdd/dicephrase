@@ -35,7 +35,7 @@ jobs:
           dune-cache: ${{ matrix.os == 'ubuntu-latest' }}
 
       - name: Install locked deps with opam
-        run: opam install . --deps-only --locked
+        run: opam install ./server.opam.locked ./native.opam.locked --deps-only --locked
 
       - name: Build world with dune
         run: opam exec -- dune build

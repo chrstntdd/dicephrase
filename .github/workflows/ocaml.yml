@@ -15,4 +15,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build -t dicephrase-ocaml-http-server --file ./Dockerfile.ocaml .
+        run: docker build -t dicephrase-ocaml-http-server-alpine --file ./apps/ocaml/Dockerfile.ocaml .

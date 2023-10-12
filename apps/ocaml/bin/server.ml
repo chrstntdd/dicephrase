@@ -26,7 +26,8 @@ module ArgParser = struct
     fmt : string;
   }
 
-  let clamp ~min ~max x = if x < min then min else if x > max then max else x
+  let clamp ~(min : int) ~max x =
+    if x < min then min else if x > max then max else x
 
   let detect qs key =
     match Uri.get_query_param qs key with

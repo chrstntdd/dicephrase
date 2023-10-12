@@ -40,24 +40,19 @@ module MakeDicephrase (P : PlatformAdapter) = struct
   let init = P.Random.init
 
   let join l1 l2 =
-    let q = Queue.create () in
-    let rec combine_inner l1_rest l2_rest =
+    let rec aux acc l1_rest l2_rest =
       match (l1_rest, l2_rest) with
-      | hd1 :: tl1, hd2 :: tl2 ->
-          Queue.add hd1 q;
-          Queue.add hd2 q;
-          combine_inner tl1 tl2
-      | hd1 :: [], [] -> Queue.add hd1 q
-      | _ -> ()
+      | hd1 :: tl1, hd2 :: tl2 -> aux (hd2 :: hd1 :: acc) tl1 tl2
+      | hd1 :: _, [] -> List.rev (hd1 :: acc)
+      | _, _ -> List.rev acc
     in
-    combine_inner l1 l2;
-    List.of_seq (Queue.to_seq q)
+    aux [] l1 l2
 
   let make_wl_keys size =
     (* Generate a key by rolling 5 6-sided dice to get a key for 1 word in the wordlist *)
     let rand_key () =
       let rec aux = function
-        | acc when String.length acc == 5 -> acc
+        | acc when String.length acc = 5 -> acc
         | acc ->
             let roll = P.Random.std_dice_roll () |> Int.to_string in
             aux (roll ^ acc)
@@ -65,20 +60,20 @@ module MakeDicephrase (P : PlatformAdapter) = struct
       aux ""
     in
     let rec make_wl_keys_aux c acc =
-      if c == 0 then acc else make_wl_keys_aux (c - 1) (rand_key () :: acc)
+      if c = 0 then acc else make_wl_keys_aux (c - 1) (rand_key () :: acc)
     in
 
     make_wl_keys_aux size []
 
   let repeat s c =
-    let rec aux acc n = if n == 0 then acc else aux (s :: acc) (n - 1) in
+    let rec aux acc n = if n = 0 then acc else aux (s :: acc) (n - 1) in
     aux [] c
 
   let make_random_separators ~count ~separators =
+    let max = Array.length separators in
     let rec aux acc i =
-      if i == count then acc
+      if i = count then acc
       else
-        let max = Array.length separators in
         let rand_separator_idx = P.Random.get_random_int ~min:0 ~max in
         let rand_separator = Array.get separators rand_separator_idx in
         aux (rand_separator :: acc) (i + 1)

@@ -1,0 +1,28 @@
+FROM ocaml/opam:alpine-3.18-ocaml-5.1-flambda AS init-opam
+
+RUN set -x && \
+  sudo apk update && sudo apk upgrade && \
+  # Note, adding in newer version of opam than what comes with the base
+  sudo apk add opam
+
+FROM init-opam AS ocaml-app-base
+COPY . .
+
+RUN set -x && \
+  opam install ./server.opam.locked ./native.opam.locked --deps-only --locked && \
+  eval $(opam env) && \
+  dune build ./apps/ocaml/bin/server.exe && \
+  sudo cp ./_build/default/apps/ocaml/bin/server.exe /usr/bin/server.exe
+
+FROM alpine:3.18.4@sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978 AS final
+WORKDIR /_app
+COPY --from=ocaml-app-base --chown=$USER:$USER /usr/bin/server.exe server.exe
+ARG USER=app-runner
+RUN set -x && \
+  apk update && apk upgrade && \
+  adduser -D $USER
+
+ENV PORT=8080
+EXPOSE $PORT
+USER $USER
+CMD ["/_app/server.exe"]

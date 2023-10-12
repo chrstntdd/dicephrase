@@ -1,18 +1,43 @@
 name: Build native Ocaml HTTP Server
 
 on:
+  pull_request:
   push:
     paths:
       - "apps/ocaml/**"
       - ".github/workflows/ocaml.yml"
+  schedule:
+    # Prime the caches every Monday
+    - cron: 0 1 * * MON
+
+permissions: read-all
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          # - macos-latest
+          - ubuntu-latest
+        ocaml-compiler:
+          - "ocaml-variants.5.1.0+options,ocaml-option-flambda"
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t dicephrase-ocaml-http-server --file ./Dockerfile.ocaml .
+      - name: Set-up OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          dune-cache: ${{ matrix.os == 'ubuntu-latest' }}
+
+      - name: Install locked deps with opam
+        run: |
+          opam install ./server.opam.locked ./native.opam.locked --deps-only --locked
+          opam pin add melange.dev --dev-repo
+
+      - name: Build world with dune
+        run: opam exec -- dune build

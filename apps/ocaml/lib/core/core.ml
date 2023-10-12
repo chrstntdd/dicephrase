@@ -29,8 +29,9 @@ end
 type t = string list
 type separator = Char of string | Rand of string array
 
-let make_separator ~randoms str =
-  match str with "random" -> Rand randoms | str -> Char str
+let make_separator ~randoms = function
+  | str when str = "random" -> Rand randoms
+  | str -> Char str
 
 module MakeDicephrase (P : PlatformAdapter) = struct
   type wordlist = P.WordList.t

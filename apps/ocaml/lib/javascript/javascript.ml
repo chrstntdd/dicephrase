@@ -3,6 +3,11 @@ external getRandomValuesU32 :
   = "getRandomValues"
 [@@mel.scope "crypto"]
 
+let remainder_float (a : float) (b : float) : float =
+  let _ = a in
+  let _ = b in
+  [%mel.raw "a % b"]
+
 module JSPlatform : Core.PlatformAdapter = struct
   module JSRandom = struct
     let init () = ()
@@ -15,14 +20,16 @@ module JSPlatform : Core.PlatformAdapter = struct
         |. Js.TypedArray2.Uint32Array.unsafe_get 0
       in
 
-      min + (bit mod range)
+      min
+      + int_of_float (remainder_float (float_of_int bit) (float_of_int range))
   end
 
   module EFFLargeWl2016 = struct
     type t = String.t Js.Dict.t
 
-    let get_word wl key = Js.Dict.get wl key |> Option.get
-    let load_list () : t = failwith "Unimplemented"
+    let int_to_str n = Js.Int.toString n
+    let get_word wl key = Js.Dict.get wl key |> Js.Option.getExn
+    let load_list () : t = Js.Dict.empty ()
   end
 
   module Random = Core.MakeRandomGenerator (JSRandom)
@@ -33,3 +40,12 @@ end
 include Core.MakeDicephrase (JSPlatform)
 
 let make_separator = Core.make_separator
+
+type rng = X
+
+let make_wl_keys ~(rng : rng) (count : int) =
+  let _ = count in
+  let _ = rng in
+  [| "" |]
+
+let make_rng () = X

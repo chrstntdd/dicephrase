@@ -1,12 +1,13 @@
 (executable
  (name server)
- (ocamlopt_flags -O3 -nodynlink -unbox-closures -compact)
+ ; (ocamlopt_flags -O3 -nodynlink -unbox-closures -compact)
  (libraries
   ; Internal libs
   core
   native
   ; Third party deps
   eio_main
+  cryptokit
   eio.unix
   fmt.tty
   logs.fmt

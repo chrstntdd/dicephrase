@@ -66,23 +66,34 @@ module ArgParser = struct
     | _ -> Error "Invalid params"
 end
 
-let connection_handler ~wl ({ request; _ } : Request_info.t Server.ctx) =
+let connection_handler ~wl ~rng ({ request; _ } : Request_info.t Server.ctx) =
   let url = Uri.of_string request.target in
   match (request, Uri.path url) with
   | { Request.meth = `GET; _ }, "/gen" -> (
       match ArgParser.parse_url_params url with
       | Error msg -> Response.of_string `Bad_request ~body:msg
       | Ok { word_count; separator; fmt = _fmt } ->
-          let generated_dicephrase = Native.generate wl word_count separator in
+          let keys = Native.make_wl_keys ~rng word_count in
+          let generated_dicephrase =
+            Native.generate wl word_count separator keys
+          in
           let body = generated_dicephrase |> Native.to_string in
-          Response.of_string ~body `OK)
+          let headers =
+            Headers.of_list
+              [
+                ("connection", "keep-alive");
+                ("keep-alive", "timeout=5");
+                ("content-type", "text/html; charset=utf-8");
+              ]
+          in
+          Response.of_string ~body ~headers `OK)
   | _ ->
       let headers = Headers.of_list [ ("connection", "close") ] in
       Response.of_string ~headers `Not_found ~body:""
 
 let run ~sw ~host ~port ~domains env handler =
   let config =
-    Server.Config.create ~buffer_size:0x1000 ~domains (`Tcp (host, port))
+    Server.Config.create ~buffer_size:0x1024 ~domains (`Tcp (host, port))
   in
   let server = Server.create ~config handler in
   let command = Server.Command.start ~sw env server in
@@ -97,7 +108,8 @@ let start ~sw env =
   let host = Eio.Net.Ipaddr.V4.any in
   let _ = Native.init () in
   let wl = Native.load_list () in
-  run ~sw ~host ~port ~domains env (connection_handler ~wl)
+  let rng = Native.make_rng () in
+  run ~sw ~host ~port ~domains env (connection_handler ~wl ~rng)
 
 let setup_log ?style_renderer level =
   Logs_threaded.enable ();

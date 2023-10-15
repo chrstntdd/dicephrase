@@ -10,6 +10,7 @@ doc: "https://url/to/documentation"
 bug-reports: "https://github.com/username/reponame/issues"
 depends: [
   "piaf" {>= "0.1.0"}
+  "cryptokit"
   "uri"
   "logs"
   "eio-ssl" {dev}

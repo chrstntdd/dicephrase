@@ -1,6 +1,6 @@
 (library
  (name native)
- (libraries core yojson)
+ (libraries core yojson cryptokit)
  (preprocessor_deps wl-2016.json)
  (preprocess
   (pps ppx_blob)))

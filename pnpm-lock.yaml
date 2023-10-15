@@ -63,6 +63,12 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
 
+  apps/node:
+    dependencies:
+      gen-utils:
+        specifier: workspace:^
+        version: link:../../pkgs/gen-utils
+
   apps/ocaml:
     devDependencies:
       '@types/node':

@@ -1,0 +1,16 @@
+{
+	"name": "@ct/node",
+	"version": "1.0.0",
+	"description": "Bare bones HTTP server exposing dicephrase running on Node.js",
+	"main": "server.mjs",
+	"keywords": [
+		"node.js",
+		"http",
+		"server"
+	],
+	"author": "Christian Todd",
+	"license": "UNLICENSED",
+	"dependencies": {
+		"gen-utils": "workspace:^"
+	}
+}

@@ -1,17 +1,23 @@
-use actix_web::{get, middleware, web, App, Either, HttpServer, Responder, Result};
+use actix_web::{get, http::KeepAlive, web, App, Either, HttpServer, Responder, Result};
 use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+struct AppState {
+    wl: HashMap<String, String>,
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
-    let app = HttpServer::new(move || {
-        App::new()
-            .wrap(middleware::Compress::default())
-            .service(gen)
+    let app = HttpServer::new(|| {
+        let wl = read_wl().expect("Unable to read wordlist");
+        let data = web::Data::new(AppState { wl });
+        App::new().app_data(data).service(gen)
     })
+    .keep_alive(KeepAlive::Os)
     .bind(("0.0.0.0", 8080))?
     .run();
 
@@ -20,7 +26,7 @@ async fn main() -> std::io::Result<()> {
 
 #[derive(Deserialize, Debug)]
 enum OutputFmt {
-    #[serde(rename = "text")]
+    #[serde(rename = "txt")]
     Text,
     #[serde(rename = "parts")]
     Parts,
@@ -28,8 +34,8 @@ enum OutputFmt {
 
 #[derive(Deserialize)]
 struct DicephraseCfg {
-    count: usize,
-    sep: String,
+    c: usize,
+    s: Option<String>,
     fmt: OutputFmt,
 }
 
@@ -42,12 +48,12 @@ struct PartsResp {
 #[get("/gen")]
 async fn gen(
     cfg: web::Query<DicephraseCfg>,
+    app_state: web::Data<AppState>,
 ) -> Either<Result<impl Responder>, Result<impl Responder>> {
-    let word_list = read_wl().expect("Unable to read wordlist");
     //  Limit to slightly over 256 bits of entropy
-    let count = cfg.count.clamp(4, 20);
-    let separators = make_separators(count, &cfg.sep);
-    let words = make_words(count, &word_list);
+    let count = cfg.c.clamp(4, 20);
+    let separators = make_separators(count, &cfg.s.as_deref().unwrap_or("🦀"));
+    let words = make_words(count, &app_state.wl);
 
     match cfg.fmt {
         OutputFmt::Text => Either::Left(Ok(combine_zip(&words, &separators))),

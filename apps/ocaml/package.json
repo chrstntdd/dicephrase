@@ -1,0 +1,16 @@
+{
+	"name": "@ct/dicephrase-melange",
+	"type": "module",
+	"scripts": {
+		"build:app-native": "dune build bin/main.exe",
+		"build:lib-js": "echo 'run dune build @melange'",
+		"bundle": "vite build",
+		"deploy:app-server": "fly deploy --config fly.toml --dockerfile Dockerfile.server ."
+	},
+	"devDependencies": {
+		"@types/node": "^20.8.2",
+		"typescript": "^5.2.2",
+		"vite": "^4.4.11",
+		"vitest": "^0.34.6"
+	}
+}

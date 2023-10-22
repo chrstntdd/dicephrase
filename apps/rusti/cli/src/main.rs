@@ -1,6 +1,5 @@
-use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
-
 use clap::Parser;
+use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]

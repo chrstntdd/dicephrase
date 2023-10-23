@@ -76,7 +76,12 @@ async fn gen(
 ) -> Result<impl Responder> {
     //  Limit to slightly over 256 bits of entropy
     let count = cfg.c.clamp(4, 20);
-    let separators = make_separators(count, cfg.s.as_deref().unwrap());
+
+    // Limit custom separators to 2 chars long
+    let separator_chars: String = cfg.s.as_deref().unwrap().chars().take(2).collect();
+    let separator_chars: &str = &separator_chars;
+
+    let separators = make_separators(count, separator_chars);
     let words = make_words(count, &app_state.wl, &app_state.rand_buf);
 
     let resp = match req.headers().get(header::ACCEPT) {

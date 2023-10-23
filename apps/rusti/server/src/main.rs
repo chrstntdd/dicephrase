@@ -1,20 +1,28 @@
-use actix_web::{get, http::KeepAlive, web, App, Either, HttpServer, Responder, Result};
-use core_dicephrase::{combine_zip, make_separators, make_words, read_wl};
+use actix_web::{
+    body::BoxBody, get, http::header, http::KeepAlive, web, App, HttpRequest, HttpResponse,
+    HttpServer, Responder, Result,
+};
+use core_dicephrase::{combine_zip, make_separators, make_words, read_wl, RandomBuffer};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 struct AppState {
-    wl: HashMap<String, String>,
+    wl: Arc<HashMap<[u8; 5], String>>,
+    rand_buf: Arc<RandomBuffer>,
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
-    let app = HttpServer::new(|| {
-        let wl = read_wl().expect("Unable to read wordlist");
-        let data = web::Data::new(AppState { wl });
+    let wl = Arc::new(read_wl().unwrap());
+    let rand_buf = Arc::new(RandomBuffer::new());
+    let app = HttpServer::new(move || {
+        let data = web::Data::new(AppState {
+            wl: wl.clone(),
+            rand_buf: rand_buf.clone(),
+        });
         App::new().app_data(data).service(gen)
     })
     .keep_alive(KeepAlive::Os)
@@ -24,19 +32,15 @@ async fn main() -> std::io::Result<()> {
     app.await
 }
 
-#[derive(Deserialize, Debug)]
-enum OutputFmt {
-    #[serde(rename = "txt")]
-    Text,
-    #[serde(rename = "parts")]
-    Parts,
+fn default_separator() -> Option<String> {
+    Some("🦀".to_string())
 }
 
 #[derive(Deserialize)]
 struct DicephraseCfg {
     c: usize,
+    #[serde(default = "default_separator")]
     s: Option<String>,
-    fmt: OutputFmt,
 }
 
 #[derive(Serialize)]
@@ -45,18 +49,46 @@ struct PartsResp {
     separators: Vec<String>,
 }
 
+enum GenResponse {
+    Html(String),
+    Json(PartsResp),
+}
+
+impl Responder for GenResponse {
+    type Body = BoxBody;
+    fn respond_to(self, _: &HttpRequest) -> HttpResponse {
+        match self {
+            GenResponse::Html(html) => HttpResponse::Ok().content_type("text/html").body(html),
+            GenResponse::Json(json) => HttpResponse::Ok().json(json),
+        }
+    }
+}
+
+const JSON_ACCEPT: &[u8; 16] = b"application/json";
+
 #[get("/gen")]
 async fn gen(
+    req: HttpRequest,
     cfg: web::Query<DicephraseCfg>,
     app_state: web::Data<AppState>,
-) -> Either<Result<impl Responder>, Result<impl Responder>> {
+) -> Result<impl Responder> {
     //  Limit to slightly over 256 bits of entropy
     let count = cfg.c.clamp(4, 20);
-    let separators = make_separators(count, &cfg.s.as_deref().unwrap_or("🦀"));
-    let words = make_words(count, &app_state.wl);
+    let separators = make_separators(count, cfg.s.as_deref().unwrap());
+    let words = make_words(count, &app_state.wl, &app_state.rand_buf);
 
-    match cfg.fmt {
-        OutputFmt::Text => Either::Left(Ok(combine_zip(&words, &separators))),
-        OutputFmt::Parts => Either::Right(Ok(web::Json(PartsResp { words, separators }))),
-    }
+    let resp = match req.headers().get(header::ACCEPT) {
+        Some(header_value)
+            if header_value
+                .as_bytes()
+                .windows(JSON_ACCEPT.len())
+                .any(|window| window == JSON_ACCEPT) =>
+        {
+            GenResponse::Json(PartsResp { words, separators })
+        }
+
+        _ => GenResponse::Html(combine_zip(&words, &separators)),
+    };
+
+    Ok(resp)
 }

@@ -1,14 +1,14 @@
-name: Build native Ocaml HTTP Server
+name: Build native Rust HTTP Server
 
 on:
   pull_request:
     paths:
-      - "apps/ocaml/**"
-      - ".github/workflows/ocaml.yml"
+      - "apps/rusti/**"
+      - ".github/workflows/rust.yml"
   push:
     paths:
-      - "apps/ocaml/**"
-      - ".github/workflows/ocaml.yml"
+      - "apps/rusti/**"
+      - ".github/workflows/rust.yml"
 
 permissions: read-all
 
@@ -26,4 +26,4 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t dicephrase-ocaml-http-server --file ./apps/ocaml/Dockerfile.ocaml .
+        run: docker build -t rust-http-server --file ./apps/rusti/Dockerfile.http-server .

@@ -38,6 +38,12 @@ impl RandomBuffer {
     }
 }
 
+impl Default for RandomBuffer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 pub fn combine_zip(words: &[String], separators: &[String]) -> String {
     let mut result = String::with_capacity(
         // Pre-allocate since the size is known ahead of time
@@ -82,8 +88,7 @@ fn make_wl_keys(count: usize, rand_buf: &RandomBuffer) -> Vec<[u8; 5]> {
     keys
 }
 
-const SEPARATOR_OPTS: [&'static str; 12] =
-    ["_", ",", "!", "@", "*", "&", "^", "~", "-", ".", "$", "|"];
+const SEPARATOR_OPTS: [&str; 12] = ["_", ",", "!", "@", "*", "&", "^", "~", "-", ".", "$", "|"];
 const SEPARATOR_OPTS_LEN: usize = SEPARATOR_OPTS.len();
 
 pub fn make_separators(count: usize, separator_kind: &str) -> Vec<String> {

@@ -2,6 +2,9 @@ name: Build native Ocaml HTTP Server
 
 on:
   pull_request:
+    paths:
+      - "apps/ocaml/**"
+      - ".github/workflows/ocaml.yml"
   push:
     paths:
       - "apps/ocaml/**"

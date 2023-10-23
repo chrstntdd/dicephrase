@@ -1,10 +1,16 @@
-FROM rust:1.73 as build
-WORKDIR /app
-COPY . /app
-RUN cargo build --bin server --release 
+FROM rust:1.73-buster AS builder
+WORKDIR /_app
 
-FROM gcr.io/distroless/cc
-COPY --from=build /app/target/release/server /
+
+
+COPY . /_app
+RUN cargo build --bin server --release
+
+FROM gcr.io/distroless/cc AS final
+WORKDIR /_app
+
+COPY --from=builder /_app/target/release/server /_app/
+
 EXPOSE 8080
 USER nonroot
 CMD ["./server"]

@@ -58,7 +58,9 @@ impl Responder for GenResponse {
     type Body = BoxBody;
     fn respond_to(self, _: &HttpRequest) -> HttpResponse {
         match self {
-            GenResponse::Html(html) => HttpResponse::Ok().content_type("text/html").body(html),
+            GenResponse::Html(html) => HttpResponse::Ok()
+                .content_type("text/html; charset=utf-8")
+                .body(html),
             GenResponse::Json(json) => HttpResponse::Ok().json(json),
         }
     }
@@ -87,7 +89,11 @@ async fn gen(
             GenResponse::Json(PartsResp { words, separators })
         }
 
-        _ => GenResponse::Html(combine_zip(&words, &separators)),
+        _ => {
+            let v = combine_zip(&words, &separators);
+            let html = "<code id=\"dicephrase\">".to_owned() + &v.to_owned() + "</code>";
+            GenResponse::Html(html)
+        }
     };
 
     Ok(resp)

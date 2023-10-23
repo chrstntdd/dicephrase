@@ -1,0 +1,10 @@
+# Deny all
+*
+
+# Allow 
+!apps/rusti/core/
+!apps/rusti/server/
+!apps/rusti/Cargo.toml
+!apps/rusti/Cargo.lock
+# Part of the workspace, but not really needed
+!apps/rusti/cli/ 

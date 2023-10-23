@@ -1,4 +1,4 @@
-name: Build native Ocaml HTTP Server
+name: Build native Rust HTTP Server
 
 on:
   pull_request:

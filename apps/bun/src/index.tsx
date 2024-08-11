@@ -5,6 +5,8 @@ import swagger from "@elysiajs/swagger"
 import { make_separators, make_phrases, combine_zip } from "gen-utils"
 import wl from "@dicephrase/wordlist"
 
+let port = +process.env.PORT! as number
+let hostname = "0.0.0.0"
 let defaultSep = "🌭"
 let defaultWordCount = 11
 
@@ -45,7 +47,7 @@ const app = new Elysia()
 			query: t.Optional(
 				t.Partial(
 					t.Object({
-						c: t.Number({ maximum: 20, minimum: 4, default: defaultWordCount }),
+						c: t.Number({ minimum: 2, maximum: 20, default: defaultWordCount }),
 						s: t.ReadonlyOptional(t.String({ default: defaultSep })),
 					}),
 				),
@@ -74,16 +76,14 @@ const app = new Elysia()
 					},
 				},
 			},
-			transform({ query }) {
-				let c = +query.c!
-				// Using custom transform instead of numeric cuz swagger does not handle the t.Numeric :(
-				// See: https://elysiajs.com/concept/numeric.html#numeric
-				if (!Number.isNaN(c)) query.c = c
-			},
+			// transform({ query }) {
+			// 	let c = +query.c!
+			// 	// Using custom transform instead of numeric cuz swagger does not handle the t.Numeric :(
+			// 	// See: https://elysiajs.com/concept/numeric.html#numeric
+			// 	if (!Number.isNaN(c)) query.c = c
+			// },
 		},
 	)
-	.listen(3000)
+	.listen({ port, hostname })
 
-console.log(
-	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-)
+console.info(`🦊 ${app.server?.hostname}:${app.server?.port}`)

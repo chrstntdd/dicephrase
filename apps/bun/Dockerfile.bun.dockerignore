@@ -1,0 +1,11 @@
+*
+
+!apps/bun/src/**
+!apps/bun/tsconfig.json
+!apps/bun/package.json
+!pkgs/wordlist/**
+!pkgs/gen-utils/**
+
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml

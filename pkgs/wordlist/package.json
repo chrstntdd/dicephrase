@@ -1,0 +1,11 @@
+{
+	"name": "@dicephrase/wordlist",
+	"files": [
+		"wl-2016.json"
+	],
+	"exports": {
+		".": {
+			"import": "./wl-2016.json"
+		}
+	}
+}

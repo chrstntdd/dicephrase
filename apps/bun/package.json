@@ -1,0 +1,22 @@
+{
+	"name": "@dicephrase/bun",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "bun --watch src/index.tsx",
+		"build": "bun build src/index.tsx",
+		"start": "NODE_ENV=production bun src/index.ts",
+		"test": "bun test"
+	},
+	"dependencies": {
+		"@dicephrase/wordlist": "workspace:^",
+		"@elysiajs/html": "1.0.2",
+		"@elysiajs/swagger": "1.0.5",
+		"elysia": "latest",
+		"gen-utils": "workspace:^"
+	},
+	"devDependencies": {
+		"@types/node": "^20.8.8",
+		"bun-types": "latest",
+		"typescript": "^5.2.2"
+	}
+}
